@@ -10,6 +10,7 @@ import {
   List,
   ListItem,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 
 const Dropdown = ({
@@ -19,6 +20,18 @@ const Dropdown = ({
 }) => {
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast();
+
+  const showToast = () => {
+    toast({
+      title: "Sign out",
+      description: "You have been signed out.",
+      duration: 5000,
+      isClosable: true,
+      status: "success",
+      position: "top",
+    });
+  };
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -27,6 +40,7 @@ const Dropdown = ({
   const signOut = async () => {
     await logoutUser();
     setContext({ user: null, userData: null });
+    showToast();
     navigate("/");
   };
 

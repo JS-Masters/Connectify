@@ -9,9 +9,11 @@ import {
   Container,
   Heading,
   Input,
-  Text,
+  InputGroup,
+  InputRightElement,
   useToast,
 } from "@chakra-ui/react";
+import { UnlockIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 const SignIn = () => {
   const toast = useToast();
@@ -20,9 +22,13 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-  const [message, setMessage] = useState("");
+
+  const [show, setShow] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
+
+  const toggleShow = () => setShow(!show);
 
   const showToast = (desc, status) => {
     toast({
@@ -32,7 +38,7 @@ const SignIn = () => {
       isClosable: true,
       status: status,
       position: "top",
-      // icon: <UnlockIcon />,
+      icon: <UnlockIcon />,
     });
   };
 
@@ -52,6 +58,7 @@ const SignIn = () => {
       setContext({ user: credentials.user, userData: null });
     } catch (error) {
       showToast("Invalid email or password", "error");
+      return;
     }
 
     showToast("Successfully logged in", "success");
@@ -66,12 +73,23 @@ const SignIn = () => {
         value={form.email}
         onChange={updateForm("email")}
       />
-      <Input
-        type="password"
-        placeholder="Password"
-        value={form.password}
-        onChange={updateForm("password")}
-      />
+
+      <InputGroup>
+        <Input
+          type={show ? "text" : "password"}
+          placeholder="Password"
+          value={form.password}
+          onChange={updateForm("password")}
+        />
+        <InputRightElement>
+          {show ? (
+            <ViewOffIcon cursor='pointer' onClick={toggleShow} />
+          ) : (
+            <ViewIcon cursor='pointer' onClick={toggleShow} />
+          )}
+        </InputRightElement>
+      </InputGroup>
+
       <Button onClick={login}>Sign In</Button>
       <Button onClick={() => navigate("/sign-up")}>Register</Button>
     </Container>
