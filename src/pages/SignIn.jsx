@@ -62,7 +62,7 @@ const SignIn = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Heading>Welcome</Heading>
+      <Heading>Welcome to Connectify</Heading>
       <Input type="email" placeholder="Email" name="email" />
 
       <InputGroup>

@@ -7,7 +7,7 @@ import {
 import "./App.css";
 import AppContext from "./providers/AppContext";
 import { useEffect, useState } from "react";
-import {useAuthState} from "react-firebase-hooks/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 
 import RootLayout from "./layouts/RootLayout";
@@ -16,6 +16,9 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import { auth } from "./config/firebase-config";
 import { getUserData } from "./services/user.services";
+import Chats from "./pages/Chats";
+import Calls from "./pages/Calls";
+import DirectMessages from "./pages/DIrectMessages";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,6 +26,9 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />
+      <Route path="/chats" element={<Chats />} />
+      <Route path="/calls" element={<Calls />} />
+      <Route path="/dms/:id" element={<DirectMessages />} />
     </Route>
   )
 );

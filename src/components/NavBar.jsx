@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Dropdown from "./Dropdown";
 import { useContext } from "react";
 import AppContext from "../providers/AppContext";
+import { NavLink } from "react-router-dom";
 
 const NavBar = () => {
   const { userData, setContext } = useContext(AppContext);
@@ -21,7 +22,9 @@ const NavBar = () => {
         <Heading>C</Heading>
       </Box>
       <Box>
-        <Heading>Welcome to Connectify</Heading>
+        {/* <Heading>Welcome to Connectify</Heading> */}
+        <NavLink to="/chats">CHATS </NavLink>
+        <NavLink to="/calls">CALLS</NavLink>
       </Box>
       {userData && (
         <Dropdown
