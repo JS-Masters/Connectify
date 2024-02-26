@@ -1,12 +1,11 @@
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { useContext, useState, useEffect } from "react";
 import AppContext from "../providers/AppContext";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Form, useLocation, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/auth.service";
 
 import {
   Button,
-  Container,
   Heading,
   Input,
   InputGroup,
@@ -18,15 +17,17 @@ import { UnlockIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 const SignIn = () => {
   const toast = useToast();
   const { user, setContext } = useContext(AppContext);
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
 
   const [show, setShow] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    if (user) {
+      navigate(location.state?.from.pathname || "/");
+    }
+  }, [user, location.state?.from.pathname, navigate]);
 
   const toggleShow = () => setShow(!show);
 
@@ -42,19 +43,14 @@ const SignIn = () => {
     });
   };
 
-  const updateForm = (prop) => (event) => {
-    setForm({ ...form, [prop]: event.target.value });
-  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  useEffect(() => {
-    if (user) {
-      navigate(location.state?.from.pathname || "/");
-    }
-  }, [user, location.state?.from.pathname, navigate]);
+    const email = event.target.elements.email.value;
+    const pass = event.target.elements.password.value;
 
-  const login = async () => {
     try {
-      const credentials = await loginUser(form.email, form.password);
+      const credentials = await loginUser(email, pass);
       setContext({ user: credentials.user, userData: null });
     } catch (error) {
       showToast("Invalid email or password", "error");
@@ -65,37 +61,31 @@ const SignIn = () => {
   };
 
   return (
-    <Container>
+    <Form onSubmit={handleSubmit}>
       <Heading>Welcome</Heading>
-      <Input
-        type="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={updateForm("email")}
-      />
+      <Input type="email" placeholder="Email" name="email" />
 
       <InputGroup>
         <Input
           type={show ? "text" : "password"}
           placeholder="Password"
-          value={form.password}
-          onChange={updateForm("password")}
+          name="password"
         />
         <InputRightElement>
           {show ? (
-            <ViewOffIcon cursor='pointer' onClick={toggleShow} />
+            <ViewOffIcon cursor="pointer" onClick={toggleShow} />
           ) : (
-            <ViewIcon cursor='pointer' onClick={toggleShow} />
+            <ViewIcon cursor="pointer" onClick={toggleShow} />
           )}
         </InputRightElement>
       </InputGroup>
 
-      <Button onClick={login}>Sign In</Button>
+      <Button type="submit">Sign In</Button>
       <Button onClick={() => navigate("/sign-up")}>Register</Button>
-    </Container>
+    </Form>
   );
 };
 
-SignIn.propTypes = {};
+// SignIn.propTypes = {};
 
 export default SignIn;
