@@ -3,6 +3,7 @@ import { db } from "../config/firebase-config"
 // import { useToast } from "@chakra-ui/toast";
 import { getUserByHandle, updateUserByHandle } from "./user.services";
 
+
 // const toast = useToast();
 // const showToast = (desc, status) => {
 //     toast({
@@ -15,55 +16,65 @@ import { getUserByHandle, updateUserByHandle } from "./user.services";
 //     });
 //   };
 
+// ГОТОВА
+const updateUsersChats = async (chatMembers) => {
+  for (const member of chatMembers) {
+    const memberChats = await getChatsByUserHandle(member);
+    await updateUserByHandle(member, 'chats', { ...memberChats, [response.key]: chatMembers });
+  };
+};
 
+// ГОТОВА
+const doesChatAlreadyExists = (loggedInChats, newChatMembers) => {
+  for (const chatId in loggedInChats) {
+    const chatParticipants = loggedInChats[chatId];
+    const hasMatchingParticipants = newChatMembers.every(member => chatParticipants.includes(member));
+    if (hasMatchingParticipants) {
+      return chatId;
+    }
+  }
+  return null;
+}
 
-export const addDirectChat = async (chatName, myUsername, chatMember) => {
-
+// ГОТОВА
+export const createNewChat = async (loggedInUsername, chatMembers) => {
   try {
-    const myDms = await getDirectChatByHandle(myUsername);
-    const memberDms = await getDirectChatByHandle(chatMember);
-    if (myDms) {
-      const myDmsMembers = Object.keys(myDms);
-      if (myDmsMembers.includes(chatMember)) {
-        const dmId = myDms[chatMember];
+    const loggedInUserChats = await getChatsByUserHandle(loggedInUsername);
+    const allParticipants = { [loggedInUsername]: true };
+    chatMembers.map((member) => {
+      allParticipants = { ...allParticipants, [member]: true }
+    });
 
-        return dmId;
+    if (loggedInUserChats) {
+      const existingChatId = doesChatAlreadyExists(loggedInUserChats, chatMembers);
+      if (existingChatId) {
+        return existingChatId;
       }
     } else {
-      const response = await push(ref(db, `direct-chats`), {});
-      await set(ref(db, `direct-chats/${response.key}`),
-        {
-          chatName,
-          id: response.key,
-          createdBy: myUsername,
-          createdOn: new Date(),
-          participants: {
-            [myUsername]: true,
-            [chatMember]: true
-          },
-          messages: {}
-        });
+      const response = await push(ref(db, `chats`), {
+        createdBy: loggedInUsername,
+        createdOn: new Date().toLocaleDateString(),
+        participants: allParticipants,
+        messages: {}
+      });
 
-      await updateUserByHandle(myUsername, 'direct-chats', { ...myDms, [chatMember]: response.key });
-      await updateUserByHandle(chatMember, 'direct-chats', { ...memberDms, [myUsername]: response.key });
-
+      await updateUsersChats([...chatMembers, loggedInUsername]);
       return response.key;
-    }
-
+    };
   } catch (error) {
     alert(error.message);
   }
 };
 
 
-
-export const getDirectChatByHandle = async (userHandle) => {
+// ГОТОВА
+export const getChatsByUserHandle = async (userHandle) => {
   try {
-    const dmsSnapshot = await get(ref(db, `users/${userHandle}/direct-chats`));
-    if (!dmsSnapshot.exists()) {
-      return;
+    const chatsSnapshot = await get(ref(db, `users/${userHandle}/chats`));
+    if (!chatsSnapshot.exists()) {
+      return null;
     }
-    return dmsSnapshot.val();
+    return chatsSnapshot.val();
 
   } catch (error) {
     alert(error.message);
@@ -79,20 +90,6 @@ export const getDirectChatMessagesById = async (listenFn, dmsId) => {
   )
   return onValue(q, listenFn);
 
-  // try {
-  //   const dmChatSnapshot = get(ref(db, `direct-messages/${dmsId}`));
-  //   if (!dmChatSnapshot.exists()) {
-  //     throw new Error('This chat does not exist!');
-  //   }
-
-  //   const dmChat = dmChatSnapshot.val();
-  //   return dmChat.messages;
-
-
-  // } catch (error) {
-  //   console.log(error.message);
-  // }
-
 }
 
 export const addMessageToDirectChat = async (directChatId, message, author) => {
@@ -102,7 +99,7 @@ export const addMessageToDirectChat = async (directChatId, message, author) => {
       id: messageRef.key,
       author: author,
       content: message,
-      createdOn: new Date()
+      createdOn: new Date().toLocaleDateString()
     })
 
   } catch (error) {

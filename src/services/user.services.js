@@ -21,8 +21,31 @@ export const getUserData = (uid) => {
   return get(query(ref(db, 'users'), orderByChild('uid'), equalTo(uid)));
 };
 
-export const getAllUsers = () => {
-
-  return get(ref(db, 'users'));
+export const getAllUsers = async () => {
+  try {
+    const snapshot = await get(ref(db, 'users'));
+    if(!snapshot.exists()) {
+      throw new Error ('No users in database!');
+    }
+    return snapshot.val();
+  } catch (error) {
+    console.log(error.message);
+  }
+  return null;
 };
+
+export const getUsersBySearchTerm = async (searchTerm) => {
+  try {
+    const allUsersSnapshot = await getAllUsers();
+    const allUsers = allUsersSnapshot.val();
+    const usersFilteredBySearchTerm = Object.keys(allUsers).filter((handle) => handle.toLowerCase().includes(searchTerm.toLowerCase()));
+console.log(usersFilteredBySearchTerm);
+    return usersFilteredBySearchTerm;
+
+  } catch (error) {
+    console.log(error.message);
+  }
+
+
+}
 

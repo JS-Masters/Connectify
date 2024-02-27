@@ -19,6 +19,7 @@ import { getUserData } from "./services/user.services";
 import Chats from "./pages/Chats";
 import Calls from "./pages/Calls";
 import DirectMessages from "./pages/DIrectMessages";
+import Loading from "./hoc/Loading";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,9 +27,9 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />
-      <Route path="/chats" element={<Chats />} />
+      <Route path="/chats" element={<Loading><Chats /></Loading>} />
       <Route path="/calls" element={<Calls />} />
-      <Route path="/dms/:id" element={<DirectMessages />} />
+      <Route path="/chats/:id" element={<DirectMessages />} />
     </Route>
   )
 );
