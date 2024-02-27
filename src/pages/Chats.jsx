@@ -23,8 +23,7 @@ const Chats = () => {
   const [myChats, setMyChats] = useState(null);
 
   const [users, setUsers] = useState([]);
-
-  const [usersBySearchTerm, setUsersBySearchTerm] = useState([]);
+  const [foundUsers, setFoundUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -34,7 +33,7 @@ const Chats = () => {
     setSearchParams({ search: value });
   };
 
-  // ГОТОВО
+
   useEffect(() => {
     getAllUsers()
       .then((users) => setUsers(Object.keys(users)))
@@ -42,40 +41,23 @@ const Chats = () => {
     getChatsByUserHandle(userData.handle)
       .then((chats) => {
         if (chats) {
+          console.log(chats);
           setMyChats(chats);
         }
       });
   }, []);
 
-  // ГОТОВО
+
   useEffect(() => {
     if (users.length) {
       const usersFiltered = users.filter((u) => (u.toLowerCase().includes(search.toLowerCase()) && u !== userData.handle));
-      setUsersBySearchTerm(usersFiltered);
+      setFoundUsers(usersFiltered);
     }
   }, [search, users]);
 
-  const showToast = (desc, status) => {
-    toast({
-      title: "Create New Chat",
-      description: desc,
-      duration: 5000,
-      isClosable: true,
-      status: status,
-      position: "top"
-    });
-  };
 
-  // // ГОТОВА
-  // const showSearchUsers = () => {
-  //   getAllUsers().then((snapshot) => {
-  //     if (snapshot.exists()) {
-  //       setUsers(Object.keys(snapshot.val()));
-  //     }
-  //   })
-  // };
 
-  // ГОТОВА
+
   const updateSelectedUsersPreferences = (userHandle) => {
 
     if (selectedUsers.includes(userHandle)) {
@@ -86,56 +68,19 @@ const Chats = () => {
     }
   };
 
-  // ГОТОВА
-  const handleCreateChatClick = async (event) => {
-    event.preventDefault();
-    if (selectedUsers.length) {
-      // const selectedChatMembers = selectedUsers
-      //   .filter((user) => Object.values(user)
-      //     .some((value) => value === true)
-      //     .map((obj) => Object.keys(obj))
-      //     .flat());
 
-      await createNewChat(userData.handle, selectedUsers).then((chatId) => navigate(`/chats/${chatId}`));
-    } else {
-      showToast('You have to choose at least one person to start a chat!', 'warning');
-    };
-  };
+
 
   return (
     <>
-<SelectedUsersBar allUsers={users} selectedUsers={selectedUsers} setSearch={setSearch} updateSelectedUsersPreferences={updateSelectedUsersPreferences}/>
-      {/* <Form onSubmit={handleCreateChatClick}>
-        <input placeholder="Connect with..." value={search} onChange={e => setSearch(e.target.value)} type="text" name="search" id="search" /> */}
-        {/* <input
-          placeholder="Connect with..."
-          name="searchUsers"
-          value={search}
-          onChange={() => setSearch(event.target.value)}
-        ></input> */}
-        {/* <Button type="submit">Create Chat</Button> */}
-      {/* </Form> */}
+      <SelectedUsersBar foundUsers={foundUsers} selectedUsers={selectedUsers} setSearch={setSearch} updateSelectedUsersPreferences={updateSelectedUsersPreferences} />
       <div>
-        {myChats ? (myChats.map((chat) => {
-          <button onClick={() => navigate(`/chats/${Object.keys(chat)[0]}`)}>{Object.values(chat)[0].join(', ')}</button>
+        {myChats ? (Object.keys(myChats).map((chatId) => {
+          const chatName = myChats[chatId].join(', ');
+          // console.log(chatName);
+          <h1 onClick={() => navigate(`/chats/${chatId}`)}>{chatName}</h1>
         })) : (<h1>You don't have any chats yet...</h1>)}
       </div>
-      {usersBySearchTerm && (
-        <div>
-          {/* {usersBySearchTerm.slice(0, 5).map((user) => {
-            return (
-              <li key={v4()}>
-                {user}{" "}
-                <Checkbox
-                  colorScheme="green"
-                  size="lg"
-                  onChange={() => updateSelectedUsersPreferences(user)}
-                ></Checkbox>
-              </li>
-            );
-          })} */}
-        </div>
-      )}
     </>
   );
 

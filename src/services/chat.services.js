@@ -17,10 +17,10 @@ import { getUserByHandle, updateUserByHandle } from "./user.services";
 //   };
 
 // ГОТОВА
-const updateUsersChats = async (chatMembers) => {
+const updateUsersChats = async (chatMembers, newChatId) => {
   for (const member of chatMembers) {
     const memberChats = await getChatsByUserHandle(member);
-    await updateUserByHandle(member, 'chats', { ...memberChats, [response.key]: chatMembers });
+    await updateUserByHandle(member, 'chats', { ...memberChats, [newChatId]: chatMembers });
   };
 };
 
@@ -36,11 +36,11 @@ const doesChatAlreadyExists = (loggedInChats, newChatMembers) => {
   return null;
 }
 
-// ГОТОВА
+
 export const createNewChat = async (loggedInUsername, chatMembers) => {
   try {
     const loggedInUserChats = await getChatsByUserHandle(loggedInUsername);
-    const allParticipants = { [loggedInUsername]: true };
+    let allParticipants = { [loggedInUsername]: true };
     chatMembers.map((member) => {
       allParticipants = { ...allParticipants, [member]: true }
     });
@@ -49,6 +49,16 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
       const existingChatId = doesChatAlreadyExists(loggedInUserChats, chatMembers);
       if (existingChatId) {
         return existingChatId;
+      } else {
+        const response = await push(ref(db, `chats`), {
+          createdBy: loggedInUsername,
+          createdOn: new Date().toLocaleDateString(),
+          participants: allParticipants,
+          messages: {}
+        });
+  
+        await updateUsersChats([...chatMembers, loggedInUsername], response.key);
+        return response.key;
       }
     } else {
       const response = await push(ref(db, `chats`), {
@@ -58,7 +68,7 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
         messages: {}
       });
 
-      await updateUsersChats([...chatMembers, loggedInUsername]);
+      await updateUsersChats([...chatMembers, loggedInUsername], response.key);
       return response.key;
     };
   } catch (error) {

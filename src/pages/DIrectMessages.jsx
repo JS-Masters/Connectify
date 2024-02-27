@@ -5,7 +5,7 @@ import ChatMessageBox from "./ChatMessageBox";
 import { Input } from "@chakra-ui/input";
 import { Form } from "react-router-dom";
 import AppContext from "../providers/AppContext";
-
+import { v4 } from "uuid";
 
 const DirectMessages = () => {
 
@@ -34,7 +34,7 @@ const DirectMessages = () => {
 
   return (
     <>
-      {dms && dms.map((message) => <ChatMessageBox message={message} />)}
+      {dms && dms.map((message) => <ChatMessageBox key={v4()} message={message} />)}
 
       <Form onSubmit={sendMessage}>
         <Input placeholder="type here..." name="newMessage" />

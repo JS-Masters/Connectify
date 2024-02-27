@@ -1,20 +1,35 @@
 import PropTypes from "prop-types";
 import { AddIcon, CloseIcon, PlusSquareIcon } from "@chakra-ui/icons";
-import { Button, Checkbox, IconButton, List, ListItem, Tag } from "@chakra-ui/react";
+import { Button, Checkbox, IconButton, List, ListItem, Tag, useToast } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { v4 } from "uuid";
 import "./SelectedUsersBar.css";
 import AppContext from "../../providers/AppContext";
+import { createNewChat } from "../../services/chat.services";
+import { useNavigate } from "react-router";
 
 const SelectedUsersBar = ({
-  allUsers = [],
+  foundUsers = [],
   selectedUsers = [],
   setSearch,
   updateSelectedUsersPreferences
 }) => {
+  const toast = useToast();
+  const navigate = useNavigate();
   const { userData } = useContext(AppContext);
   const [showBar, setShowBar] = useState(false);
   const [searchField, setSearchField] = useState("");
+
+  const showToast = (desc, status) => {
+    toast({
+      title: "Create New Chat",
+      description: desc,
+      duration: 5000,
+      isClosable: true,
+      status: status,
+      position: "top"
+    });
+  };
 
   const updateSearchField = (event) => {
     setSearchField(event.target.value);
@@ -27,10 +42,6 @@ const SelectedUsersBar = ({
       : "";
 
   const menu = () => {
-    const foundUsers = allUsers
-      .filter((handle) => handle.toLowerCase().includes(searchField.toLowerCase()) && !selectedUsers.includes(handle) && handle !== userData.handle)
-      .slice(0, 5);
-
     return (
       <div className="drop-down-menu">
         <input
@@ -71,6 +82,16 @@ const SelectedUsersBar = ({
     );
   };
 
+  const handleCreateChatClick = async () => {
+
+    if (selectedUsers.length) {
+
+      await createNewChat(userData.handle, selectedUsers).then((chatId) => navigate(`/chats/${chatId}`));
+    } else {
+      showToast('You have to choose at least one person to start a chat!', 'warning');
+    };
+  };
+
   return (
     <div className="selected-users-menu">
       <div className="select-kit-header-wrapper">
@@ -88,14 +109,14 @@ const SelectedUsersBar = ({
           onClick={() => setShowBar(!showBar)}
         />
       </div>
-
       {showBar && menu()}
+      <Button onClick={handleCreateChatClick}>Connect Now</Button>
     </div>
   );
 };
 
 SelectedUsersBar.propTypes = {
-  allUsers: PropTypes.array.isRequired,
+  foundUsers: PropTypes.array.isRequired,
   selectedUsers: PropTypes.array.isRequired,
   setSearch: PropTypes.func.isRequired,
   updateSelectedUsersPreferences: PropTypes.func.isRequired,
