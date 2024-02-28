@@ -7,11 +7,27 @@ import { Form } from "react-router-dom";
 import AppContext from "../providers/AppContext";
 import { v4 } from "uuid";
 import { DELETE_MESSAGE } from "../common/constants";
+import { useToast } from "@chakra-ui/react";
+import { UnlockIcon } from "@chakra-ui/icons";
 
 const ChatMessages = () => {
   const [messages, setMessages] = useState([]);
   const { id } = useParams();
   const { userData } = useContext(AppContext);
+  const toast = useToast();
+  // const [error, setError] = useState('');
+
+  // const showToast = (desc) => {
+  //   toast({
+  //     title: "Unexpected error: ",
+  //     description: desc,
+  //     duration: 5000,
+  //     isClosable: true,
+  //     status: "error",
+  //     position: "top",
+  //     icon: <UnlockIcon />,
+  //   });
+  // };
 
   useEffect(() => {
     const unsubscribe = getChatMessagesById((snapshot) => {
@@ -30,15 +46,28 @@ const ChatMessages = () => {
   };
 
   const handleEditMessage = async (messageId, newContent) => {
-    await editMessageInChat(id, messageId, newContent);
+    try {
+     
+      // throw new Error ('FATAL ERROR :)')
+      await editMessageInChat(id, messageId, newContent);
+    } catch(error) {
+      // showToast(error);
+      // setError(error.message);
+    }
+    
   };
 
   const handleDeleteMessage = async (messageId) => {
     await deleteMessageFromChat(id, messageId, userData.handle);
   }; 
 
+  // if(error) {
+  //   return; 
+  // };
+
   return (
     <>
+    {/* {console.log('RETURN')} */}
       {messages &&
         messages.map((message) => (
           <ChatMessageBox 

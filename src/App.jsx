@@ -20,6 +20,7 @@ import Chats from "./pages/Chats";
 import Calls from "./pages/Calls";
 import ChatMessages from "./components/ChatMessages";
 import Loading from "./hoc/Loading";
+import Teams from "./pages/Teams";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
       <Route path="chats" element={<Loading><Chats /></Loading>} />
       <Route path="calls" element={<Calls />} />
       <Route path="chats/:id" element={<ChatMessages />} />
+      <Route path="teams" element={<Teams />} />
     </Route>
   )
 );

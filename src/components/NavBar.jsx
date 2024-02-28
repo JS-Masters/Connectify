@@ -16,7 +16,8 @@ const NavBar = () => {
       <Box>
         {/* <Heading>Welcome to Connectify</Heading> */}
         <NavLink to="/chats">CHATS </NavLink>
-        <NavLink to="/calls">CALLS</NavLink>
+        <NavLink to="/calls">CALLS </NavLink>
+        <NavLink to="/teams">TEAMS</NavLink>
       </Box>
       {userData && (
         <Dropdown

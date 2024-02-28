@@ -36,8 +36,7 @@ const SelectedUsersBar = ({
     setSearch(event.target.value);
   };
 
-  const formattedSelection =
-    selectedUsers.length > 0 ? selectedUsers.join(", ") : "";
+  const formattedSelection = () =>   selectedUsers.length > 0 ? selectedUsers.join(", ") : "";
 
   const menu = () => {
     return (
@@ -102,7 +101,7 @@ const SelectedUsersBar = ({
   return (
     <div className="selected-users-menu">
       <div className="select-kit-header-wrapper">
-        <span className="formatted-selection">{formattedSelection}</span>
+        <span className="formatted-selection">{formattedSelection()}</span>
         <IconButton
           style={{
             backgroundColor: "transparent",
