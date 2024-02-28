@@ -1,4 +1,4 @@
-import { get, limitToFirst, onValue, orderByChild, push, query, ref, set } from "@firebase/database"
+import { get, limitToFirst, onValue, orderByChild, push, query, ref, set, getDatabase } from "@firebase/database"
 import { db } from "../config/firebase-config"
 // import { useToast } from "@chakra-ui/toast";
 import { getUserByHandle, updateUserByHandle } from "./user.services";
@@ -110,7 +110,7 @@ export const addMessageToChat = async (chatId, message, author) => {
       id: msgRef.key,
       author: author,
       content: message,
-      createdOn: new Date()
+      createdOn: new Date().toLocaleString()
     })
 
 
@@ -118,3 +118,22 @@ export const addMessageToChat = async (chatId, message, author) => {
     console.log(error.message);
   }
 }
+
+export const editMessageInChat = async (chatId, messageId, newContent) => {
+  const db = getDatabase(); 
+  try {
+    const messageRef = ref(db, `chats/${chatId}/messages/${messageId}`); 
+    const snapshot = await get(messageRef);
+    if (snapshot.exists()) {
+      await set(messageRef, {
+        ...snapshot.val(), 
+        content: newContent,  
+        editedOn: new Date().toLocaleString(), 
+      });
+    } else {
+      console.log('No such message!');
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};

@@ -1,9 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import {
-  addMessageToChat,
-  getChatMessagesById,
-} from "../services/chat.services";
+import { addMessageToChat, editMessageInChat, getChatMessagesById } from "../services/chat.services";
 import ChatMessageBox from "./ChatMessageBox";
 import { Input } from "@chakra-ui/input";
 import { Form } from "react-router-dom";
@@ -31,11 +28,20 @@ const ChatMessages = () => {
     event.target.elements.newMessage.value = "";
   };
 
+  const handleEditMessage = async (messageId, newContent) => {
+    await editMessageInChat(id, messageId, newContent);
+  };
+
   return (
     <>
       {messages &&
         messages.map((message) => (
-          <ChatMessageBox key={v4()} message={message} />
+          <ChatMessageBox
+          key={v4()}
+          message={message}
+          onEdit={handleEditMessage}
+          currentUserHandle={userData.handle}
+        />
         ))}
 
       <Form onSubmit={sendMessage}>
