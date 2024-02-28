@@ -33,11 +33,7 @@ const ChatMessages = () => {
     await editMessageInChat(id, messageId, newContent);
   };
 
-  // const handleDeleteMessage = async (messageId) => {
-  //   await editMessageInChat(id, messageId, 'Deleted message');
-  // }; 
-
-    const handleDeleteMessage = async (messageId) => {
+  const handleDeleteMessage = async (messageId) => {
     await deleteMessageFromChat(id, messageId, userData.handle);
   }; 
 
@@ -45,8 +41,6 @@ const ChatMessages = () => {
     <>
       {messages &&
         messages.map((message) => (
-          //if(message.)
-          //<ChatMessageBox message={}
           <ChatMessageBox 
             key={v4()}
             message={message}

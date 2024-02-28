@@ -29,13 +29,10 @@ const Chats = () => {
 
     getChatsByUserHandle(userData.handle).then((chats) => {
       if (chats) {
-        console.log(chats);
         setMyChats(chats);
       }
     });
   }, []);
-
-  console.log(myChats);
 
   useEffect(() => {
     if (users.length) {
@@ -71,7 +68,6 @@ const Chats = () => {
         {myChats ? (
           Object.keys(myChats).map((chatId) => {
             const chatName = myChats[chatId].join(", ");
-            console.log(chatName);
             return (
               <h1 key={v4()} onClick={() => navigate(`/chats/${chatId}`)}>
                 {chatName}

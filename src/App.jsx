@@ -18,7 +18,7 @@ import { auth } from "./config/firebase-config";
 import { getUserData } from "./services/user.services";
 import Chats from "./pages/Chats";
 import Calls from "./pages/Calls";
-import ChatMessages from "./pages/ChatMessages";
+import ChatMessages from "./components/ChatMessages";
 import Loading from "./hoc/Loading";
 
 const router = createBrowserRouter(

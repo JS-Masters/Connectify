@@ -1,23 +1,9 @@
 import { get, limitToFirst, onValue, orderByChild, push, query, ref, set, getDatabase, remove } from "@firebase/database"
 import { db } from "../config/firebase-config"
-// import { useToast } from "@chakra-ui/toast";
-import { getUserByHandle, updateUserByHandle } from "./user.services";
+import { updateUserByHandle } from "./user.services";
 import { DELETE_MESSAGE } from "../common/constants";
 
 
-// const toast = useToast();
-// const showToast = (desc, status) => {
-//     toast({
-//       title: "Registration",
-//       description: desc,
-//       duration: 5000,
-//       isClosable: true,
-//       status: status,
-//       position: "top",
-//     });
-//   };
-
-// ГОТОВА
 const updateUsersChats = async (chatMembers, newChatId) => {
   for (const member of chatMembers) {
     const memberChats = await getChatsByUserHandle(member);
@@ -25,18 +11,16 @@ const updateUsersChats = async (chatMembers, newChatId) => {
   };
 };
 
-// ГОТОВА
 const doesChatAlreadyExists = (loggedInChats, newChatMembers) => {
   for (const chatId in loggedInChats) {
     const chatParticipants = loggedInChats[chatId];
     const hasMatchingParticipants = newChatMembers.every(member => chatParticipants.includes(member));
     if (hasMatchingParticipants) {
       return chatId;
-    }
-  }
+    };
+  };
   return null;
-}
-
+};
 
 export const createNewChat = async (loggedInUsername, chatMembers) => {
   try {
@@ -78,7 +62,6 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
 };
 
 
-// ГОТОВА
 export const getChatsByUserHandle = async (userHandle) => {
   try {
     const chatsSnapshot = await get(ref(db, `users/${userHandle}/chats`));
@@ -146,8 +129,7 @@ export const deleteMessageFromChat = async (chatId, messageId, deletedBy) => {
       deleteMessage: DELETE_MESSAGE,
       deletedOn: new Date().toLocaleDateString(),
       deletedBy
-    })
-    // await remove(ref(db, `chats/${chatId}/messages/${messageId}`));
+    });
   } catch (error) {
     console.log(error.message);
   }
