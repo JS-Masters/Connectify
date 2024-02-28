@@ -1,5 +1,5 @@
-import { Box, Flex, Heading } from "@chakra-ui/react";
-import PropTypes from "prop-types";
+import { Box, Heading } from "@chakra-ui/react";
+// import PropTypes from "prop-types";
 import Dropdown from "./Dropdown";
 import { useContext } from "react";
 import AppContext from "../providers/AppContext";
@@ -9,15 +9,7 @@ const NavBar = () => {
   const { userData, setContext } = useContext(AppContext);
 
   return (
-    <Flex
-      as="nav"
-      align="center"
-      justify="space-around"
-      wrap="wrap"
-      padding="1.5rem"
-      bg="brand.500"
-      color="white"
-    >
+    <>
       <Box>
         <Heading>C</Heading>
       </Box>
@@ -33,7 +25,7 @@ const NavBar = () => {
           setContext={setContext}
         />
       )}
-    </Flex>
+    </>
   );
 };
 

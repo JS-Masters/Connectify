@@ -81,7 +81,10 @@ const SignUp = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form
+      onSubmit={handleSubmit}
+      style={{ width: "380px", margin: "auto", marginTop: "150px" }}
+    >
       <VStack spacing="10px">
         <Heading>Sign up</Heading>
         <Input placeholder="username" name="username" />

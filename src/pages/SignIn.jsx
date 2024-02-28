@@ -63,7 +63,10 @@ const SignIn = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form
+      onSubmit={handleSubmit}
+      style={{ width: "380px", margin: "auto", marginTop: "200px" }}
+    >
       <VStack spacing="10px">
         <Heading>Welcome to Connectify</Heading>
         <Input type="email" placeholder="Email" name="email" />
