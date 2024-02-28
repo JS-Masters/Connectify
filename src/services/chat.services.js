@@ -1,4 +1,4 @@
-import { get, limitToFirst, onValue, orderByChild, push, query, ref, set, getDatabase } from "@firebase/database"
+import { get, limitToFirst, onValue, orderByChild, push, query, ref, set, getDatabase, remove } from "@firebase/database"
 import { db } from "../config/firebase-config"
 // import { useToast } from "@chakra-ui/toast";
 import { getUserByHandle, updateUserByHandle } from "./user.services";
@@ -137,3 +137,12 @@ export const editMessageInChat = async (chatId, messageId, newContent) => {
     console.log(error.message);
   }
 };
+
+
+export const deleteMessageFromChat = async (chatId, messageId) => {
+  try {
+    await remove(ref(db, `chats/${chatId}/messages/${messageId}`));
+  } catch (error) {
+    console.log(error.message);
+  }
+}

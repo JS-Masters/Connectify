@@ -1,7 +1,7 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const ChatMessageBox = ({ message, onEdit, currentUserHandle }) => {
+const ChatMessageBox = ({ message, onEdit, onDelete, currentUserHandle }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
 
@@ -17,6 +17,10 @@ const ChatMessageBox = ({ message, onEdit, currentUserHandle }) => {
   const handleCancelClick = () => {
     setEditedContent(message.content);
     setIsEditing(false);
+  };
+
+  const handleDeleteClick = () => {
+    onDelete(message.id);
   };
 
   return (
@@ -35,8 +39,13 @@ const ChatMessageBox = ({ message, onEdit, currentUserHandle }) => {
         </div>
       ) : (
         <div>
-          <p>Content: {message.content}</p>
-          {currentUserHandle === message.author && <button onClick={handleEditClick}>Edit</button>}
+          <p>{message.content}</p>
+          {currentUserHandle === message.author && (
+            <div>
+              <button onClick={handleEditClick}>Edit</button>
+              <button onClick={handleDeleteClick}>Delete</button>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -46,6 +55,7 @@ const ChatMessageBox = ({ message, onEdit, currentUserHandle }) => {
 ChatMessageBox.propTypes = {
   message: PropTypes.object.isRequired,
   onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   currentUserHandle: PropTypes.string.isRequired,
 };
 

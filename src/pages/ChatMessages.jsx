@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { addMessageToChat, editMessageInChat, getChatMessagesById } from "../services/chat.services";
+import { addMessageToChat, editMessageInChat, getChatMessagesById, deleteMessageFromChat } from "../services/chat.services";
 import ChatMessageBox from "./ChatMessageBox";
 import { Input } from "@chakra-ui/input";
 import { Form } from "react-router-dom";
@@ -32,16 +32,25 @@ const ChatMessages = () => {
     await editMessageInChat(id, messageId, newContent);
   };
 
+  const handleDeleteMessage = async (messageId) => {
+    await editMessageInChat(id, messageId, 'Deleted message');
+  }; 
+
+   /* const handleDeleteMessage = async (messageId) => {
+    await deleteMessageFromChat(id, messageId, 'Deleted message');
+  }; */
+
   return (
     <>
       {messages &&
         messages.map((message) => (
           <ChatMessageBox
-          key={v4()}
-          message={message}
-          onEdit={handleEditMessage}
-          currentUserHandle={userData.handle}
-        />
+            key={v4()}
+            message={message}
+            onEdit={handleEditMessage}
+            onDelete={handleDeleteMessage}
+            currentUserHandle={userData.handle}
+          />
         ))}
 
       <Form onSubmit={sendMessage}>
