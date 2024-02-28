@@ -2,6 +2,7 @@ import { get, limitToFirst, onValue, orderByChild, push, query, ref, set, getDat
 import { db } from "../config/firebase-config"
 // import { useToast } from "@chakra-ui/toast";
 import { getUserByHandle, updateUserByHandle } from "./user.services";
+import { DELETE_MESSAGE } from "../common/constants";
 
 
 // const toast = useToast();
@@ -139,9 +140,14 @@ export const editMessageInChat = async (chatId, messageId, newContent) => {
 };
 
 
-export const deleteMessageFromChat = async (chatId, messageId) => {
+export const deleteMessageFromChat = async (chatId, messageId, deletedBy) => {
   try {
-    await remove(ref(db, `chats/${chatId}/messages/${messageId}`));
+    await set(ref(db, `chats/${chatId}/messages/${messageId}`), {
+      deleteMessage: DELETE_MESSAGE,
+      deletedOn: new Date().toLocaleDateString(),
+      deletedBy
+    })
+    // await remove(ref(db, `chats/${chatId}/messages/${messageId}`));
   } catch (error) {
     console.log(error.message);
   }

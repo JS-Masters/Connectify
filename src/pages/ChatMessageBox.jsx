@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Divider } from '@chakra-ui/react';
 
 const ChatMessageBox = ({ message, onEdit, onDelete, currentUserHandle }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -25,28 +26,35 @@ const ChatMessageBox = ({ message, onEdit, onDelete, currentUserHandle }) => {
 
   return (
     <div>
-      <p>Author: {message.author}</p>
-      <p>Created on: {message.createdOn}</p>
-      {message.editedOn && <p>Edited on: {message.editedOn}</p>}
-      {isEditing ? (
-        <div>
-          <textarea
-            value={editedContent}
-            onChange={(e) => setEditedContent(e.target.value)}
-          />
-          <button onClick={handleSaveClick}>Save</button>
-          <button onClick={handleCancelClick}>Cancel</button>
-        </div>
+      {'deleteMessage' in message ? (
+        <p>{message.deleteMessage} by {message.deletedBy} on {message.deletedOn}</p>
       ) : (
-        <div>
-          <p>{message.content}</p>
-          {currentUserHandle === message.author && (
+        <>
+          <p>Author: {message.author}</p>
+          <p>Created on: {message.createdOn}</p>
+          {message.editedOn && <p>Edited on: {message.editedOn}</p>}
+          {isEditing ? (
             <div>
-              <button onClick={handleEditClick}>Edit</button>
-              <button onClick={handleDeleteClick}>Delete</button>
+              <textarea
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+              />
+              <button onClick={handleSaveClick}>Save</button>
+              <button onClick={handleCancelClick}>Cancel</button>
+            </div>
+          ) : (
+            <div>
+              <p>{message.content}</p>
+              {currentUserHandle === message.author && (
+                <div>
+                  <button onClick={handleEditClick}>Edit</button>
+                  <button onClick={handleDeleteClick}>Delete</button>
+                </div>
+              )}
             </div>
           )}
-        </div>
+        <Divider/>
+        </>
       )}
     </div>
   );

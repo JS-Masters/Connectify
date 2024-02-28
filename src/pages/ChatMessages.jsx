@@ -6,6 +6,7 @@ import { Input } from "@chakra-ui/input";
 import { Form } from "react-router-dom";
 import AppContext from "../providers/AppContext";
 import { v4 } from "uuid";
+import { DELETE_MESSAGE } from "../common/constants";
 
 const ChatMessages = () => {
   const [messages, setMessages] = useState([]);
@@ -32,19 +33,21 @@ const ChatMessages = () => {
     await editMessageInChat(id, messageId, newContent);
   };
 
-  const handleDeleteMessage = async (messageId) => {
-    await editMessageInChat(id, messageId, 'Deleted message');
-  }; 
+  // const handleDeleteMessage = async (messageId) => {
+  //   await editMessageInChat(id, messageId, 'Deleted message');
+  // }; 
 
-   /* const handleDeleteMessage = async (messageId) => {
-    await deleteMessageFromChat(id, messageId, 'Deleted message');
-  }; */
+    const handleDeleteMessage = async (messageId) => {
+    await deleteMessageFromChat(id, messageId, userData.handle);
+  }; 
 
   return (
     <>
       {messages &&
         messages.map((message) => (
-          <ChatMessageBox
+          //if(message.)
+          //<ChatMessageBox message={}
+          <ChatMessageBox 
             key={v4()}
             message={message}
             onEdit={handleEditMessage}
