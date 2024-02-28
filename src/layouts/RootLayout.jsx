@@ -4,8 +4,8 @@ import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
   return (
-    <Grid templateColumns="repeat(6, 1fr)" bg="gray.50">
-      <GridItem as="main" colSpan={6} padding="0px">
+    <Grid templateColumns="repeat(6, 1fr)" bg="gray.50" h="100vh">
+      <GridItem as="main" colSpan={6}>
         <NavBar />
         <Outlet />
       </GridItem>

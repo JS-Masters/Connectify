@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { AddIcon, CloseIcon, PlusSquareIcon } from "@chakra-ui/icons";
-import { Button, Checkbox, IconButton, List, ListItem, Tag, useToast } from "@chakra-ui/react";
+import { Button, IconButton, List, Tag, useToast } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { v4 } from "uuid";
 import "./SelectedUsersBar.css";
@@ -11,8 +11,8 @@ import { useNavigate } from "react-router";
 const SelectedUsersBar = ({
   foundUsers = [],
   selectedUsers = [],
-  setSearch,
-  updateSelectedUsersPreferences
+  setSearch = () => {},
+  updateSelectedUsersPreferences = () => {},
 }) => {
   const toast = useToast();
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const SelectedUsersBar = ({
       duration: 5000,
       isClosable: true,
       status: status,
-      position: "top"
+      position: "top",
     });
   };
 
@@ -37,9 +37,7 @@ const SelectedUsersBar = ({
   };
 
   const formattedSelection =
-    selectedUsers.length > 0
-      ? selectedUsers.join(", ")
-      : "";
+    selectedUsers.length > 0 ? selectedUsers.join(", ") : "";
 
   const menu = () => {
     return (
@@ -50,46 +48,55 @@ const SelectedUsersBar = ({
           onChange={updateSearchField}
           placeholder="Connect with..."
         />
-        <div className="selected-content" style={{ color: 'black' }}>
+        <div className="selected-content" style={{ color: "black" }}>
           {selectedUsers.join(" ").length
             ? selectedUsers.map((user) => (
-              <Tag
-                key={v4()}
-                onClick={() => updateSelectedUsersPreferences(user)}
-                style={{
-                  cursor: "pointer",
-                  backgroundColor: "darkgray",
-                  color: "black",
-                  margin: "2px",
-                  color: 'black'
-                }}
-              >
-                {user}{" "}
-                <CloseIcon style={{ width: "15px", marginLeft: "3px", color: 'black' }} />
-              </Tag>
-            ))
+                <Tag
+                  key={v4()}
+                  onClick={() => updateSelectedUsersPreferences(user)}
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor: "darkgray",
+                    color: "black",
+                    margin: "2px",
+                  }}
+                >
+                  {user}{" "}
+                  <CloseIcon
+                    style={{ width: "15px", marginLeft: "3px", color: "black" }}
+                  />
+                </Tag>
+              ))
             : "No users selected yet!"}
         </div>
         <List>
-          {foundUsers.length && foundUsers.map((user) => (
-            <Button rightIcon={<AddIcon/>} key={v4()} style={{ cursor: "pointer", color: 'black' }} onClick={() => updateSelectedUsersPreferences(user)}>
-              {user}
-            </Button>
-          ))
-          }
+          {foundUsers.length &&
+            foundUsers.map((user) => (
+              <Button
+                rightIcon={<AddIcon />}
+                key={v4()}
+                style={{ cursor: "pointer", color: "black" }}
+                onClick={() => updateSelectedUsersPreferences(user)}
+              >
+                {user}
+              </Button>
+            ))}
         </List>
       </div>
     );
   };
 
   const handleCreateChatClick = async () => {
-
     if (selectedUsers.length) {
-
-      await createNewChat(userData.handle, selectedUsers).then((chatId) => navigate(`/chats/${chatId}`));
+      await createNewChat(userData.handle, selectedUsers).then((chatId) =>
+        navigate(`/chats/${chatId}`)
+      );
     } else {
-      showToast('You have to choose at least one person to start a chat!', 'warning');
-    };
+      showToast(
+        "You have to choose at least one person to start a chat!",
+        "warning"
+      );
+    }
   };
 
   return (

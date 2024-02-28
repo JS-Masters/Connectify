@@ -24,9 +24,6 @@ export const getUserData = (uid) => {
 export const getAllUsers = async () => {
   try {
     const snapshot = await get(ref(db, 'users'));
-    if(!snapshot.exists()) {
-      throw new Error ('No users in database!');
-    }
     return snapshot.val();
   } catch (error) {
     console.log(error.message);
@@ -34,18 +31,17 @@ export const getAllUsers = async () => {
   return null;
 };
 
-export const getUsersBySearchTerm = async (searchTerm) => {
-  try {
-    const allUsersSnapshot = await getAllUsers();
-    const allUsers = allUsersSnapshot.val();
-    const usersFilteredBySearchTerm = Object.keys(allUsers).filter((handle) => handle.toLowerCase().includes(searchTerm.toLowerCase()));
-console.log(usersFilteredBySearchTerm);
-    return usersFilteredBySearchTerm;
+// export const getUsersBySearchTerm = async (searchTerm) => {
+//   try {
+//     const allUsersSnapshot = await getAllUsers();
+//     const allUsers = allUsersSnapshot.val();
+//     const usersFilteredBySearchTerm = Object.keys(allUsers).filter((handle) => handle.toLowerCase().includes(searchTerm.toLowerCase()));
+//     console.log(usersFilteredBySearchTerm);
+//     return usersFilteredBySearchTerm;
 
-  } catch (error) {
-    console.log(error.message);
-  }
+//   } catch (error) {
+//     console.log(error.message);
+//   }
 
-
-}
+// }
 

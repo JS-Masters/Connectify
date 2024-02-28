@@ -56,7 +56,7 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
           participants: allParticipants,
           messages: {}
         });
-  
+
         await updateUsersChats([...chatMembers, loggedInUsername], response.key);
         return response.key;
       }
@@ -92,9 +92,9 @@ export const getChatsByUserHandle = async (userHandle) => {
 }
 
 
-export const getDirectChatMessagesById = async (listenFn, dmsId) => {
+export const getChatMessagesById = (listenFn, chatId) => {
   const q = query(
-    ref(db, `/direct-chats/${dmsId}/messages`),
+    ref(db, `chats/${chatId}/messages`),
     orderByChild('createdOn'),
     limitToFirst(50)
   )
@@ -102,15 +102,17 @@ export const getDirectChatMessagesById = async (listenFn, dmsId) => {
 
 }
 
-export const addMessageToDirectChat = async (directChatId, message, author) => {
+export const addMessageToChat = async (chatId, message, author) => {
   try {
-    const messageRef = await push(ref(db, `direct-chats/${directChatId}/messages`), {});
-    await set(ref(db, `direct-chats/${directChatId}/messages/${messageRef.key}`), {
-      id: messageRef.key,
+
+    const msgRef = await push(ref(db, `chats/${chatId}/messages`), {});
+    await set(ref(db, `chats/${chatId}/messages/${msgRef.key}`), {
+      id: msgRef.key,
       author: author,
       content: message,
-      createdOn: new Date().toLocaleDateString()
+      createdOn: new Date()
     })
+
 
   } catch (error) {
     console.log(error.message);

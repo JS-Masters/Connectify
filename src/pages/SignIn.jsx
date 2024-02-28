@@ -6,10 +6,12 @@ import { loginUser } from "../services/auth.service";
 
 import {
   Button,
+  HStack,
   Heading,
   Input,
   InputGroup,
   InputRightElement,
+  VStack,
   useToast,
 } from "@chakra-ui/react";
 import { UnlockIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
@@ -62,26 +64,30 @@ const SignIn = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Heading>Welcome to Connectify</Heading>
-      <Input type="email" placeholder="Email" name="email" />
+      <VStack spacing="10px">
+        <Heading>Welcome to Connectify</Heading>
+        <Input type="email" placeholder="Email" name="email" />
 
-      <InputGroup>
-        <Input
-          type={show ? "text" : "password"}
-          placeholder="Password"
-          name="password"
-        />
-        <InputRightElement>
-          {show ? (
-            <ViewOffIcon cursor="pointer" onClick={toggleShow} />
-          ) : (
-            <ViewIcon cursor="pointer" onClick={toggleShow} />
-          )}
-        </InputRightElement>
-      </InputGroup>
+        <InputGroup>
+          <Input
+            type={show ? "text" : "password"}
+            placeholder="Password"
+            name="password"
+          />
+          <InputRightElement>
+            {show ? (
+              <ViewOffIcon cursor="pointer" onClick={toggleShow} />
+            ) : (
+              <ViewIcon cursor="pointer" onClick={toggleShow} />
+            )}
+          </InputRightElement>
+        </InputGroup>
 
-      <Button type="submit">Sign In</Button>
-      <Button onClick={() => navigate("/sign-up")}>Register</Button>
+        <HStack spacing="20px">
+          <Button type="submit">Sign In</Button>
+          <Button onClick={() => navigate("/sign-up")}>Register</Button>
+        </HStack>
+      </VStack>
     </Form>
   );
 };

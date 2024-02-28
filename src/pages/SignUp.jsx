@@ -4,7 +4,14 @@ import AppContext from "../providers/AppContext";
 import { Form, useNavigate } from "react-router-dom";
 import { createUserHandle, getUserByHandle } from "../services/user.services";
 import { registerUser } from "../services/auth.service";
-import { Button, Heading, Input, useToast } from "@chakra-ui/react";
+import {
+  Button,
+  HStack,
+  Heading,
+  Input,
+  VStack,
+  useToast,
+} from "@chakra-ui/react";
 
 const SignUp = () => {
   const toast = useToast();
@@ -75,19 +82,23 @@ const SignUp = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Heading>Sign up</Heading>
-      <Input placeholder="username" name="username" />
-      <Input placeholder="First name" name="firstName" />
-      <Input placeholder="Last name" name="lastName" />
-      <Input type="email" placeholder="Email" name="email" />
-      <Input type="password" placeholder="Password" name="password" />
-      <Input
-        type="password"
-        placeholder="Confirm password"
-        name="confirmPassword"
-      />
-      <Button type="submit">Sign up</Button>
-      <Button onClick={() => navigate(-1)}>Cancel</Button>
+      <VStack spacing="10px">
+        <Heading>Sign up</Heading>
+        <Input placeholder="username" name="username" />
+        <Input placeholder="First name" name="firstName" />
+        <Input placeholder="Last name" name="lastName" />
+        <Input type="email" placeholder="Email" name="email" />
+        <Input type="password" placeholder="Password" name="password" />
+        <Input
+          type="password"
+          placeholder="Confirm password"
+          name="confirmPassword"
+        />
+        <HStack spacing="20px">
+          <Button type="submit">Sign up</Button>
+          <Button onClick={() => navigate(-1)}>Cancel</Button>
+        </HStack>
+      </VStack>
     </Form>
   );
 };

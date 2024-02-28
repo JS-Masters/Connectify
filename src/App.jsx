@@ -18,18 +18,18 @@ import { auth } from "./config/firebase-config";
 import { getUserData } from "./services/user.services";
 import Chats from "./pages/Chats";
 import Calls from "./pages/Calls";
-import DirectMessages from "./pages/DIrectMessages";
+import ChatMessages from "./pages/ChatMessages";
 import Loading from "./hoc/Loading";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
       <Route index element={<Home />} />
-      <Route path="/sign-in" element={<SignIn />} />
-      <Route path="/sign-up" element={<SignUp />} />
-      <Route path="/chats" element={<Loading><Chats /></Loading>} />
-      <Route path="/calls" element={<Calls />} />
-      <Route path="/chats/:id" element={<DirectMessages />} />
+      <Route path="sign-in" element={<SignIn />} />
+      <Route path="sign-up" element={<SignUp />} />
+      <Route path="chats" element={<Loading><Chats /></Loading>} />
+      <Route path="calls" element={<Calls />} />
+      <Route path="chats/:id" element={<ChatMessages />} />
     </Route>
   )
 );
