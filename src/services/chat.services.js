@@ -4,9 +4,9 @@ import { updateUserByHandle } from "./user.services";
 import { DELETE_MESSAGE } from "../common/constants";
 
 
-const updateUsersChats = async (chatMembers, newChatId) => {
+const updateUsersChats = async (chatMembers, newChatId) => { 
 
-  const chatPromises = chatMembers.map(async (member) => {
+    const chatPromises = Object.keys(chatMembers).map(async (member) => {
     const memberChats = await getChatsByUserHandle(member);
     return { member, chats: memberChats };
   });
@@ -14,16 +14,16 @@ const updateUsersChats = async (chatMembers, newChatId) => {
   const allChats = await Promise.all(chatPromises);
 
   const updatePromises = allChats.map(async ({ member, chats }) => {
-    await updateUserByHandle(member, 'chats', { ...chats, [newChatId]: chatMembers });
+    await updateUserByHandle(member, 'chats', { ...chats, [newChatId]: {participants : chatMembers} });
   });
-  
+   
   await Promise.all(updatePromises);
 };
 
 
-const doesChatAlreadyExists = (loggedInChats, newChatMembers) => {
-  for (const chatId in loggedInChats) {
-    const chatParticipants = loggedInChats[chatId];
+const doesChatAlreadyExists = (loggedInUserChats, newChatMembers) => {
+  for (const chatId in loggedInUserChats) {
+    const chatParticipants = Object.keys(loggedInUserChats[chatId].participants);
     const hasMatchingParticipants = newChatMembers.every(member => chatParticipants.includes(member));
     if (hasMatchingParticipants) {
       return chatId;
@@ -55,7 +55,7 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
       messages: {}
     });
 
-    await updateUsersChats([...chatMembers, loggedInUsername], chatRef.key);
+    await updateUsersChats(allParticipants, chatRef.key);
     return chatRef.key;
   } catch (error) {
     console.log(error.message);

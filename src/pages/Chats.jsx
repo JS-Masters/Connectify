@@ -67,7 +67,7 @@ const Chats = () => {
       <div>
         {myChats ? (
           Object.keys(myChats).map((chatId) => {
-            const chatName = myChats[chatId].join(", ");
+            const chatName = Object.keys(myChats[chatId].participants).filter((participant) => participant !== userData.handle).join(", ");
             return (
               <h1 key={v4()} onClick={() => navigate(`/chats/${chatId}`)}>
                 {chatName}
@@ -83,3 +83,5 @@ const Chats = () => {
 };
 
 export default Chats;
+
+
