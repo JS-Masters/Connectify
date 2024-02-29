@@ -34,30 +34,21 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
       const existingChatId = doesChatAlreadyExists(loggedInUserChats, chatMembers);
       if (existingChatId) {
         return existingChatId;
-      } else {
-        const response = await push(ref(db, `chats`), {
-          createdBy: loggedInUsername,
-          createdOn: new Date().toLocaleDateString(),
-          participants: allParticipants,
-          messages: {}
-        });
-
-        await updateUsersChats([...chatMembers, loggedInUsername], response.key);
-        return response.key;
-      }
-    } else {
-      const response = await push(ref(db, `chats`), {
-        createdBy: loggedInUsername,
-        createdOn: new Date().toLocaleDateString(),
-        participants: allParticipants,
-        messages: {}
-      });
-
-      await updateUsersChats([...chatMembers, loggedInUsername], response.key);
-      return response.key;
+      };
     };
+    const chatRef = await push(ref(db, 'chats'), {});
+    await set(ref(db, `chats/${chatRef.key}`), {
+      id: chatRef.key,
+      createdBy: loggedInUsername,
+      createdOn: new Date().toLocaleDateString(),
+      participants: allParticipants,
+      messages: {}
+    });
+
+    await updateUsersChats([...chatMembers, loggedInUsername], chatRef.key);
+    return chatRef.key;
   } catch (error) {
-    alert(error.message);
+    console.log(error.message);
   }
 };
 
@@ -71,7 +62,7 @@ export const getChatsByUserHandle = async (userHandle) => {
     return chatsSnapshot.val();
 
   } catch (error) {
-    alert(error.message);
+    console.log(error.message);
   }
 }
 
@@ -104,15 +95,15 @@ export const addMessageToChat = async (chatId, message, author) => {
 }
 
 export const editMessageInChat = async (chatId, messageId, newContent) => {
-  const db = getDatabase(); 
+  const db = getDatabase();
   try {
-    const messageRef = ref(db, `chats/${chatId}/messages/${messageId}`); 
+    const messageRef = ref(db, `chats/${chatId}/messages/${messageId}`);
     const snapshot = await get(messageRef);
     if (snapshot.exists()) {
       await set(messageRef, {
-        ...snapshot.val(), 
-        content: newContent,  
-        editedOn: new Date().toLocaleString(), 
+        ...snapshot.val(),
+        content: newContent,
+        editedOn: new Date().toLocaleString(),
       });
     } else {
       console.log('No such message!');
