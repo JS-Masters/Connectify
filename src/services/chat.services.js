@@ -5,11 +5,21 @@ import { DELETE_MESSAGE } from "../common/constants";
 
 
 const updateUsersChats = async (chatMembers, newChatId) => {
-  for (const member of chatMembers) {
+
+  const chatPromises = chatMembers.map(async (member) => {
     const memberChats = await getChatsByUserHandle(member);
-    await updateUserByHandle(member, 'chats', { ...memberChats, [newChatId]: chatMembers });
-  };
+    return { member, chats: memberChats };
+  });
+
+  const allChats = await Promise.all(chatPromises);
+
+  const updatePromises = allChats.map(async ({ member, chats }) => {
+    await updateUserByHandle(member, 'chats', { ...chats, [newChatId]: chatMembers });
+  });
+  
+  await Promise.all(updatePromises);
 };
+
 
 const doesChatAlreadyExists = (loggedInChats, newChatMembers) => {
   for (const chatId in loggedInChats) {
