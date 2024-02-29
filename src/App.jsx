@@ -40,6 +40,7 @@ const App = () => {
   const [context, setContext] = useState({
     user: null,
     userData: null,
+    notifications: [],
   });
 
   const [user] = useAuthState(auth);
@@ -47,18 +48,26 @@ const App = () => {
     if (user) {
       getUserData(user.uid).then((snapshot) => {
         if (snapshot.exists()) {
-          setContext({
+          setContext((prevContext) => ({
+            ...prevContext,
             user,
             userData: snapshot.val()[Object.keys(snapshot.val())[0]],
-          });
+          }));
         }
       });
     }
   }, [user]);
 
+  const setNotifications = (notifications) => {
+    setContext((prevContext) => ({
+      ...prevContext,
+      notifications,
+    }));
+  }
+
   return (
     <>
-      <AppContext.Provider value={{ ...context, setContext }}>
+      <AppContext.Provider value={{ ...context, setContext, setNotifications }}>
         <RouterProvider router={router} />
       </AppContext.Provider>
     </>

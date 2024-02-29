@@ -37,26 +37,37 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
     const loggedInUserChats = await getChatsByUserHandle(loggedInUsername);
     let allParticipants = { [loggedInUsername]: true };
     chatMembers.map((member) => {
-      allParticipants = { ...allParticipants, [member]: true }
+      allParticipants = { ...allParticipants, [member]: true };
     });
 
     if (loggedInUserChats) {
       const existingChatId = doesChatAlreadyExists(loggedInUserChats, chatMembers);
       if (existingChatId) {
         return existingChatId;
-      };
-    };
+      }
+    }
+
     const chatRef = await push(ref(db, 'chats'), {});
-    await set(ref(db, `chats/${chatRef.key}`), {
-      id: chatRef.key,
+    const newChatId = chatRef.key; 
+
+    await set(ref(db, `chats/${newChatId}`), {
+      id: newChatId,
       createdBy: loggedInUsername,
       createdOn: new Date().toLocaleDateString(),
       participants: allParticipants,
-      messages: {}
+      messages: {},
     });
 
-    await updateUsersChats(allParticipants, chatRef.key);
-    return chatRef.key;
+    await updateUsersChats(allParticipants, newChatId);
+    const notificationPromises = chatMembers.map(async (member) => {
+      if (member !== loggedInUsername) {
+        await sendNotification(member, 'New chat!', 'You have been added to a new chat.');
+      }
+    });
+
+    await Promise.all(notificationPromises);
+
+    return newChatId;
   } catch (error) {
     console.log(error.message);
   }
@@ -66,6 +77,7 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
 export const getChatsByUserHandle = async (userHandle) => {
   try {
     const chatsSnapshot = await get(ref(db, `users/${userHandle}/chats`));
+    console.log(chatsSnapshot.val());
     if (!chatsSnapshot.exists()) {
       return null;
     }
@@ -89,20 +101,30 @@ export const getChatMessagesById = (listenFn, chatId) => {
 
 export const addMessageToChat = async (chatId, message, author) => {
   try {
-
     const msgRef = await push(ref(db, `chats/${chatId}/messages`), {});
-    await set(ref(db, `chats/${chatId}/messages/${msgRef.key}`), {
-      id: msgRef.key,
+    const newMessageId = msgRef.key;
+
+    await set(ref(db, `chats/${chatId}/messages/${newMessageId}`), {
+      id: newMessageId,
       author: author,
       content: message,
-      createdOn: new Date().toLocaleString()
-    })
+      createdOn: new Date().toLocaleString(),
+    });
 
+    const chatSnapshot = await get(ref(db, `chats/${chatId}`));
+    const chatData = chatSnapshot.val();
 
+    const notificationPromises = Object.keys(chatData.participants).map(async (participant) => {
+      if (participant !== author) {
+        await sendNotification(participant, 'New message!', `You have new message from ${author}.`);
+      }
+    });
+
+    await Promise.all(notificationPromises);
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
 export const editMessageInChat = async (chatId, messageId, newContent) => {
   const db = getDatabase();
@@ -131,6 +153,49 @@ export const deleteMessageFromChat = async (chatId, messageId, deletedBy) => {
       deletedOn: new Date().toLocaleDateString(),
       deletedBy
     });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+export const sendNotification = async (userHandle, title, body) => {
+  try {
+    const notificationRef = await push(ref(db, `notifications/${userHandle}`), {});
+    const notificationId = notificationRef.key;
+
+    await set(ref(db, `notifications/${userHandle}/${notificationId}`), {
+      id: notificationId,
+      title,
+      body,
+      createdOn: new Date().toLocaleString(),
+      read: false,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+export const markNotificationAsRead = async (userHandle, notificationId) => {
+  try {
+    await set(ref(db, `notifications/${userHandle}/${notificationId}/read`), true);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+
+export const deleteNotification = async (userHandle, notificationId) => {
+  try {
+    await remove(ref(db, `notifications/${userHandle}/${notificationId}`));
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+export const getNotificationsByUserHandle = async (userHandle) => {
+  try {
+    const notificationsSnapshot = await get(ref(db, `notifications/${userHandle}`));
+    return notificationsSnapshot.val() || [];
   } catch (error) {
     console.log(error.message);
   }
