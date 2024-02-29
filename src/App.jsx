@@ -21,6 +21,7 @@ import Calls from "./pages/Calls";
 import ChatMessages from "./components/ChatMessages";
 import Loading from "./hoc/Loading";
 import Teams from "./pages/Teams";
+// import { getChatsByUserHandle, listenToLoggedUserChats } from "./services/chat.services";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -44,6 +45,8 @@ const App = () => {
   });
 
   const [user] = useAuthState(auth);
+  // const [loggedInUserChatsIds, setLoggedInUserChatsIds] = useState([]);
+
   useEffect(() => {
     if (user) {
       getUserData(user.uid).then((snapshot) => {
@@ -64,6 +67,27 @@ const App = () => {
       notifications,
     }));
   }
+
+  // useEffect(() => {
+  //   getChatsByUserHandle(userData.handle)
+  //   .then((chatsData) => setLoggedInUserChatsIds(Object.keys(chatsData)));
+  // },[]);
+
+  // useEffect(() => {
+  //   loggedInUserChatsIds.map((chatId) => {
+  //     listenToLoggedUserChats((snapshot) => {
+  //       const chatsData = snapshot.exists() ? snapshot.val() : {};
+  //       if(loggedInUserChatsIds.length) {
+          
+  //       }
+  //     }, userData.handle, chatId);
+  //   })
+    
+
+
+  // });
+
+
 
   return (
     <>

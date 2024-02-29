@@ -13,7 +13,6 @@ const CreateTeamPopUp = () => {
   const [users, setUsers] = useState([]);
   const [foundUsers, setFoundUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [search, setSearch] = useState('');
   const [searchField, setSearchField] = useState('');
   const [channelFromInput, setChannelFromInput] = useState('');
   const [channels, setChannels] = useState([]);
@@ -39,17 +38,12 @@ const CreateTeamPopUp = () => {
     if (users.length) {
       const usersFiltered = users.filter(
         (u) =>
-          u.toLowerCase().includes(search.toLowerCase()) &&
+          u.toLowerCase().includes(searchField.toLowerCase()) &&
           u !== userData.handle
       );
       setFoundUsers(usersFiltered);
     }
-  }, [search, users]);
-
-  const updateSearchField = (event) => {
-    setSearchField(event.target.value);
-    setSearch(event.target.value);
-  };
+  }, [searchField, users]);
 
   const updateTeamNameInputField = (event) => {
     setTeamName(event.target.value);
@@ -106,7 +100,7 @@ const CreateTeamPopUp = () => {
     if(!selectedUsers.length) {
       showToast('Choose people to connect with in your team', 'info');
     };
-    if(!channels) {
+    if(!channels.length) {
       showToast('Create at least one channel', 'info');
     };
     try {
@@ -137,7 +131,7 @@ const CreateTeamPopUp = () => {
               <Input
                 type="search"
                 value={searchField}
-                onChange={updateSearchField}
+                onChange={(event) => setSearchField(event.target.value)}
                 placeholder="Connect with..."
               />
               <div className="selected-content" style={{ color: "black" }}>

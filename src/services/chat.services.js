@@ -156,7 +156,17 @@ export const deleteMessageFromChat = async (chatId, messageId, deletedBy) => {
   } catch (error) {
     console.log(error.message);
   }
-}
+};
+
+// export const listenToLoggedUserChats = (listenFn, userHandle, chatId) => {
+//   const q = query(
+//     ref(db, `${userHandle}/chats/${chatId}/messages`),
+//     orderByChild('createdOn'),
+//     limitToFirst(50)
+//   )
+//   return onValue(q, listenFn);
+
+// }
 
 export const sendNotification = async (userHandle, title, body) => {
   try {
