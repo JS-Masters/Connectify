@@ -5,6 +5,7 @@ import AppContext from "../providers/AppContext";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import { getAllUsers } from "../services/user.services";
 import { v4 } from "uuid";
+import { addChannelToTeam, createTeam } from "../services/team.services";
 
 const CreateTeamPopUp = () => {
 
@@ -13,15 +14,15 @@ const CreateTeamPopUp = () => {
   const [foundUsers, setFoundUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [search, setSearch] = useState('');
-  const [searchField, setSearchField] = useState("");
+  const [searchField, setSearchField] = useState('');
   const [channelFromInput, setChannelFromInput] = useState('');
   const [channels, setChannels] = useState([]);
-
+  const [teamName, setTeamName] = useState('');
   const toast = useToast();
 
   const showToast = (desc, status) => {
     toast({
-      title: "Add channel",
+      title: "Create team",
       description: desc,
       duration: 5000,
       isClosable: true,
@@ -32,11 +33,6 @@ const CreateTeamPopUp = () => {
 
   useEffect(() => {
     getAllUsers().then((users) => setUsers(Object.keys(users)));
-    // getChatsByUserHandle(userData.handle).then((chats) => {
-    //   if (chats) {
-    //     setMyChats(chats);
-    //   }
-    // });
   }, []);
 
   useEffect(() => {
@@ -55,9 +51,13 @@ const CreateTeamPopUp = () => {
     setSearch(event.target.value);
   };
 
+  const updateTeamNameInputField = (event) => {
+    setTeamName(event.target.value);
+  };
+
   const updateChannelInputField = (event) => {
     setChannelFromInput(event.target.value);
-  }
+  };
 
   const formattedSelection = () => selectedUsers.length > 0 ? selectedUsers.join(", ") : "";
 
@@ -88,16 +88,37 @@ const CreateTeamPopUp = () => {
   };
 
   const handlePopUpClose = (close) => {
-     close();
+    close();
     setChannels([]);
     setChannelFromInput('');
+    setTeamName('');
+    setSearchField('');
     setSelectedUsers([]);
   };
 
-  const handleCreateTeamClick = () => {
+  const handleCreateTeamClick = async () => {
+    if(!teamName) {
+      showToast('Choose a name for your team', 'info');
+    };
+    if(teamName.length < 3 || teamName.length > 40) {
+      showToast('Team name should be between 3 and 40 characters', 'info');
+    };
+    if(!selectedUsers.length) {
+      showToast('Choose people to connect with in your team', 'info');
+    };
+    if(!channels) {
+      showToast('Create at least one channel', 'info');
+    };
+    try {
+      const newTeamId = await createTeam(teamName, userData.handle, selectedUsers);
 
-
-  }
+      await Promise.all(channels.map(async (channelTitle) => {
+        await addChannelToTeam(newTeamId, channelTitle, userData.handle);
+    }));
+    } catch (error) {
+      showToast('Error occured while creating a post', 'error');
+    }
+  };
 
   return (
     <Popup trigger=
@@ -106,13 +127,13 @@ const CreateTeamPopUp = () => {
       {
         close => (
           <div className='modal'>
-            <Button style={{float: "right", margin:"15px"}} onClick=
-                {() => handlePopUpClose(close)}>
-                X
-              </Button>
-            <div style={{ width: '500px', height: '500px', border: '2px solid black', padding: "30px"}} className='content'>
+            <Button style={{ float: "right", margin: "15px" }} onClick=
+              {() => handlePopUpClose(close)}>
+              X
+            </Button>
+            <div style={{ width: '500px', height: '500px', border: '2px solid black', padding: "30px" }} className='content'>
               <span className="formatted-selection">{formattedSelection()}</span>
-              
+
               <Input
                 type="search"
                 value={searchField}
@@ -153,11 +174,19 @@ const CreateTeamPopUp = () => {
                     </Button>
                   ))}
               </List>
+              <br />
+              <Input
+                type="text"
+                value={teamName}
+                onChange={updateTeamNameInputField}
+                placeholder="Team name..."
+              />
+              <br />
               <Input
                 type="text"
                 value={channelFromInput}
                 onChange={updateChannelInputField}
-                placeholder="Creacte a channel..."
+                placeholder="Create a channel..."
                 style={{ width: "275px" }}
               /><Button onClick={() => addChannelToSelected()}>+</Button>
               <br />
@@ -169,12 +198,10 @@ const CreateTeamPopUp = () => {
                   </div>
                 )
               })
-            ):(' ')}
+              ) : (' ')}
               <br />
               <Button onClick={handleCreateTeamClick}>Create Team</Button>
             </div>
-           
-
           </div>
         )
       }
