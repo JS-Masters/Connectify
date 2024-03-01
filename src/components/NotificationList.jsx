@@ -7,7 +7,7 @@ const NotificationList = ({ userHandle }) => {
 
   useEffect(() => {
     getNotificationsByUserHandle(userHandle).then((notifications) => {
-      console.log(notifications);
+
       setNotifications(notifications);
     });
   }, [userHandle]);
@@ -55,8 +55,9 @@ const NotificationList = ({ userHandle }) => {
   );
 };
 
-NotificationList.propTypes = {
-  userHandle: PropTypes.string.isRequired,
-};
 
 export default NotificationList;
+
+// NotificationList.propTypes = {
+//   userHandle: PropTypes.string.isRequired,
+// };

@@ -21,6 +21,10 @@ import Calls from "./pages/Calls";
 import ChatMessages from "./components/ChatMessages";
 import Loading from "./hoc/Loading";
 import Teams from "./pages/Teams";
+import { getIncomingCalls } from "./services/call.services";
+import { Button } from "@chakra-ui/react";
+import { addUserToCall } from "./services/dyte.services";
+import SingleCallRoom from "./components/SingleCallRoom";
 // import { getChatsByUserHandle, listenToLoggedUserChats } from "./services/chat.services";
 
 const router = createBrowserRouter(
@@ -31,6 +35,7 @@ const router = createBrowserRouter(
       <Route path="sign-up" element={<SignUp />} />
       <Route path="chats" element={<Loading><Chats /></Loading>} />
       <Route path="calls" element={<Calls />} />
+      <Route path="calls/:id" element={<Calls />} />
       <Route path="chats/:id" element={<ChatMessages />} />
       <Route path="teams" element={<Teams />} />
     </Route>
@@ -45,6 +50,7 @@ const App = () => {
   });
 
   const [user] = useAuthState(auth);
+
   // const [loggedInUserChatsIds, setLoggedInUserChatsIds] = useState([]);
 
   useEffect(() => {
@@ -60,6 +66,8 @@ const App = () => {
       });
     }
   }, [user]);
+
+
 
   const setNotifications = (notifications) => {
     setContext((prevContext) => ({
@@ -78,11 +86,11 @@ const App = () => {
   //     listenToLoggedUserChats((snapshot) => {
   //       const chatsData = snapshot.exists() ? snapshot.val() : {};
   //       if(loggedInUserChatsIds.length) {
-          
+
   //       }
   //     }, userData.handle, chatId);
   //   })
-    
+
 
 
   // });
@@ -94,6 +102,7 @@ const App = () => {
       <AppContext.Provider value={{ ...context, setContext, setNotifications }}>
         <RouterProvider router={router} />
       </AppContext.Provider>
+    
     </>
   );
 };
