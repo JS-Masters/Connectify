@@ -12,6 +12,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
+import UploadForm from "./UploadForm";
 
 const Dropdown = ({
   username = null,
@@ -76,6 +77,7 @@ const Dropdown = ({
           top="70px"
         >
           <ListItem cursor="pointer">Profile</ListItem>
+          <UploadForm />
           <ListItem cursor="pointer" onClick={signOut}>
             Sign out
           </ListItem>
