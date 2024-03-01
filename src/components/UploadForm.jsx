@@ -3,7 +3,7 @@ import Popup from "reactjs-popup";
 import { useContext, useState } from "react";
 import AppContext from "../providers/AppContext";
 import { Form } from "react-router-dom";
-import { Button, Heading, Input, Text, useToast } from "@chakra-ui/react";
+import { Button, Heading, Img, Input, Text, useToast } from "@chakra-ui/react";
 import { storage } from "../config/firebase-config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateUserByHandle } from "../services/user.services";
@@ -70,7 +70,14 @@ const UploadForm = () => {
   return (
     <Popup trigger={<Text cursor="pointer">Change avatar</Text>} modal nested>
       {(close) => (
-        <Form style={{ border: "2px dashed green" }} onSubmit={handleSubmit}>
+        <Form
+          style={{
+            border: "2px dashed green",
+            padding: "15px",
+            textAlign: "center",
+          }}
+          onSubmit={handleSubmit}
+        >
           <CloseIcon
             cursor="pointer"
             float="right"
@@ -79,7 +86,7 @@ const UploadForm = () => {
           />
           {selectedFileUrl ? (
             <>
-              <img src={selectedFileUrl} alt="Selected" />
+              <Img h="500px" w="400px" src={selectedFileUrl} alt="Selected" />
               <Button type="submit">Upload</Button>
             </>
           ) : (
