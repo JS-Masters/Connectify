@@ -77,7 +77,6 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
 export const getChatsByUserHandle = async (userHandle) => {
   try {
     const chatsSnapshot = await get(ref(db, `users/${userHandle}/chats`));
-    console.log(chatsSnapshot.val());
     if (!chatsSnapshot.exists()) {
       return null;
     }
