@@ -9,7 +9,6 @@ import AppContext from "./providers/AppContext";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-
 import RootLayout from "./layouts/RootLayout";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
@@ -19,12 +18,12 @@ import { getUserData } from "./services/user.services";
 import Chats from "./pages/Chats";
 import Calls from "./pages/Calls";
 import ChatMessages from "./components/ChatMessages";
-import Loading from "./hoc/Loading";
+import Authenticated from "./hoc/Authenticated";
 import Teams from "./pages/Teams";
 import { getIncomingCalls } from "./services/call.services";
-import { Button } from "@chakra-ui/react";
 import { addUserToCall } from "./services/dyte.services";
 import SingleCallRoom from "./components/SingleCallRoom";
+
 // import { getChatsByUserHandle, listenToLoggedUserChats } from "./services/chat.services";
 
 const router = createBrowserRouter(
@@ -33,11 +32,11 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="sign-in" element={<SignIn />} />
       <Route path="sign-up" element={<SignUp />} />
-      <Route path="chats" element={<Loading><Chats /></Loading>} />
-      <Route path="calls" element={<Calls />} />
-      <Route path="calls/:id" element={<Calls />} />
-      <Route path="chats/:id" element={<ChatMessages />} />
-      <Route path="teams" element={<Teams />} />
+      <Route path="chats" element={<Authenticated><Chats /></Authenticated>}/>
+      <Route path="calls" element={<Authenticated><Calls /></Authenticated>} />
+      <Route path="calls/:id" element={<Authenticated><Calls /></Authenticated>} />
+      <Route path="chats/:id" element={<Authenticated><ChatMessages /></Authenticated>} />
+      <Route path="teams" element={<Authenticated><Teams /></Authenticated>} />
     </Route>
   )
 );
@@ -53,6 +52,8 @@ const App = () => {
 
   // const [loggedInUserChatsIds, setLoggedInUserChatsIds] = useState([]);
 
+
+
   useEffect(() => {
     if (user) {
       getUserData(user.uid).then((snapshot) => {
@@ -67,14 +68,12 @@ const App = () => {
     }
   }, [user]);
 
-
-
   const setNotifications = (notifications) => {
     setContext((prevContext) => ({
       ...prevContext,
       notifications,
     }));
-  }
+  };
 
   // useEffect(() => {
   //   getChatsByUserHandle(userData.handle)
@@ -91,18 +90,13 @@ const App = () => {
   //     }, userData.handle, chatId);
   //   })
 
-
-
   // });
-
-
 
   return (
     <>
       <AppContext.Provider value={{ ...context, setContext, setNotifications }}>
         <RouterProvider router={router} />
       </AppContext.Provider>
-    
     </>
   );
 };
