@@ -9,7 +9,7 @@ const Authenticated = ({ children }) => {
 
   if (user === null) {
     return (
-      <Navigate to="/" path={location.pathname}>
+      <Navigate to="/welcome" path={location.pathname}>
         {" "}
       </Navigate>
     );
