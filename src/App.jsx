@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import AppContext from "./providers/AppContext";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import RootLayout from "./layouts/RootLayout";
@@ -25,11 +25,7 @@ import { addUserToCall } from "./services/dyte.services";
 import SingleCallRoom from "./components/SingleCallRoom";
 import { changeIncomingCallStatus, listenForIncomingCalls } from "./services/call.services";
 import { Button } from "@chakra-ui/react";
-// import { getIncomingCalls } from "./services/call.services";
-// import { addUserToCall } from "./services/dyte.services";
-// import SingleCallRoom from "./components/SingleCallRoom";
-
-// import { getChatsByUserHandle, listenToLoggedUserChats } from "./services/chat.services";
+import { v4 } from "uuid";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -58,7 +54,6 @@ const App = () => {
   const [userData, setUserData] = useState(null);
   const [incomingToken, setIncomingToken] = useState('');
   const [incomingCall, setIncomingCall] = useState([]);
- 
 
   useEffect(() => {
     if (user) {
@@ -76,27 +71,25 @@ const App = () => {
   }, [user]);
 
   useEffect(() => {
-    if(user) {
+    if (user) {
       const unsubscribe = listenForIncomingCalls((snapshot) => {
         if (snapshot.exists()) {
           const incomingCalls = snapshot.val();
           const callsWaiting = Object.values(incomingCalls).filter((call) => call.status === 'waiting');
-          if(callsWaiting.length) {
+          if (callsWaiting.length) {
             callsWaiting.map((call) => {
-              setIncomingCall([...incomingCall, {callId: call.id, dyteRoomId : call.dyteRoomId, caller: call.caller}]);
+              setIncomingCall([...incomingCall, { callId: call.id, dyteRoomId: call.dyteRoomId, caller: call.caller }]);
             })
           } else {
             setIncomingCall([]); // това виж дали да е тук или като else на if (snapshot.exists()) ??!?!?!
           }
-        
           // логиката тук е само ако има 1 обект с обаждане в incomingCalls във Firebase
         };
       }, user.uid);
-  
+
       return () => unsubscribe();
     };
   }, [user]);
-
 
   const setNotifications = (notifications) => {
     setContext((prevContext) => ({
@@ -116,14 +109,13 @@ const App = () => {
         <RouterProvider router={router} />
       </AppContext.Provider>
       {Boolean(incomingCall.length) && incomingCall.map((call) => {
-        return <Button onClick={() => joinCall(call.dyteRoomId, call.callId)}>{call.caller} is Calling</Button>
+        return <Button key={v4()} onClick={() => joinCall(call.dyteRoomId, call.callId)}>{call.caller} is Calling</Button>
       })}
       {incomingToken &&
         <div style={{ height: '50vh', width: 'auto' }} >
-          <SingleCallRoom token={incomingToken} />
+          <SingleCallRoom token={incomingToken} setToken={setIncomingToken} />
         </div >}
     </>
   );
 };
-
 export default App;

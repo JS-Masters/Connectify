@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import MyMeeting from "./MyMeeting";
 
 
-const SingleCallRoom = ({ token }) => {
+const SingleCallRoom = ({ token, setToken }) => {
 
   const [client, initClient] = useDyteClient();
 
@@ -25,7 +25,7 @@ const SingleCallRoom = ({ token }) => {
       <div className="flex-1 flex flex-col bg-gray-700">
         {client ?
           <DyteProvider value={client}>
-            <MyMeeting />
+            <MyMeeting setToken={setToken} />
           </DyteProvider>
           : <div style={{ height: '30vh', width: 'auto' }}> </div>
         }
