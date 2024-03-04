@@ -1,6 +1,6 @@
 import { limitToFirst, onValue, orderByChild, push, query, ref, set } from "firebase/database"
 import { db } from "../config/firebase-config"
-import { updateUserByHandle } from "./user.services";
+import { getUserByHandle, updateUserByHandle } from "./user.services";
 
 // const addCallToUserThatCalled = async (userHandle, newCallId) => {
 //   await updateUserByHandle(userHandle, 'calls', {
@@ -10,9 +10,9 @@ import { updateUserByHandle } from "./user.services";
 //     }
 //   });
 // };
-export const getIncomingCalls = (listenFn, userHandle) => {
+export const getIncomingCalls = (listenFn, loggedUserUid) => {
   const q = query(
-    ref(db, `users/${userHandle}/incomingCalls`),
+    ref(db, `incomingCalls/${loggedUserUid}`),
     orderByChild('createdOn'),
     limitToFirst(50)
   )
@@ -20,15 +20,35 @@ export const getIncomingCalls = (listenFn, userHandle) => {
 
 };
 
-export const addCallToUserThatRecieve = async (userHandle, caller, newCallDyteId) => {
-  await updateUserByHandle(userHandle, 'incomingCalls', {
-    [newCallDyteId]: {
-      incoming: true,
+export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteId) => {
+  // const incomingCallRef = await push(ref(db, `incomingCalls/${userHandle}`), {});
+  // const incomingCallId = incomingCallRef.key;
+  try {
+    const userSnapshot = await getUserByHandle(userToCallHandle);
+    if (!userSnapshot.exists()) {
+      throw new Error('There was a problem getting data from database')
+    }
+    const userVal = userSnapshot.val();
+    const userId = userVal.uid;
+
+    await set(ref(db, `incomingCalls/${userId}`), {
+      dyteRoomId: newCallDyteId,
       caller: caller,
       createdOn: new Date().toLocaleString()
-    }
-  });
-  return newCallDyteId;
+    });
+    return newCallDyteId;
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  // await updateUserByHandle(userHandle, 'incomingCalls', {
+  //   [newCallDyteId]: {
+  //     // incoming: true,
+  //     caller: caller,
+  //     createdOn: new Date().toLocaleString()
+  //   }
+  // });
+  // return newCallDyteId;
 };
 
 

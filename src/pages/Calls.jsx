@@ -1,11 +1,12 @@
 import { Button, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { getAllUsers } from "../services/user.services";
-import { addCallToUserThatRecieve, createCall, getIncomingCalls } from "../services/call.services";
+import { addIncomingCallToDb, createCall, getIncomingCalls } from "../services/call.services";
 import { useContext } from "react";
 import AppContext from "../providers/AppContext";
 import { addUserToCall, createDyteCall } from "../services/dyte.services";
 import SingleCallRoom from "../components/SingleCallRoom";
+import { v4 } from "uuid";
 
 
 const Calls = () => {
@@ -26,13 +27,13 @@ const Calls = () => {
     const unsubscribe = getIncomingCalls((snapshot) => {
       if (snapshot.exists()) {
         const incomingCall = snapshot.val();
-        const dyteRoomId = Object.keys(incomingCall)[0];
-        const caller = incomingCall[dyteRoomId].caller;
-
+        const dyteRoomId = incomingCall.dyteRoomId;
+        const caller = incomingCall.caller;
+        // логиката тук е само ако има 1 обект с обаждане в incomingCalls във Firebase
         setIncomingCall([dyteRoomId, caller]);
       };
 
-    }, userData.handle);
+    }, userData.uid);
 
     return () => unsubscribe();
   }, []);
@@ -46,10 +47,10 @@ const Calls = () => {
   };
 
 
-  const startCall = async (userToCall) => {
-    await createCall(userData.handle, userToCall)
+  const startCall = async (userToCallHandle) => {
+    await createCall(userData.handle, userToCallHandle)
       .then((newCallId) => createDyteCall(newCallId)) // roomID ???
-      .then((roomID) => addCallToUserThatRecieve(userToCall, userData.handle, roomID))
+      .then((roomID) => addIncomingCallToDb(userToCallHandle, userData.handle, roomID))
       .then((roomID) => addUserToCall((data) => setToken(data), userData, roomID))
 
   };
@@ -57,7 +58,7 @@ const Calls = () => {
   return (
     <>
       <Input onChange={handleInputChange} />
-      {usersBySearchTerm && usersBySearchTerm.map((user) => <Button onClick={() => startCall(user)}>CALL {user}</Button>)}
+      {usersBySearchTerm && usersBySearchTerm.map((user) => <Button key={v4()}onClick={() => startCall(user)}>CALL {user}</Button>)}
       {token &&
         <div style={{ height: '50vh', width: 'auto' }} >
           <SingleCallRoom token={token} />

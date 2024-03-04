@@ -14,6 +14,8 @@ const MyMeeting = ({callId}) => {
   useEffect(() => {
     meeting.self.on('roomLeft', () => {
         alert("You've left the room")
+        // нулиране на стейта че вече не се звъни и да го няма бутона за вдигане !!!
+        // променяме статуса, че вече не е In a meeting
     });
   }, [meeting]);
 
