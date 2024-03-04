@@ -1,4 +1,4 @@
-import { limitToFirst, onValue, orderByChild, push, query, ref, set } from "firebase/database"
+import { limitToFirst, onValue, orderByChild, push, query, ref, set, update } from "firebase/database"
 import { db } from "../config/firebase-config"
 import { getUserByHandle, updateUserByHandle } from "./user.services";
 
@@ -10,7 +10,7 @@ import { getUserByHandle, updateUserByHandle } from "./user.services";
 //     }
 //   });
 // };
-export const getIncomingCalls = (listenFn, loggedUserUid) => {
+export const listenForIncomingCalls = (listenFn, loggedUserUid) => {
   const q = query(
     ref(db, `incomingCalls/${loggedUserUid}`),
     orderByChild('createdOn'),
@@ -30,25 +30,49 @@ export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteI
     }
     const userVal = userSnapshot.val();
     const userId = userVal.uid;
+    // console.log(userId);
 
-    await set(ref(db, `incomingCalls/${userId}`), {
+    const callRef = await push(ref(db, `incomingCalls/${userId}`), {});
+    const callId = callRef.key;
+    
+    // Use set to create or update the document (node)
+    await set(ref(db, `incomingCalls/${userId}/${callId}`), {
+      id: callId,
       dyteRoomId: newCallDyteId,
       caller: caller,
-      createdOn: new Date().toLocaleString()
+      createdOn: new Date().toLocaleString(),
+      status: 'waiting'
     });
+
     return newCallDyteId;
+
   } catch (error) {
     console.log(error.message);
-  }
+  };
+};
 
-  // await updateUserByHandle(userHandle, 'incomingCalls', {
-  //   [newCallDyteId]: {
-  //     // incoming: true,
-  //     caller: caller,
-  //     createdOn: new Date().toLocaleString()
-  //   }
-  // });
-  // return newCallDyteId;
+export const getIncomingCallsByUid = async (uid) => {
+  try {
+    const incomingCallsSnapshot = await get(ref(db, `incomingCalls/${uid}`));
+    if (!incomingCallsSnapshot.exists()) {
+      throw new Error('User does not have incoming calls');
+    };
+    const incomingCallsVal = incomingCallsSnapshot.val();
+    return Object.values(incomingCallsVal);
+  } catch (error) {
+    console.log(error.message);
+  };
+};
+
+
+export const changeIncomingCallStatus = async (callId, uid) => {
+  // const currentCallRoom = await getIncomingCallsByUid(uid).filter((call) => call.callId === callId);
+  try{
+    const callRef = ref(db, `incomingCalls/${uid}/${callId}`);
+    await update(callRef, { status: 'attended' });
+  } catch(error) {
+    console.log(error.message);
+  };
 };
 
 
@@ -63,9 +87,6 @@ export const createCall = async (madeCall, recievedCall) => {
       recievedCall: recievedCall,
       createdOn: new Date().toLocaleString(),
     });
-
-    // await addCallToUserThatCalled(madeCall, newCallId);
-    // await addCallToUserThatRecieved(recievedCall, newCallId);
 
     return newCallId;
   } catch (error) {

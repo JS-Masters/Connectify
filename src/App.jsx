@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import AppContext from "./providers/AppContext";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import RootLayout from "./layouts/RootLayout";
@@ -21,6 +21,10 @@ import ChatMessages from "./components/ChatMessages";
 import Authenticated from "./hoc/Authenticated";
 import Teams from "./pages/Teams";
 import LandingPage from "./pages/LandingPage";
+import { addUserToCall } from "./services/dyte.services";
+import SingleCallRoom from "./components/SingleCallRoom";
+import { changeIncomingCallStatus, listenForIncomingCalls } from "./services/call.services";
+import { Button } from "@chakra-ui/react";
 // import { getIncomingCalls } from "./services/call.services";
 // import { addUserToCall } from "./services/dyte.services";
 // import SingleCallRoom from "./components/SingleCallRoom";
@@ -34,7 +38,7 @@ const router = createBrowserRouter(
       <Route path="sign-in" element={<SignIn />} />
       <Route path="sign-up" element={<SignUp />} />
       <Route index element={<Authenticated><Home /></Authenticated>} />
-      <Route path="chats" element={<Authenticated><Chats /></Authenticated>}/>
+      <Route path="chats" element={<Authenticated><Chats /></Authenticated>} />
       <Route path="calls" element={<Authenticated><Calls /></Authenticated>} />
       <Route path="calls/:id" element={<Authenticated><Calls /></Authenticated>} />
       <Route path="chats/:id" element={<Authenticated><ChatMessages /></Authenticated>} />
@@ -51,8 +55,10 @@ const App = () => {
   });
 
   const [user] = useAuthState(auth);
-
-  // const [loggedInUserChatsIds, setLoggedInUserChatsIds] = useState([]);
+  const [userData, setUserData] = useState(null);
+  const [incomingToken, setIncomingToken] = useState('');
+  const [incomingCall, setIncomingCall] = useState([]);
+ 
 
   useEffect(() => {
     if (user) {
@@ -63,10 +69,34 @@ const App = () => {
             user,
             userData: snapshot.val()[Object.keys(snapshot.val())[0]],
           }));
+          setUserData(snapshot.val()[Object.keys(snapshot.val())[0]]);
         }
       });
     }
   }, [user]);
+
+  useEffect(() => {
+    if(user) {
+      const unsubscribe = listenForIncomingCalls((snapshot) => {
+        if (snapshot.exists()) {
+          const incomingCalls = snapshot.val();
+          const callsWaiting = Object.values(incomingCalls).filter((call) => call.status === 'waiting');
+          if(callsWaiting.length) {
+            callsWaiting.map((call) => {
+              setIncomingCall([...incomingCall, {callId: call.id, dyteRoomId : call.dyteRoomId, caller: call.caller}]);
+            })
+          } else {
+            setIncomingCall([]); // това виж дали да е тук или като else на if (snapshot.exists()) ??!?!?!
+          }
+        
+          // логиката тук е само ако има 1 обект с обаждане в incomingCalls във Firebase
+        };
+      }, user.uid);
+  
+      return () => unsubscribe();
+    };
+  }, [user]);
+
 
   const setNotifications = (notifications) => {
     setContext((prevContext) => ({
@@ -75,28 +105,23 @@ const App = () => {
     }));
   };
 
-  // useEffect(() => {
-  //   getChatsByUserHandle(userData.handle)
-  //   .then((chatsData) => setLoggedInUserChatsIds(Object.keys(chatsData)));
-  // },[]);
-
-  // useEffect(() => {
-  //   loggedInUserChatsIds.map((chatId) => {
-  //     listenToLoggedUserChats((snapshot) => {
-  //       const chatsData = snapshot.exists() ? snapshot.val() : {};
-  //       if(loggedInUserChatsIds.length) {
-
-  //       }
-  //     }, userData.handle, chatId);
-  //   })
-
-  // });
+  const joinCall = (dyteRoomId, callId) => {
+    addUserToCall((data) => setIncomingToken(data), userData, dyteRoomId);
+    changeIncomingCallStatus(callId, user.uid);
+  };
 
   return (
     <>
       <AppContext.Provider value={{ ...context, setContext, setNotifications }}>
         <RouterProvider router={router} />
       </AppContext.Provider>
+      {Boolean(incomingCall.length) && incomingCall.map((call) => {
+        return <Button onClick={() => joinCall(call.dyteRoomId, call.callId)}>{call.caller} is Calling</Button>
+      })}
+      {incomingToken &&
+        <div style={{ height: '50vh', width: 'auto' }} >
+          <SingleCallRoom token={incomingToken} />
+        </div >}
     </>
   );
 };

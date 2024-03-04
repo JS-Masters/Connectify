@@ -1,7 +1,7 @@
 import { Button, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { getAllUsers } from "../services/user.services";
-import { addIncomingCallToDb, createCall, getIncomingCalls } from "../services/call.services";
+import { addIncomingCallToDb, createCall, listenForIncomingCalls } from "../services/call.services";
 import { useContext } from "react";
 import AppContext from "../providers/AppContext";
 import { addUserToCall, createDyteCall } from "../services/dyte.services";
@@ -17,27 +17,13 @@ const Calls = () => {
   const [usersBySearchTerm, setUsersBySearchTerm] = useState([]);
   const [token, setToken] = useState('');
 
-  const [incomingCall, setIncomingCall] = useState([]);
-  const [incomingToken, setIncomingToken] = useState('');
+
+
 
   useEffect(() => {
     getAllUsers().then((users) => setUsers(Object.keys(users)));
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = getIncomingCalls((snapshot) => {
-      if (snapshot.exists()) {
-        const incomingCall = snapshot.val();
-        const dyteRoomId = incomingCall.dyteRoomId;
-        const caller = incomingCall.caller;
-        // логиката тук е само ако има 1 обект с обаждане в incomingCalls във Firebase
-        setIncomingCall([dyteRoomId, caller]);
-      };
-
-    }, userData.uid);
-
-    return () => unsubscribe();
-  }, []);
 
 
 
@@ -70,11 +56,7 @@ const Calls = () => {
         <div style={{ height: '50vh', width: 'auto' }} >
           <SingleCallRoom token={token} />
         </div>}
-      {Boolean(incomingCall.length) && <Button onClick={() => addUserToCall((data) => setIncomingToken(data), userData, incomingCall[0])}>{incomingCall[1]} is Calling</Button>}
-      {incomingToken &&
-        <div style={{ height: '50vh', width: 'auto' }} >
-          <SingleCallRoom token={incomingToken} callId={incomingCall[0]}/>
-        </div >}
+
     </>
   );
 

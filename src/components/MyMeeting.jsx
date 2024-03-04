@@ -3,7 +3,7 @@ import { useDyteMeeting } from "@dytesdk/react-web-core";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 
-const MyMeeting = ({callId}) => {
+const MyMeeting = () => {
 
 //   const { meetingId } = useParams();
 
