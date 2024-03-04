@@ -1,18 +1,6 @@
-import PropTypes from "prop-types";
-import { useContext, useEffect } from "react";
-import AppContext from "../providers/AppContext";
-import { useNavigate } from "react-router-dom";
+// import PropTypes from "prop-types";
 
-const Home = (props) => {
-  const { user } = useContext(AppContext);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) {
-      navigate("/sign-in");
-    }
-  }, [user, navigate]);
-
+const Home = () => {
   return <div>Home</div>;
 };
 

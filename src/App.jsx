@@ -20,18 +20,20 @@ import Calls from "./pages/Calls";
 import ChatMessages from "./components/ChatMessages";
 import Authenticated from "./hoc/Authenticated";
 import Teams from "./pages/Teams";
-import { getIncomingCalls } from "./services/call.services";
-import { addUserToCall } from "./services/dyte.services";
-import SingleCallRoom from "./components/SingleCallRoom";
+import LandingPage from "./pages/LandingPage";
+// import { getIncomingCalls } from "./services/call.services";
+// import { addUserToCall } from "./services/dyte.services";
+// import SingleCallRoom from "./components/SingleCallRoom";
 
 // import { getChatsByUserHandle, listenToLoggedUserChats } from "./services/chat.services";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
-      <Route index element={<Home />} />
+      <Route path="welcome" element={<LandingPage />} />
       <Route path="sign-in" element={<SignIn />} />
       <Route path="sign-up" element={<SignUp />} />
+      <Route index element={<Authenticated><Home /></Authenticated>} />
       <Route path="chats" element={<Authenticated><Chats /></Authenticated>}/>
       <Route path="calls" element={<Authenticated><Calls /></Authenticated>} />
       <Route path="calls/:id" element={<Authenticated><Calls /></Authenticated>} />
@@ -51,8 +53,6 @@ const App = () => {
   const [user] = useAuthState(auth);
 
   // const [loggedInUserChatsIds, setLoggedInUserChatsIds] = useState([]);
-
-
 
   useEffect(() => {
     if (user) {
