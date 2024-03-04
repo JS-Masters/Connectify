@@ -13,6 +13,7 @@ const Calls = () => {
 
   const { userData } = useContext(AppContext);
   const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [usersBySearchTerm, setUsersBySearchTerm] = useState([]);
   const [token, setToken] = useState('');
 
@@ -42,14 +43,20 @@ const Calls = () => {
 
 
   const handleInputChange = (event) => {
-    const filteredUsers = users.filter((u) => u.toLowerCase().includes(event.target.value));
-    setUsersBySearchTerm(filteredUsers);
+    if(event.target.value.length) {
+      const filteredUsers = users.filter((u) => u.toLowerCase().includes(event.target.value)); // startsWith(event.target.value) ???
+      setUsersBySearchTerm(filteredUsers);
+    } else {
+      setUsersBySearchTerm([]);
+    };
+   
+    setSearchTerm(event.target.value); 
   };
 
 
   const startCall = async (userToCallHandle) => {
     await createCall(userData.handle, userToCallHandle)
-      .then((newCallId) => createDyteCall(newCallId)) // roomID ???
+      .then((newCallId) => createDyteCall(newCallId))
       .then((roomID) => addIncomingCallToDb(userToCallHandle, userData.handle, roomID))
       .then((roomID) => addUserToCall((data) => setToken(data), userData, roomID))
 
@@ -57,13 +64,13 @@ const Calls = () => {
 
   return (
     <>
-      <Input onChange={handleInputChange} />
-      {usersBySearchTerm && usersBySearchTerm.map((user) => <Button key={v4()}onClick={() => startCall(user)}>CALL {user}</Button>)}
+      <Input value={searchTerm} onChange={handleInputChange} />
+      {Boolean(usersBySearchTerm.length) && usersBySearchTerm.map((user) => <Button key={v4()}onClick={() => startCall(user)}>CALL {user}</Button>)}
       {token &&
         <div style={{ height: '50vh', width: 'auto' }} >
           <SingleCallRoom token={token} />
         </div>}
-      {incomingCall.length && <Button onClick={() => addUserToCall((data) => setIncomingToken(data), userData, incomingCall[0])}>{incomingCall[1]} is Calling</Button>}
+      {Boolean(incomingCall.length) && <Button onClick={() => addUserToCall((data) => setIncomingToken(data), userData, incomingCall[0])}>{incomingCall[1]} is Calling</Button>}
       {incomingToken &&
         <div style={{ height: '50vh', width: 'auto' }} >
           <SingleCallRoom token={incomingToken} callId={incomingCall[0]}/>
