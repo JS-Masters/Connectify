@@ -1,16 +1,14 @@
 import { DyteMeeting } from "@dytesdk/react-ui-kit";
 import { useDyteMeeting } from "@dytesdk/react-web-core";
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
-import { useLocation } from "react-router-dom";
 
-const MyMeeting = ({ setToken }) => {
+const MyMeeting = ({ leaveCall }) => {
 
   const { meeting } = useDyteMeeting();
 
   useEffect(() => {
     meeting.self.on('roomLeft', () => {
-      setToken('');
+      leaveCall();
       // променяме статуса, че вече не е In a meeting
     });
   }, [meeting]);

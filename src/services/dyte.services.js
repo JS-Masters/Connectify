@@ -53,4 +53,5 @@ export const addUserToCall = (listenFn, userData, dyteRoomId) => {
         .then(response => response.json())
         .then(response => listenFn(response.data.token))
         .catch(e => console.error(e));
+    return dyteRoomId;
 };

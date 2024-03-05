@@ -1,6 +1,7 @@
-import { limitToFirst, onValue, orderByChild, push, query, ref, set, update } from "firebase/database"
+import { get, limitToFirst, onValue, orderByChild, push, query, ref, remove, set, update } from "firebase/database"
 import { db } from "../config/firebase-config"
 import { getUserByHandle } from "./user.services";
+import { DATABASE_ERROR_MSG, WAITING_STATUS } from "../common/constants";
 
 export const listenForIncomingCalls = (listenFn, loggedUserUid) => {
   const q = query(
@@ -15,7 +16,7 @@ export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteI
   try {
     const userSnapshot = await getUserByHandle(userToCallHandle);
     if (!userSnapshot.exists()) {
-      throw new Error('There was a problem getting data from database')
+      throw new Error(DATABASE_ERROR_MSG)
     };
     const userVal = userSnapshot.val();
     const userId = userVal.uid;
@@ -28,7 +29,7 @@ export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteI
       dyteRoomId: newCallDyteId,
       caller: caller,
       createdOn: new Date().toLocaleString(),
-      status: 'waiting'
+      status: WAITING_STATUS
     });
 
     return newCallDyteId;
@@ -38,10 +39,10 @@ export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteI
   };
 };
 
-export const changeIncomingCallStatus = async (callId, uid) => {
+export const changeIncomingCallStatus = async (callId, uid, status) => {
   try{
     const callRef = ref(db, `incomingCalls/${uid}/${callId}`);
-    await update(callRef, { status: 'attended' });
+    await update(callRef, { status: status });
   } catch(error) {
     console.log(error.message);
   };
@@ -65,6 +66,38 @@ export const createCall = async (madeCall, recievedCall) => {
     console.log(error.message);
   }
 };
+
+export const endCall = async (userToCall, dyteRoomId) => {
+  try{
+    const userSnapshot = await getUserByHandle(userToCall);
+    if (!userSnapshot.exists()) {
+      throw new Error(DATABASE_ERROR_MSG)
+    };
+    const userVal = userSnapshot.val();
+    const userId = userVal.uid;
+    const incomingCalls = await getIncomingCallsByUid(userId);
+    const callId = Object.values(incomingCalls).filter((call) => call.dyteRoomId === dyteRoomId)[0].id;
+    
+    await remove(ref(db, `incomingCalls/${userId}/${callId}`));
+  } catch(error) {
+    console.log(error.message);
+  }; 
+};
+
+export const getIncomingCallsByUid = async (uid) => {
+  try {
+    const incomingCallsSnapshot = await get(ref(db, `incomingCalls/${uid}`));
+    if(!incomingCallsSnapshot.exists()) {
+      throw new Error(DATABASE_ERROR_MSG);
+    };
+
+    return incomingCallsSnapshot.val();
+  } catch(error) {
+    console.log(error.message);
+  };
+};
+
+
 
 
 

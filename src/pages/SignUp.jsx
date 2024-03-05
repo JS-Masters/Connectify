@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 
 const SignUp = () => {
+
   const toast = useToast();
   const { setContext } = useContext(AppContext);
   const navigate = useNavigate();
@@ -25,8 +26,7 @@ const SignUp = () => {
       duration: 5000,
       isClosable: true,
       status: status,
-      position: "top",
-      // icon: <UnlockIcon />,
+      position: "top"
     });
   };
 
