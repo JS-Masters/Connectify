@@ -95,8 +95,7 @@ export const getChatMessagesById = (listenFn, chatId) => {
     limitToFirst(50)
   )
   return onValue(q, listenFn);
-
-}
+};
 
 export const addMessageToChat = async (chatId, message, author) => {
   try {
@@ -122,7 +121,7 @@ export const addMessageToChat = async (chatId, message, author) => {
     await Promise.all(notificationPromises);
   } catch (error) {
     console.log(error.message);
-  }
+  };
 };
 
 export const editMessageInChat = async (chatId, messageId, newContent) => {
@@ -141,7 +140,7 @@ export const editMessageInChat = async (chatId, messageId, newContent) => {
     }
   } catch (error) {
     console.log(error.message);
-  }
+  };
 };
 
 
@@ -154,7 +153,7 @@ export const deleteMessageFromChat = async (chatId, messageId, deletedBy) => {
     });
   } catch (error) {
     console.log(error.message);
-  }
+  };
 };
 
 // export const listenToLoggedUserChats = (listenFn, userHandle, chatId) => {

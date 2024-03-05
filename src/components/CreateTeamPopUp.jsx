@@ -5,7 +5,8 @@ import AppContext from "../providers/AppContext";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import { getAllUsers } from "../services/user.services";
 import { v4 } from "uuid";
-import { addChannelToTeam, createTeam } from "../services/team.services";
+import { createTeam } from "../services/team.services";
+import { addChannelToTeam } from "../services/channel.servicies";
 
 const CreateTeamPopUp = () => {
 

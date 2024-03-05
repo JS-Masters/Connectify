@@ -36,10 +36,12 @@ const router = createBrowserRouter(
       <Route path="sign-up" element={<SignUp />} />
       <Route index element={<Authenticated><Home /></Authenticated>} />
       <Route path="chats" element={<Authenticated><Chats /></Authenticated>} />
+      <Route path="chats/:id" element={<Authenticated><ChatMessages /></Authenticated>} />
       <Route path="calls" element={<Authenticated><Calls /></Authenticated>} />
       <Route path="calls/:id" element={<Authenticated><Calls /></Authenticated>} />
-      <Route path="chats/:id" element={<Authenticated><ChatMessages /></Authenticated>} />
       <Route path="teams" element={<Authenticated><Teams /></Authenticated>} />
+      <Route path="teams/:teamId" element={<Authenticated><Teams /></Authenticated>} />
+      <Route path="teams/:teamId/channels/:channelId" element={<Authenticated><Teams /></Authenticated>} />
     </Route>
   )
 );
