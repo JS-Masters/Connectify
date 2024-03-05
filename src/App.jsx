@@ -8,12 +8,11 @@ import "./App.css";
 import AppContext from "./providers/AppContext";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-
 import RootLayout from "./layouts/RootLayout";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import { auth } from "./config/firebase-config";
+import { auth, db } from "./config/firebase-config";
 import { getUserData } from "./services/user.services";
 import Chats from "./pages/Chats";
 import Calls from "./pages/Calls";
@@ -23,10 +22,11 @@ import Teams from "./pages/Teams";
 import LandingPage from "./pages/LandingPage";
 import { addUserToCall } from "./services/dyte.services";
 import SingleCallRoom from "./components/SingleCallRoom";
-import { changeIncomingCallStatus, endCall, listenForIncomingCalls } from "./services/call.services";
-import { Button } from "@chakra-ui/react";
+import { changeIncomingCallStatus, endCall, listenForIncomingCalls, listenForRejectedCalls, setUserHasRejectedCall } from "./services/call.services";
+import { Button, useToast } from "@chakra-ui/react";
 import { v4 } from "uuid";
 import { ATENDED_STATUS, WAITING_STATUS } from "./common/constants";
+import { ref, remove } from "firebase/database";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -57,6 +57,17 @@ const App = () => {
   const [incomingCall, setIncomingCall] = useState([]);
   const [joinedCallDyteId, setJoinedCallDyteId] = useState('');
   // const [loadingCall, setLoadingCall] = useState(false);
+  const toast = useToast();
+  const showToast = (desc, status) => {
+    toast({
+      title: "Create team",
+      description: desc,
+      duration: 5000,
+      isClosable: true,
+      status: status,
+      position: "top",
+    });
+  };
 
   useEffect(() => {
     if (user) {
@@ -80,11 +91,12 @@ const App = () => {
           const incomingCalls = snapshot.val();
           const callsWaiting = Object.values(incomingCalls).filter((call) => call.status === WAITING_STATUS);
           if (callsWaiting.length) {
+            // вкарвай само по един кол като въведем status: in a meeting/call на всеки user
             callsWaiting.map((call) => {
-              setIncomingCall([...incomingCall, { callId: call.id, dyteRoomId: call.dyteRoomId, caller: call.caller }]);
+              setIncomingCall([{ callId: call.id, dyteRoomId: call.dyteRoomId, caller: call.caller }]); // вкарвай само по един кол като въведем status: in a meeting/call на всеки user
             })
           } else {
-            setIncomingCall([]); // това виж дали да е тук или като else на if (snapshot.exists()) ??!?!?!
+            setIncomingCall([]);
           }
           // логиката тук е само ако има 1 обект с обаждане в incomingCalls във Firebase
         } else {
@@ -95,6 +107,25 @@ const App = () => {
       return () => unsubscribe();
     };
   }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      const unsubscribe = listenForRejectedCalls((snapshot) => {
+        if (snapshot.exists()) {
+          const userDocument = snapshot.val();
+          if ('hasRejectedCall' in userDocument) {
+            //banner 
+            showToast('Your call was rejected. You may leave the call room', 'info');
+            // махане на hasRejectedCall:true oт user
+            remove(ref(db, `users/${userData.handle}/hasRejectedCall`));
+          };
+        };
+      }, userData.handle);
+
+      return () => unsubscribe();
+    };
+  }, [user]);
+
 
   const setNotifications = (notifications) => {
     setContext((prevContext) => ({
@@ -109,14 +140,17 @@ const App = () => {
     setJoinedCallDyteId(dyteRoomId);
   };
 
-  const rejectCall = (callId) => {
-    // changeIncomingCallStatus(callId, user.uid, DECLINED_STATUS);
-    // който звъни да получава банер/нотификация + виж дали има смисъл от горния ред или да се трие направо???
-
-  }
+  const rejectCall = async (callId, callerHandle) => {
+    try {
+      await remove(ref(db, `incomingCalls/${userData.uid}/${callId}`));
+      await setUserHasRejectedCall(callerHandle);
+      setIncomingCall([]);
+    } catch (error) {
+      console.log(error.message);
+    };
+  };
 
   const leaveCall = async () => {
-    // delete the call from incomingCalls
     try {
       await endCall(userData.handle, joinedCallDyteId);
     } catch (error) {
@@ -131,13 +165,14 @@ const App = () => {
       <AppContext.Provider value={{ ...context, setContext, setNotifications }}>
         <RouterProvider router={router} />
       </AppContext.Provider>
-      {Boolean(incomingCall.length) && incomingCall.map((call) => {
+      {Boolean(incomingCall.length) && incomingCall.map((call) => { // ако има статус за in a meeting този мап също не е необходим !??
         return <div key={v4()}>
-          <Button onClick={() => joinCall(call.dyteRoomId, call.callId)}>{call.caller} is Calling</Button>
-
+          <h3>{call.caller} is Calling</h3>
+          <Button onClick={() => joinCall(call.dyteRoomId, call.callId)}>ANSWER</Button>
+          <Button onClick={() => rejectCall(call.callId, call.caller)}>REJCET</Button>
         </div>
       })}
-      {incomingToken && joinedCallDyteId &&
+      {incomingToken &&
         <div style={{ height: '50vh', width: 'auto' }} >
           <SingleCallRoom token={incomingToken} leaveCall={leaveCall} />
         </div >}

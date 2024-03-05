@@ -12,6 +12,14 @@ export const listenForIncomingCalls = (listenFn, loggedUserUid) => {
   return onValue(q, listenFn);
 };
 
+export const listenForRejectedCalls = (listenFn, loggedUserHandle) => {
+  const q = query(
+    ref(db, `users/${loggedUserHandle}`)
+  )
+  return onValue(q, listenFn);
+};
+
+
 export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteId) => {
   try {
     const userSnapshot = await getUserByHandle(userToCallHandle);
@@ -23,7 +31,7 @@ export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteI
 
     const callRef = await push(ref(db, `incomingCalls/${userId}`), {});
     const callId = callRef.key;
-    
+
     await set(ref(db, `incomingCalls/${userId}/${callId}`), {
       id: callId,
       dyteRoomId: newCallDyteId,
@@ -40,10 +48,10 @@ export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteI
 };
 
 export const changeIncomingCallStatus = async (callId, uid, status) => {
-  try{
+  try {
     const callRef = ref(db, `incomingCalls/${uid}/${callId}`);
     await update(callRef, { status: status });
-  } catch(error) {
+  } catch (error) {
     console.log(error.message);
   };
 };
@@ -68,7 +76,7 @@ export const createCall = async (madeCall, recievedCall) => {
 };
 
 export const endCall = async (userToCall, dyteRoomId) => {
-  try{
+  try {
     const userSnapshot = await getUserByHandle(userToCall);
     if (!userSnapshot.exists()) {
       throw new Error(DATABASE_ERROR_MSG)
@@ -76,23 +84,35 @@ export const endCall = async (userToCall, dyteRoomId) => {
     const userVal = userSnapshot.val();
     const userId = userVal.uid;
     const incomingCalls = await getIncomingCallsByUid(userId);
-    const callId = Object.values(incomingCalls).filter((call) => call.dyteRoomId === dyteRoomId)[0].id;
-    
-    await remove(ref(db, `incomingCalls/${userId}/${callId}`));
-  } catch(error) {
+
+    if (incomingCalls) {
+      const callId = Object.values(incomingCalls).filter((call) => call.dyteRoomId === dyteRoomId)[0].id;
+      await remove(ref(db, `incomingCalls/${userId}/${callId}`));
+    };
+  } catch (error) {
     console.log(error.message);
-  }; 
+  };
 };
 
 export const getIncomingCallsByUid = async (uid) => {
   try {
     const incomingCallsSnapshot = await get(ref(db, `incomingCalls/${uid}`));
-    if(!incomingCallsSnapshot.exists()) {
-      throw new Error(DATABASE_ERROR_MSG);
+    // if(!incomingCallsSnapshot.exists()) {
+    //   throw new Error(DATABASE_ERROR_MSG);
+    // };
+    if (incomingCallsSnapshot) {
+      return incomingCallsSnapshot.val();
     };
+  } catch (error) {
+    console.log(error.message);
+  };
+};
 
-    return incomingCallsSnapshot.val();
-  } catch(error) {
+export const setUserHasRejectedCall = async (userHandle) => {
+  try {
+    const userRef = ref(db, `users/${userHandle}`);
+    await update(userRef, { hasRejectedCall: true });
+  } catch (error) {
     console.log(error.message);
   };
 };
