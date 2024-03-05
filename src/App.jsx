@@ -109,7 +109,7 @@ const App = () => {
   }, [user]);
 
   useEffect(() => {
-    if (user) {
+    if (userData) {
       const unsubscribe = listenForRejectedCalls((snapshot) => {
         if (snapshot.exists()) {
           const userDocument = snapshot.val();
@@ -120,7 +120,7 @@ const App = () => {
             remove(ref(db, `users/${userData.handle}/hasRejectedCall`));
           };
         };
-      }, userData.handle);
+      }, userData.uid);
 
       return () => unsubscribe();
     };
