@@ -16,6 +16,8 @@ export const addChannelToTeam = async (teamId, channelTitle, createdBy) => {
       participants: teamMembers,
       messages: {}
     })
+    return channelRef.key;
+    
   } catch (error) {
     console.log(error.message);
   }
