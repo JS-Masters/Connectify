@@ -25,7 +25,7 @@ const Teams = () => {
         })
         // .then((userTeams) => setTeams(userTeams))
     };
-  }, []);
+  }, [teamId, channelId]);
 
   return (
     <>

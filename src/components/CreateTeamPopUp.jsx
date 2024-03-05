@@ -7,6 +7,7 @@ import { getAllUsers } from "../services/user.services";
 import { v4 } from "uuid";
 import { createTeam } from "../services/team.services";
 import { addChannelToTeam } from "../services/channel.servicies";
+import { useNavigate } from "react-router-dom";
 
 const CreateTeamPopUp = () => {
 
@@ -19,6 +20,7 @@ const CreateTeamPopUp = () => {
   const [channels, setChannels] = useState([]);
   const [teamName, setTeamName] = useState('');
   const toast = useToast();
+  const navigate = useNavigate();
 
   const showToast = (desc, status) => {
     toast({
@@ -91,17 +93,17 @@ const CreateTeamPopUp = () => {
     setSelectedUsers([]);
   };
 
-  const handleCreateTeamClick = async () => {
-    if(!teamName) {
+  const handleCreateTeamClick = async (close) => {
+    if (!teamName) {
       showToast('Choose a name for your team', 'info');
     };
-    if(teamName.length < 3 || teamName.length > 40) {
+    if (teamName.length < 3 || teamName.length > 40) {
       showToast('Team name should be between 3 and 40 characters', 'info');
     };
-    if(!selectedUsers.length) {
+    if (!selectedUsers.length) {
       showToast('Choose people to connect with in your team', 'info');
     };
-    if(!channels.length) {
+    if (!channels.length) {
       showToast('Create at least one channel', 'info');
     };
     try {
@@ -109,7 +111,9 @@ const CreateTeamPopUp = () => {
 
       await Promise.all(channels.map(async (channelTitle) => {
         await addChannelToTeam(newTeamId, channelTitle, userData.handle);
-    }));
+      }));
+      handlePopUpClose(close);
+      navigate(`/teams/${newTeamId}`);
     } catch (error) {
       showToast('Error occured while creating a post', 'error');
     }
@@ -195,7 +199,7 @@ const CreateTeamPopUp = () => {
               })
               ) : (' ')}
               <br />
-              <Button onClick={handleCreateTeamClick}>Create Team</Button>
+              <Button onClick={() => handleCreateTeamClick(close)}>Create Team</Button>
             </div>
           </div>
         )
