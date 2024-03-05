@@ -13,7 +13,7 @@ import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import { auth, db } from "./config/firebase-config";
-import { getUserData } from "./services/user.services";
+import { changeUserCurrentStatusInDb, getUserData } from "./services/user.services";
 import Chats from "./pages/Chats";
 import Calls from "./pages/Calls";
 import ChatMessages from "./components/ChatMessages";
@@ -71,16 +71,28 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      getUserData(user.uid).then((snapshot) => {
-        if (snapshot.exists()) {
-          setContext((prevContext) => ({
-            ...prevContext,
-            user,
-            userData: snapshot.val()[Object.keys(snapshot.val())[0]],
-          }));
-          setUserData(snapshot.val()[Object.keys(snapshot.val())[0]]);
-        }
-      });
+      getUserData(user.uid)
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            return snapshot.val()[Object.keys(snapshot.val())[0]];
+          }
+        })
+        .then((oldUserData) => {
+          changeUserCurrentStatusInDb(oldUserData.handle, oldUserData.lastStatus);
+        })
+        .then(() => getUserData(user.uid))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            const currentUserData =
+              snapshot.val()[Object.keys(snapshot.val())[0]];
+
+            setContext((prevContext) => ({
+              ...prevContext,
+              user,
+              userData: currentUserData,
+            }));
+          }
+        });
     }
   }, [user]);
 

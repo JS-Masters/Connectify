@@ -1,4 +1,4 @@
-import { get, set, ref, query, equalTo, orderByChild } from 'firebase/database';
+import { get, set, ref, query, equalTo, orderByChild, update } from 'firebase/database';
 import { db } from '../config/firebase-config';
 
 export const getUserByHandle = (handle) => {
@@ -11,9 +11,9 @@ export const updateUserByHandle = (handle, prop, value) => {
   return set(ref(db, `users/${handle}/${prop}`), value);
 };
 
-export const createUserHandle = (handle, uid, firstName, lastName, email) => {
+export const createUserHandle = (handle, uid, firstName, lastName, email, currentStatus, lastStatus) => {
 
-  return set(ref(db, `users/${handle}`), { handle, uid, firstName, lastName, email, createdOn: new Date() })
+  return set(ref(db, `users/${handle}`), { handle, uid, firstName, lastName, email, createdOn: new Date(), currentStatus, lastStatus })
 };
 
 export const getUserData = (uid) => {
@@ -45,3 +45,16 @@ export const getAllUsers = async () => {
 
 // }
 
+export const changeUserCurrentStatusInDb = (handle, status) => {
+  update(ref(db, `users/${handle}`),
+    {
+      currentStatus: status
+    });
+};
+
+export const changeUserLastStatusInDb = (handle, status) => {
+  update(ref(db, `users/${handle}`),
+    {
+      lastStatus: status
+    });
+};

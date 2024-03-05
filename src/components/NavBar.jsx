@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 import NotificationList from "./NotificationList";
 
 const NavBar = () => {
-  const { userData, setContext } = useContext(AppContext);
+  const { userData } = useContext(AppContext);
   const [userHandle, setUserHandle] = useState(null);
 
   useEffect(() => {
@@ -29,11 +29,7 @@ const NavBar = () => {
         <NotificationList userHandle={userHandle} />
       </Box>
       {userData && (
-        <Dropdown
-          username={userData.handle}
-          avatarUrl={userData.avatarUrl}
-          setContext={setContext}
-        />
+        <Dropdown username={userData.handle} avatarUrl={userData.avatarUrl} />
       )}
     </>
   );

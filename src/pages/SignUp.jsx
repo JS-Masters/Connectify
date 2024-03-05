@@ -12,6 +12,7 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
+import { statuses } from "../common/constants";
 
 const SignUp = () => {
 
@@ -68,7 +69,9 @@ const SignUp = () => {
         credentials.user.uid,
         firstName,
         lastName,
-        email
+        email,
+        statuses.online,
+        statuses.online
       );
 
       setContext({ user, userData: null });
