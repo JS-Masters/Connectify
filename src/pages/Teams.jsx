@@ -8,7 +8,6 @@ import TeamChannels from "../components/TeamChannels";
 import TeamChannelContent from "../components/TeamChannelContent";
 import { v4 } from "uuid";
 
-
 const Teams = () => {
 
   const { userData } = useContext(AppContext);
@@ -19,15 +18,19 @@ const Teams = () => {
   useEffect(() => {
     if (userData) {
       getTeamsByUserHandle(userData.handle)
-        .then((userTeamsIds) => getTeamsByIds(Object.keys(userTeamsIds)))
-        .then((userTeams) => setTeams(userTeams))
+        .then((userTeams) =>{
+          if(userTeams) {
+            setTeams(Object.values(userTeams));
+          };
+        })
+        // .then((userTeams) => setTeams(userTeams))
     };
   }, []);
 
   return (
     <>
-      {teams && teams.map((team) => <Button key={v4()} onClick={() => navigate(`${team.id}`)} style={{ width: 'fit-content', height: '45px', border: '2px solid black' }}>{team.teamName}</Button>)}
-      {<CreateTeamPopUp />}
+     {<CreateTeamPopUp />}
+      {teams && teams.map((team) => <Button key={v4()} onClick={() => navigate(`/teams/${team.id}`)} style={{ width: 'fit-content', height: '45px', border: '2px solid black' }}>{team.teamName}</Button>)}
       {teamId && <TeamChannels/>}
       {channelId && <TeamChannelContent/>}
     </>

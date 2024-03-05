@@ -4,8 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getTeamChannels } from "../services/channel.servicies";
 import { v4 } from "uuid";
 
-
-
 const TeamChannels = () => {
 
   const { teamId } = useParams();
@@ -21,7 +19,7 @@ const TeamChannels = () => {
     <>
       {channels &&
         <div style={{ width: '400px' }}>
-          {channels.map((channel) => <Button key={v4()} onClick={() => navigate(`channels/${channel.id}`)} style={{ width: '400px' }}>{channel.title}</Button>)}
+          {channels.map((channel) => <Button key={v4()} onClick={() => navigate(`/teams/${teamId}/channels/${channel.id}`)} style={{ width: '400px' }}>{channel.title}</Button>)}
         </div>}
     </>
   );
