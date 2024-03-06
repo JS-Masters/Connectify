@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { addMessageToChat, editMessageInChat, getChatMessagesById, deleteMessageFromChat } from "../services/chat.services";
+import { addMessageToChat, editMessageInChat, getChatMessagesById, deleteMessageFromChat, replyToMessage } from "../services/chat.services";
 import ChatMessageBox from "./ChatMessageBox";
 import { Input } from "@chakra-ui/input";
 import { Form } from "react-router-dom";
@@ -65,6 +65,10 @@ const ChatMessages = () => {
   //   return; 
   // };
 
+  const handleReplyToMessage = async (messageId, replyContent) => {
+    await replyToMessage(id, messageId, replyContent, userData.handle);
+  }
+
   return (
     <>
     {/* {console.log('RETURN')} */}
@@ -75,6 +79,7 @@ const ChatMessages = () => {
             message={message}
             onEdit={handleEditMessage}
             onDelete={handleDeleteMessage}
+            onReply={handleReplyToMessage}
             currentUserHandle={userData.handle}
             chatId={id}
             reactions={message.reactions}

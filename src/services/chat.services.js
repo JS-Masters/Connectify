@@ -223,3 +223,20 @@ export const removeReactionFromMessage = async (chatId, messageId, userHandle) =
   const messageRef = ref(db, `chats/${chatId}/messages/${messageId}/reactions/${userHandle}`);
   await remove(messageRef);
 };
+
+export const replyToMessage = async (chatId, messageId, reply, userHandle) => {
+  const replyRef = await push(ref(db, `chats/${chatId}/messages/${messageId}/replies`), {});
+  const replyId = replyRef.key;
+  await set(ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}`), {
+    id: replyId,
+    author: userHandle,
+    content: reply,
+    createdOn: new Date().toLocaleString(),
+    reactions: {},
+  });
+};
+
+export const getRepliesByMessage = (chatId, messageId, listenFn) => {
+  const q = query(ref(db, `chats/${chatId}/messages/${messageId}/replies`));
+  return onValue(q, listenFn);
+}
