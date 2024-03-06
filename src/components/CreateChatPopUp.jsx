@@ -1,24 +1,21 @@
-import { Button, Input, List, Tag, useToast } from "@chakra-ui/react"
+import { Button, Input, List, Tag, useToast } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
-import Popup from 'reactjs-popup';
+import Popup from "reactjs-popup";
 import AppContext from "../providers/AppContext";
-import { AddIcon, CloseIcon } from "@chakra-ui/icons";
-import { getAllUsers } from "../services/user.services";
-import { v4 } from "uuid";
-import { createTeam } from "../services/team.services";
-import { addChannelToTeam } from "../services/channel.servicies";
 import { useNavigate } from "react-router-dom";
+import { getAllUsers } from "../services/user.services";
+import { AddIcon, CloseIcon } from "@chakra-ui/icons";
+import { v4 } from "uuid";
+import { createNewChat } from "../services/chat.services";
 
-const CreateTeamPopUp = () => {
+
+const CreateChatPopUp = () => {
 
   const { userData } = useContext(AppContext);
   const [users, setUsers] = useState([]);
   const [foundUsers, setFoundUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchField, setSearchField] = useState('');
-  const [channelFromInput, setChannelFromInput] = useState('');
-  const [channels, setChannels] = useState([]);
-  const [teamName, setTeamName] = useState('');
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -48,16 +45,7 @@ const CreateTeamPopUp = () => {
     }
   }, [searchField, users]);
 
-  const updateTeamNameInputField = (event) => {
-    setTeamName(event.target.value);
-  };
-
-  const updateChannelInputField = (event) => {
-    setChannelFromInput(event.target.value);
-  };
-
   const formattedSelection = () => selectedUsers.length > 0 ? selectedUsers.join(", ") : "";
-
 
   const updateSelectedUsers = (userHandle) => {
     if (selectedUsers.includes(userHandle)) {
@@ -70,58 +58,28 @@ const CreateTeamPopUp = () => {
     }
   };
 
-  const addChannelToSelected = () => {
-    if (!channelFromInput) {
-      showToast('You must enter a channel name first', 'warning');
-    } else {
-      setChannels((prevChannels) => [...prevChannels, channelFromInput]);
-      setChannelFromInput('');
-    }
-  };
-
-  const removeChannelFromSelected = (channelToRemove) => {
-    const channelsUpdated = [...channels].filter((channel) => channel !== channelToRemove);
-    setChannels(channelsUpdated);
-  };
-
   const handlePopUpClose = (close) => {
     close();
-    setChannels([]);
-    setChannelFromInput('');
-    setTeamName('');
     setSearchField('');
     setSelectedUsers([]);
   };
 
-  const handleCreateTeamClick = async (close) => {
-    if (!teamName) {
-      showToast('Choose a name for your team', 'info');
-    };
-    if (teamName.length < 3 || teamName.length > 40) {
-      showToast('Team name should be between 3 and 40 characters', 'info');
-    };
+  const handleCreateChatClick = async (close) => {
     if (!selectedUsers.length) {
-      showToast('Choose people to connect with in your team', 'info');
-    };
-    if (!channels.length) {
-      showToast('Create at least one channel', 'info');
+      showToast('Choose someone to connect with', 'info');
     };
     try {
-      const newTeamId = await createTeam(teamName, userData.handle, selectedUsers);
-
-      await Promise.all(channels.map(async (channelTitle) => {
-        await addChannelToTeam(newTeamId, channelTitle, userData.handle);
-      }));
+      const newChatId = await createNewChat(userData.handle, selectedUsers);
       handlePopUpClose(close);
-      navigate(`/teams/${newTeamId}`);
+      navigate(`/chats/${newChatId}`);
     } catch (error) {
       showToast('Error occured while creating a post', 'error');
-    }
+    };
   };
 
   return (
     <Popup trigger=
-      {<Button style={{ width: '45px', height: '45px', backgroundColor: 'green' }}>+</Button>}
+      {<Button style={{ width: '400px', height: '45px', backgroundColor: 'green' }}>+</Button>}
       modal nested>
       {
         close => (
@@ -174,37 +132,14 @@ const CreateTeamPopUp = () => {
                   ))}
               </List>
               <br />
-              <Input
-                type="text"
-                value={teamName}
-                onChange={updateTeamNameInputField}
-                placeholder="Team name..."
-              />
-              <br />
-              <Input
-                type="text"
-                value={channelFromInput}
-                onChange={updateChannelInputField}
-                placeholder="Create a channel..."
-                style={{ width: "275px" }}
-              /><Button onClick={() => addChannelToSelected()}>+</Button>
-              <br />
-              {channels.length ? (channels.map((channel) => {
-                return (
-                  <div key={v4()}>
-                    {`${channel}`}
-                    <Button onClick={() => removeChannelFromSelected(channel)}>X</Button>
-                  </div>
-                )
-              })
-              ) : (' ')}
-              <br />
-              <Button onClick={() => handleCreateTeamClick(close)}>Create Team</Button>
+              <Button onClick={() => handleCreateChatClick(close)}>Create Chat</Button>
             </div>
           </div>
         )
       }
     </Popup>
   );
+
 };
-export default CreateTeamPopUp;
+
+export default CreateChatPopUp;

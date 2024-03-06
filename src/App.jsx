@@ -36,7 +36,7 @@ const router = createBrowserRouter(
       <Route path="sign-up" element={<SignUp />} />
       <Route index element={<Authenticated><Home /></Authenticated>} />
       <Route path="chats" element={<Authenticated><Chats /></Authenticated>} />
-      <Route path="chats/:id" element={<Authenticated><ChatMessages /></Authenticated>} />
+      <Route path="chats/:chatId" element={<Authenticated><Chats /></Authenticated>} />
       <Route path="calls" element={<Authenticated><Calls /></Authenticated>} />
       <Route path="calls/:id" element={<Authenticated><Calls /></Authenticated>} />
       <Route path="teams" element={<Authenticated><Teams /></Authenticated>} />
@@ -129,9 +129,7 @@ const App = () => {
         if (snapshot.exists()) {
           const userDocument = snapshot.val();
           if ('hasRejectedCall' in userDocument) {
-            //banner 
             showToast('Your call was rejected. You may leave the call room', 'info');
-            // махане на hasRejectedCall:true oт user
             remove(ref(db, `users/${userData.handle}/hasRejectedCall`));
           };
         };

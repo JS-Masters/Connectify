@@ -70,7 +70,7 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
     return newChatId;
   } catch (error) {
     console.log(error.message);
-  }
+  };
 };
 
 

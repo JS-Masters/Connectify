@@ -6,86 +6,66 @@ import { Input } from "@chakra-ui/input";
 import { Form } from "react-router-dom";
 import AppContext from "../providers/AppContext";
 import { v4 } from "uuid";
-import { DELETE_MESSAGE } from "../common/constants";
-import { useToast } from "@chakra-ui/react";
-import { UnlockIcon } from "@chakra-ui/icons";
 
 const ChatMessages = () => {
   const [messages, setMessages] = useState([]);
-  const { id } = useParams();
+  const { chatId } = useParams();
   const { userData } = useContext(AppContext);
-  const toast = useToast();
-  // const [error, setError] = useState('');
-
-  // const showToast = (desc) => {
-  //   toast({
-  //     title: "Unexpected error: ",
-  //     description: desc,
-  //     duration: 5000,
-  //     isClosable: true,
-  //     status: "error",
-  //     position: "top",
-  //     icon: <UnlockIcon />,
-  //   });
-  // };
 
   useEffect(() => {
     const unsubscribe = getChatMessagesById((snapshot) => {
       const msgData = snapshot.exists() ? snapshot.val() : {};
       setMessages(Object.values(msgData));
-    }, id);
+    }, chatId);
 
     return () => unsubscribe();
-  }, [id]);
+  }, [chatId]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
     const message = event.target.elements.newMessage.value;
-    await addMessageToChat(id, message, userData.handle);
+    await addMessageToChat(chatId, message, userData.handle);
     event.target.elements.newMessage.value = "";
   };
 
   const handleEditMessage = async (messageId, newContent) => {
     try {
-     
+
       // throw new Error ('FATAL ERROR :)')
-      await editMessageInChat(id, messageId, newContent);
-    } catch(error) {
+      await editMessageInChat(chatId, messageId, newContent);
+    } catch (error) {
       // showToast(error);
       // setError(error.message);
-    }
-    
+    };
   };
 
   const handleDeleteMessage = async (messageId) => {
-    await deleteMessageFromChat(id, messageId, userData.handle);
-  }; 
+    await deleteMessageFromChat(chatId, messageId, userData.handle);
+  };
 
   // if(error) {
   //   return; 
   // };
 
   const handleReplyToMessage = async (messageId, replyContent) => {
-    await replyToMessage(id, messageId, replyContent, userData.handle);
-  }
+    await replyToMessage(chatId, messageId, replyContent, userData.handle);
+  };
 
   return (
     <>
-    {/* {console.log('RETURN')} */}
       {messages &&
         messages.map((message) => (
-          <ChatMessageBox 
+          <ChatMessageBox
             key={v4()}
             message={message}
             onEdit={handleEditMessage}
             onDelete={handleDeleteMessage}
             onReply={handleReplyToMessage}
             currentUserHandle={userData.handle}
-            chatId={id}
+            chatId={chatId}
             reactions={message.reactions}
           />
         ))}
-
       <Form onSubmit={sendMessage}>
         <Input placeholder="type here..." name="newMessage" />
       </Form>
