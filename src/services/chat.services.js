@@ -208,3 +208,18 @@ export const getNotificationsByUserHandle = async (userHandle) => {
     console.log(error.message);
   }
 }
+
+export const getReactionsByMessage = (chatId, messageId, listenFn) => {
+  const q = query(ref(db, `chats/${chatId}/messages/${messageId}/reactions`));
+  return onValue(q, listenFn);
+}
+
+export const addReactionToMessage = async (chatId, messageId, reaction, userHandle) => {
+  const messageRef = ref(db, `chats/${chatId}/messages/${messageId}/reactions/${userHandle}`);
+  await set(messageRef, reaction);
+};
+
+export const removeReactionFromMessage = async (chatId, messageId, userHandle) => {
+  const messageRef = ref(db, `chats/${chatId}/messages/${messageId}/reactions/${userHandle}`);
+  await remove(messageRef);
+};

@@ -76,6 +76,8 @@ const ChatMessages = () => {
             onEdit={handleEditMessage}
             onDelete={handleDeleteMessage}
             currentUserHandle={userData.handle}
+            chatId={id}
+            reactions={message.reactions}
           />
         ))}
 
