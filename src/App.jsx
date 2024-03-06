@@ -58,8 +58,8 @@ const App = () => {
   const [incomingToken, setIncomingToken] = useState('');
   const [incomingCall, setIncomingCall] = useState([]);
   const [joinedCallDyteId, setJoinedCallDyteId] = useState('');
-  // const [loadingCall, setLoadingCall] = useState(false);
   const toast = useToast();
+
   const showToast = (desc, status) => {
     toast({
       title: "Create team",
@@ -76,11 +76,9 @@ const App = () => {
       getUserData(user.uid)
         .then((snapshot) => {
           if (snapshot.exists()) {
-            return snapshot.val()[Object.keys(snapshot.val())[0]];
+            const oldUserData =  snapshot.val()[Object.keys(snapshot.val())[0]];
+            changeUserCurrentStatusInDb(oldUserData.handle, oldUserData.lastStatus);
           }
-        })
-        .then((oldUserData) => {
-          changeUserCurrentStatusInDb(oldUserData.handle, oldUserData.lastStatus);
         })
         .then(() => getUserData(user.uid))
         .then((snapshot) => {
@@ -93,8 +91,10 @@ const App = () => {
               user,
               userData: currentUserData,
             }));
+            setUserData(currentUserData);
           }
-        });
+        })
+        .catch((error) => console.log(error.message));
     }
   }, [user]);
 
@@ -106,6 +106,7 @@ const App = () => {
           const callsWaiting = Object.values(incomingCalls).filter((call) => call.status === WAITING_STATUS);
           if (callsWaiting.length) {
             // вкарвай само по един кол като въведем status: in a meeting/call на всеки user
+            // СЛЕД ИМПЛЕМЕНТИРАНЕ НА In A Meeting STATUS, ДА НЕ МОЖЕ ДА СЕ НАБИРА ЮЗЪРА, КОЙТО Е В СРЕЩА !!!!!
             callsWaiting.map((call) => {
               setIncomingCall([{ callId: call.id, dyteRoomId: call.dyteRoomId, caller: call.caller }]); // вкарвай само по един кол като въведем status: in a meeting/call на всеки user
             })
@@ -123,7 +124,7 @@ const App = () => {
   }, [user]);
 
   useEffect(() => {
-    if (userData) {
+    if (userData) {    
       const unsubscribe = listenForRejectedCalls((snapshot) => {
         if (snapshot.exists()) {
           const userDocument = snapshot.val();
@@ -134,7 +135,7 @@ const App = () => {
             remove(ref(db, `users/${userData.handle}/hasRejectedCall`));
           };
         };
-      }, userData.uid);
+      }, userData.handle);
 
       return () => unsubscribe();
     };
