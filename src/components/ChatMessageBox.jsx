@@ -95,14 +95,17 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, currentUserHandle,
           ) : (
             <div>
               <p>{message.content}</p>
-              {currentUserHandle !== message.author && !isHovered && reactions && reactions[currentUserHandle] && (
+              {/* ТУК ЗАКОМЕНТИРАХ, не помня защо :) */}
+              {/* {currentUserHandle !== message.author && !isHovered && reactions && reactions[currentUserHandle] && (
                 <span>{REACTIONS[reactions[currentUserHandle]]} 1</span>
-              )}
+              )} */}
               {currentUserHandle !== message.author && isHovered && (
                 <div>
                   <Reactions chatId={chatId} messageId={message.id} userHandle={currentUserHandle} />
                 </div>
               )}
+               {/*ТОВА го добавих за да се рендерират промените при всички юзъри */}
+              {'reactions' in message && Object.values(message.reactions).map((reaction) => <span>{REACTIONS[reaction]}</span>)}
               {currentUserHandle === message.author && (
                 <div>
                   <button onClick={handleEditClick}>Edit</button>

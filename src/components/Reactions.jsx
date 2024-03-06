@@ -26,7 +26,11 @@ const Reactions = ({ chatId, messageId, userHandle }) => {
         <div>
         {Object.keys(REACTIONS).map((reaction) => (
             <span key={reaction} onClick={() => handleReaction(reaction)}>
-            {REACTIONS[reaction]} {reactions && reactions[userHandle] === reaction ? 1 : 0}
+                 {/*ТУК ако съм реагирал аз ми е в синъо квадратче което съм избрал */}
+                {reactions && reactions[userHandle] === reaction ? 
+                <span style={{border: '1px solid blue'}}>{REACTIONS[reaction]} </span> 
+                : <span>{REACTIONS[reaction]} </span>}
+            {/* {REACTIONS[reaction]} {reactions && reactions[userHandle] === reaction ? 1 : 0} */}
             </span>
         ))}
         </div>
