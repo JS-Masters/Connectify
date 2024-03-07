@@ -1,7 +1,7 @@
-import { get, limitToFirst, onValue, orderByChild, push, query, ref, set, getDatabase, remove } from "@firebase/database"
+import { get, limitToFirst, onValue, orderByChild, push, query, ref, set, getDatabase, remove, update } from "@firebase/database"
 import { db } from "../config/firebase-config"
 import { updateUserByHandle } from "./user.services";
-import { DELETE_MESSAGE } from "../common/constants";
+import { DELETE_MESSAGE, DELETE_REPLY } from "../common/constants";
 
 
 const updateUsersChats = async (chatMembers, newChatId) => { 
@@ -224,6 +224,21 @@ export const removeReactionFromMessage = async (chatId, messageId, userHandle) =
   await remove(messageRef);
 };
 
+export const addReactionToReply = async (chatId, messageId, replyId, reaction, userHandle) => {
+  const replyRef = ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}/reactions/${userHandle}`);
+  await set(replyRef, reaction);
+};
+
+export const removeReactionFromReply = async (chatId, messageId, replyId, userHandle) => {
+  const replyRef = ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}/reactions/${userHandle}`);
+  await remove(replyRef);
+};
+
+export const getReactionsByReply = (chatId, messageId, replyId, listenFn) => {
+  const q = query(ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}/reactions`));
+  return onValue(q, listenFn);
+};
+
 export const replyToMessage = async (chatId, messageId, reply, userHandle) => {
   const replyRef = await push(ref(db, `chats/${chatId}/messages/${messageId}/replies`), {});
   const replyId = replyRef.key;
@@ -240,3 +255,53 @@ export const getRepliesByMessage = (chatId, messageId, listenFn) => {
   const q = query(ref(db, `chats/${chatId}/messages/${messageId}/replies`));
   return onValue(q, listenFn);
 }
+
+export const  editReplyInChat = async (chatId, messageId, replyId, newContent
+) => {
+  const replyRef = ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}`);
+  const snapshot = await get(replyRef);
+  if (snapshot.exists()) {
+    await set(replyRef, {
+      ...snapshot.val(),
+      content: newContent,
+      editedOn: new Date().toLocaleString(),
+    });
+  } else {
+    console.log('No such reply!');
+  }
+}
+
+export const deleteReplyFromChat = async (chatId, messageId, replyId, deletedBy) => {
+  await set(ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}`), {
+    deleteMessage: DELETE_REPLY,
+    deletedOn: new Date().toLocaleDateString(),
+    deletedBy
+  });
+}
+
+export const leaveChat = async (chatId, userHandle) => {
+  try {
+    const chatRef = ref(db, `chats/${chatId}`);
+    const chatSnapshot = await get(chatRef);
+    const chatData = chatSnapshot.val();
+
+    if (chatData) {
+      const newParticipants = { ...chatData.participants };
+      delete newParticipants[userHandle];
+
+      await update(ref(db, `chats/${chatId}`), {
+        participants: newParticipants,
+      });
+
+      return true;
+    } else {
+      console.log('Chat not found');
+      return false; 
+    }
+  } catch (error) {
+    console.log(error.message);
+    return false; 
+  }
+};
+
+

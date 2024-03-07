@@ -7,14 +7,15 @@ import { getRepliesByMessage } from '../services/chat.services';
 import { v4 } from 'uuid';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
-const ChatMessageBox = ({ message, onEdit, onDelete, onReply, currentUserHandle, chatId, reactions }) => {
+const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDeleteReply, currentUserHandle, chatId, userHandle, isReply, showReactions, reply }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
   const [isHovered, setIsHovered] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState('');
-  const [replies, setReplies] = useState([]);
-
+  const [repliesToMessage, setReplies] = useState([]);
+  const [isEditingReply, setIsEditingReply] = useState(false);
+  const [editedReplyContent, setEditedReplyContent] = useState('');
 
   useEffect(() => {
     const unsubscribe = getRepliesByMessage(chatId, message.id, (snapshot) => {
@@ -77,8 +78,31 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, currentUserHandle,
     }
   };
 
+  const handleEditReplyClick = (reply) => {
+    console.log('Clicked Reply:', reply.id);
+    setIsEditingReply(true);
+    setEditedReplyContent(reply.content);
+  };
+  const handleSaveReplyEditClick = (reply) => {
+    console.log('Editing reply:', reply.id);
+    onEditReply(message.id, reply.id, editedReplyContent);
+    setIsEditingReply(false);
+    setEditedReplyContent('');
+  };
+  const handleCancelReplyEditClick = () => {
+    setIsEditingReply(false);
+    setEditedReplyContent('');
+  };
+
+  const handleDeleteReplyClick = (reply) => {
+    onDeleteReply(message.id, reply.id);
+  }
+
+  
   return (
+    
     <Card onMouseEnter={handleHoverEnter} onMouseLeave={handleHoverLeave} borderTop="8px" borderColor="purple.400" bg="white" >
+    
       {'deleteMessage' in message ? (
         <Text>
           {message.deleteMessage} by {message.deletedBy} on {message.deletedOn}
@@ -102,55 +126,81 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, currentUserHandle,
           ) : (
             <>
               <CardBody>
+                {/* Message content */}
                 <Text>{message.content}</Text>
-                {/* ТУК ЗАКОМЕНТИРАХ, не помня защо :) */}
-                {/* {currentUserHandle !== message.author && !isHovered && reactions && reactions[currentUserHandle] && (
-                <span>{REACTIONS[reactions[currentUserHandle]]} 1</span>)} */}
-                {currentUserHandle !== message.author && isHovered && (
-                  <Box>
-                    <Reactions chatId={chatId} messageId={message.id} userHandle={currentUserHandle} />
-                  </Box>
-                )}
-                {/*ТОВА го добавих за да се рендерират промените при всички юзъри */}
-                {'reactions' in message && Object.values(message.reactions).map((reaction) => <span key={v4()} >{REACTIONS[reaction]}</span>)}
 
-                {isReplying && (
+                {!isReply && currentUserHandle !== message.author && isHovered && showReactions && (
                   <Box>
-                    <Textarea value={replyContent} onChange={(e) => setReplyContent(e.target.value)} /> <br />
-                    <Button onClick={handleSaveReplyClick}>Add Reply</Button>
-                    <Button onClick={handleCancelReplyClick}>Cancel Reply</Button>
+                    <Reactions chatId={chatId} messageId={message.id} userHandle={currentUserHandle} isReply={false} />
                   </Box>
                 )}
+
+                {'reactions' in message && Object.values(message.reactions).map((reaction) => (
+                  <span key={v4()}>{REACTIONS[reaction]}</span>
+                ))}
               </CardBody>
 
+              {isReplying && !isReply && (
+                <CardBody>
+                  <Textarea value={replyContent} onChange={(e) => setReplyContent(e.target.value)} />
+                  <Button onClick={handleSaveReplyClick}>Add Reply</Button>
+                  <Button onClick={handleCancelReplyClick}>Cancel Reply</Button>
+                </CardBody>
+              )}
+
               <CardFooter>
-                {currentUserHandle === message.author && (
+                {currentUserHandle === message.author && !isReply && (
                   <HStack spacing={2}>
                     <Button leftIcon={<EditIcon />} onClick={handleEditClick}>Edit</Button>
                     <Button leftIcon={<DeleteIcon />} onClick={handleDeleteClick}>Delete</Button>
                   </HStack>
                 )}
-                {currentUserHandle !== message.author && !isReplying && (
+                {currentUserHandle !== message.author && !isReplying && !isReply && (
                   <Button onClick={handleReplyClick}>Reply</Button>
                 )}
+                
               </CardFooter>
 
-              {replies.map((reply) => (
-                <ChatMessageBox
-                  key={reply.id}
-                  message={reply}
-                  onEdit={onEdit}
-                  onDelete={onDelete}
-                  onReply={onReply}
-                  currentUserHandle={currentUserHandle}
-                  chatId={chatId}
-                  reactions={reactions}
-                />
-              ))}
+              {repliesToMessage.map((reply) => (
+  <div key={reply.id}>
+    <ChatMessageBox
+      chatId={chatId}
+      message={reply}
+      userHandle={userHandle}
+      isReply={true}
+      onEditReply={onEditReply}
+      onDeleteReply={onDeleteReply}
+      reply={reply}
+    />
+{currentUserHandle === reply.author && (
+  <>
+   <button onClick={() => handleEditReplyClick(reply)}>Edit</button>
+    <button onClick={() => handleDeleteReplyClick(reply)}>Delete</button>
+    {isEditingReply && (
+      <Box>
+        <Textarea value={editedReplyContent} onChange={(e) => setEditedReplyContent(e.target.value)} />
+        <Button onClick={() => handleSaveReplyEditClick(reply)}>Save</Button>
+        <Button onClick={handleCancelReplyEditClick}>Cancel</Button>
+      </Box>
+    )}
+  </>
+)}
+    {!isReply && currentUserHandle !== reply.author && isHovered && (
+      <Reactions
+        chatId={chatId}
+        messageId={message.id}
+        userHandle={userHandle}
+        replyID={reply.id}
+      />
+    )}
+  </div>
+))}
             </>
           )}
         </>
       )}
+
+
     </Card>
   );
 };
@@ -160,9 +210,18 @@ ChatMessageBox.propTypes = {
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onReply: PropTypes.func.isRequired,
+  onEditReply: PropTypes.func.isRequired,
+  onDeleteReply: PropTypes.func.isRequired,
   currentUserHandle: PropTypes.string.isRequired,
   chatId: PropTypes.string.isRequired,
-  reactions: PropTypes.object
+  reactions: PropTypes.object,
+  replies: PropTypes.array.isRequired,
+  repliesId: PropTypes.array.isRequired,
+  isReply: PropTypes.bool,
+  userHandle: PropTypes.string.isRequired,
+  showReactions: PropTypes.bool.isRequired,
+  reply: PropTypes.object,
+
 };
 
 

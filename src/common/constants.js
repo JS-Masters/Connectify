@@ -2,6 +2,10 @@ export const DYTE_URL = 'https://api.dyte.io/v2';
 
 export const DELETE_MESSAGE = 'Deleted message';
 
+export const DELETE_REPLY = 'Deleted reply';
+
+export const LEAVE_CHAT = 'left chat';
+
 
 export const statuses = {
     online: 'online',
