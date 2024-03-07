@@ -116,7 +116,7 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, currentUserHandle,
 
                 {isReplying && (
                   <Box>
-                    <Textarea value={replyContent} onChange={(e) => setReplyContent(e.target.value)} />
+                    <Textarea value={replyContent} onChange={(e) => setReplyContent(e.target.value)} /> <br />
                     <Button onClick={handleSaveReplyClick}>Add Reply</Button>
                     <Button onClick={handleCancelReplyClick}>Cancel Reply</Button>
                   </Box>

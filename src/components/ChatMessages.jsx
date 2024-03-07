@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { addMessageToChat, editMessageInChat, getChatMessagesById, deleteMessageFromChat, replyToMessage } from "../services/chat.services";
+import { editMessageInChat, getChatMessagesById, deleteMessageFromChat, replyToMessage } from "../services/chat.services";
 import ChatMessageBox from "./ChatMessageBox";
-import { Input } from "@chakra-ui/input";
-import { Form } from "react-router-dom";
+import ChatInput from "./ChatInput";
 import AppContext from "../providers/AppContext";
 import { v4 } from "uuid";
 import { Box } from "@chakra-ui/react";
+
 
 const ChatMessages = () => {
   const [messages, setMessages] = useState([]);
@@ -22,12 +22,6 @@ const ChatMessages = () => {
     return () => unsubscribe();
   }, [chatId]);
 
-  const sendMessage = async (event) => {
-    event.preventDefault();
-    const message = event.target.elements.newMessage.value;
-    await addMessageToChat(chatId, message, userData.handle);
-    event.target.elements.newMessage.value = "";
-  };
 
   const handleEditMessage = async (messageId, newContent) => {
     try {
@@ -53,24 +47,27 @@ const ChatMessages = () => {
   };
 
   return (
-    <Box overflowY='scroll' whiteSpace='nowrap' h='93%'>
+    <>
       {messages &&
-        messages.map((message) => (
-          <ChatMessageBox
-            key={v4()}
-            message={message}
-            onEdit={handleEditMessage}
-            onDelete={handleDeleteMessage}
-            onReply={handleReplyToMessage}
-            currentUserHandle={userData.handle}
-            chatId={chatId}
-            reactions={message.reactions}
-          />
-        ))}
-      <Form onSubmit={sendMessage} style={{ position: 'absolute', bottom: 30, width: '70%', backgroundColor: '#242424', color:'white' }}>
-        <Input placeholder="type here..." name="newMessage" />
-      </Form>
-    </Box>
+        <Box overflowY='scroll' whiteSpace='nowrap' h='93%'>
+          {
+            messages.map((message) => (
+              <ChatMessageBox
+                key={v4()}
+                message={message}
+                onEdit={handleEditMessage}
+                onDelete={handleDeleteMessage}
+                onReply={handleReplyToMessage}
+                currentUserHandle={userData.handle}
+                chatId={chatId}
+                reactions={message.reactions}
+              />
+            ))}
+        </Box>
+      }
+
+      <ChatInput />
+    </>
   );
 };
 
