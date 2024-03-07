@@ -6,6 +6,7 @@ import { Input } from "@chakra-ui/input";
 import { Form } from "react-router-dom";
 import AppContext from "../providers/AppContext";
 import { v4 } from "uuid";
+import { Box } from "@chakra-ui/react";
 
 const ChatMessages = () => {
   const [messages, setMessages] = useState([]);
@@ -36,7 +37,7 @@ const ChatMessages = () => {
     } catch (error) {
       // showToast(error);
       // setError(error.message);
-    };
+    }
   };
 
   const handleDeleteMessage = async (messageId) => {
@@ -52,7 +53,7 @@ const ChatMessages = () => {
   };
 
   return (
-    <>
+    <Box overflowY='scroll' whiteSpace='nowrap' h='93%'>
       {messages &&
         messages.map((message) => (
           <ChatMessageBox
@@ -66,10 +67,10 @@ const ChatMessages = () => {
             reactions={message.reactions}
           />
         ))}
-      <Form onSubmit={sendMessage}>
+      <Form onSubmit={sendMessage} style={{ position: 'absolute', bottom: 30, width: '70%', backgroundColor: '#242424', color:'white' }}>
         <Input placeholder="type here..." name="newMessage" />
       </Form>
-    </>
+    </Box>
   );
 };
 

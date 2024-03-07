@@ -67,19 +67,19 @@ const CreateChatPopUp = () => {
   const handleCreateChatClick = async (close) => {
     if (!selectedUsers.length) {
       showToast('Choose someone to connect with', 'info');
-    };
+    }
     try {
       const newChatId = await createNewChat(userData.handle, selectedUsers);
       handlePopUpClose(close);
       navigate(`/chats/${newChatId}`);
     } catch (error) {
       showToast('Error occured while creating a post', 'error');
-    };
+    }
   };
 
   return (
     <Popup trigger=
-      {<Button style={{ width: '400px', height: '45px', backgroundColor: 'green' }}>+</Button>}
+      {<Button style={{ marginTop: '10px' , width: '80%', height: '45px', backgroundColor: 'green' }}>New chat</Button>}
       modal nested>
       {
         close => (

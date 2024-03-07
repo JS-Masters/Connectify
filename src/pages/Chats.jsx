@@ -5,6 +5,7 @@ import { getChatsByUserHandle } from "../services/chat.services";
 import { v4 } from "uuid";
 import ChatMessages from "../components/ChatMessages";
 import CreateChatPopUp from "../components/CreateChatPopUp";
+import { Grid, GridItem, Heading } from "@chakra-ui/react";
 
 const Chats = () => {
   const { userData } = useContext(AppContext);
@@ -21,24 +22,29 @@ const Chats = () => {
   }, [chatId]);
 
   return (
-    <>
-      <div>
+    <Grid templateColumns="repeat(6, 1fr)">
+      <GridItem h='87vh' as='aside' border='2px solid green' colSpan={1}>
+        {<CreateChatPopUp />}
         {myChats ? (
           Object.keys(myChats).map((chatId) => {
             const chatName = Object.keys(myChats[chatId].participants).filter((participant) => participant !== userData.handle).join(", ");
             return (
-              <h1 key={v4()} onClick={() => navigate(`/chats/${chatId}`)}>
+              <Heading fontSize='1.5em' cursor='pointer' key={v4()} onClick={() => navigate(`/chats/${chatId}`)}>
                 {chatName}
-              </h1>
+              </Heading>
             );
           })
         ) : (
-          <h1>You dont have any chats yet...</h1>
+          <Heading fontSize='2em'>You dont have any chats yet...</Heading>
         )}
-        {<CreateChatPopUp/>}
-      </div>
-      {chatId && <ChatMessages/>}
-    </>
+      </GridItem>
+
+      {chatId &&
+        <GridItem h='87vh' colSpan={5} border='2px solid green'>
+          <ChatMessages />
+        </GridItem>
+      }
+    </Grid>
   );
 };
 
