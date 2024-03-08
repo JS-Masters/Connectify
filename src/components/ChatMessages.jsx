@@ -1,11 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { editMessageInChat, getChatMessagesById, deleteMessageFromChat, replyToMessage, editReplyInChat, deleteReplyFromChat, leaveChat } from "../services/chat.services";
+import { editMessageInChat, getChatMessagesById, deleteMessageFromChat, replyToMessage, editReplyInChat, deleteReplyFromChat, leaveChat, addMessageToChat } from "../services/chat.services";
 import ChatMessageBox from "./ChatMessageBox";
 import ChatInput from "./ChatInput";
 import AppContext from "../providers/AppContext";
 import { v4 } from "uuid";
-import { Box } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
+import { Input } from "@chakra-ui/input";
+import { Form } from "react-router-dom";
 
 const ChatMessages = () => {
   const [messages, setMessages] = useState([]);
@@ -89,26 +91,34 @@ const handleLeaveChat = async () => {
 };
 
 
-  return (
-    <>
-      {messages &&
-        messages.map((message) => (
-          <ChatMessageBox
-            key={v4()}
-            message={message}
-            onEdit={handleEditMessage}
-            onDelete={handleDeleteMessage}
-            onReply={handleReplyToMessage}
-            currentUserHandle={userData.handle}
-            chatId={chatId}
-            reactions={message.reactions}
-          />
-        ))}
-      <Form onSubmit={sendMessage} style={{ position: 'absolute', bottom: 30, width: '70%', backgroundColor: '#242424', color:'white' }}>
-        <Input placeholder="type here..." name="newMessage" />
+return (
+  <Box overflowY='scroll' whiteSpace='nowrap' h='93%'>
+    {messages && (
+      messages.map((message) => (
+        <ChatMessageBox
+          key={message.id} 
+          message={message}
+          onEdit={handleEditMessage}
+          onDelete={handleDeleteMessage}
+          onReply={handleReplyToMessage}
+          onEditReply={handleEditReply}
+          onDeleteReply={handleDeleteReply}
+          currentUserHandle={userData.handle}
+          chatId={chatId}
+          reactions={message.reactions}
+        />
+      ))
+    )}
+    <Form onSubmit={sendMessage} style={{ position: 'absolute', bottom: 30, width: '70%', backgroundColor: '#242424', color:'white' }}>
+        <Input placeholder="type here..." name="newMessage" disabled={isCurrentUserLeft} />
       </Form>
+      <Box display="flex" justifyContent="flex-end" mt={4}>
+        <Button colorScheme="red" onClick={handleLeaveChat} disabled={isCurrentUserLeft}>
+          Leave Chat
+        </Button>
+      </Box>
     </Box>
-  );
+);
 };
 
 export default ChatMessages;

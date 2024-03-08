@@ -129,7 +129,7 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
                 {/* Message content */}
                 <Text>{message.content}</Text>
 
-                {!isReply && currentUserHandle !== message.author && isHovered && showReactions && (
+                {!isReply && currentUserHandle !== message.author && isHovered &&  (
                   <Box>
                     <Reactions chatId={chatId} messageId={message.id} userHandle={currentUserHandle} isReply={false} />
                   </Box>
