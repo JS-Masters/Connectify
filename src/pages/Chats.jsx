@@ -29,7 +29,7 @@ const Chats = () => {
           Object.keys(myChats).map((chatId) => {
             const chatName = Object.keys(myChats[chatId].participants).filter((participant) => participant !== userData.handle).join(", ");
             return (
-              <Heading fontSize='1.5em' cursor='pointer' key={v4()} onClick={() => navigate(`/chats/${chatId}`)}>
+              <Heading size='md' cursor='pointer' key={v4()} onClick={() => navigate(`/chats/${chatId}`)}>
                 {chatName}
               </Heading>
             );

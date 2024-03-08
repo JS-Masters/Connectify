@@ -97,7 +97,7 @@ export const getChatMessagesById = (listenFn, chatId) => {
   return onValue(q, listenFn);
 };
 
-export const addMessageToChat = async (chatId, message, author) => {
+export const addMessageToChat = async (chatId, message, author, picURL) => {
   try {
     const msgRef = await push(ref(db, `chats/${chatId}/messages`), {});
     const newMessageId = msgRef.key;
@@ -106,6 +106,7 @@ export const addMessageToChat = async (chatId, message, author) => {
       id: newMessageId,
       author: author,
       content: message,
+      img: picURL || null,
       createdOn: new Date().toLocaleString(),
     });
 
