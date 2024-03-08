@@ -1,6 +1,6 @@
-// import PropTypes from 'prop-types'
+ import PropTypes from 'prop-types'
 
-import { useContext, useState } from "react";
+import { useContext, useState} from "react";
 import { Form, useParams } from "react-router-dom";
 import { addMessageToChat } from "../services/chat.services";
 import AppContext from "../providers/AppContext";
@@ -14,12 +14,15 @@ import { uploadMessagePhoto } from "../services/storage.service";
 import { DeleteIcon } from "@chakra-ui/icons";
 
 
-const ChatInput = () => {
+
+const ChatInput = ({disabled}) => {
 
     const [msg, setMsg] = useState('');
     const [isPickerVisible, setPickerVisible] = useState(false);
     const [picURL, setPicURL] = useState('');
     const [showMenu, setShowMenu] = useState(false);
+    const [isUserLeft, setIsUserLeft] = useState(false);
+
 
     const { chatId } = useParams();
     const { userData } = useContext(AppContext);
@@ -50,6 +53,7 @@ const ChatInput = () => {
         setShowMenu(false);
     };
 
+
     return (
         <Form onSubmit={sendMessage} style={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'space-around', bottom: 30, width: '70%', backgroundColor: '#242424', color: 'white', padding: '10px', borderRadius: '5px' }}>
             {isPickerVisible && <Box position='absolute' top='-430px' right='0'>
@@ -61,15 +65,18 @@ const ChatInput = () => {
             {showMenu && <Box position='absolute' width='100%' p='20px' top='-135px' bg='gray.800'>
                 <Image src={picURL} alt="Image" w='200px' />
                 <DeleteIcon position="absolute" cursor='pointer' top="0" right="0" color="red.500" onClick={() => { setShowMenu(false); setPicURL('') }} />
-            </Box>}
-            <Input value={msg} onChange={(event) => setMsg(event.target.value)} placeholder="type here..." w='80%' />
-            <FaRegSmile onClick={() => setPickerVisible(!isPickerVisible)} style={{ fontSize: '30px', cursor: 'pointer' }} />
-            <label htmlFor="file" style={{ fontSize: '30px', cursor: 'pointer' }}><SlPicture /></label>
-            <Input type="file" id="file" style={{ display: 'none' }} onChange={handlePic} />
-        </Form>
+                </Box>}
+      <Input value={msg} onChange={(event) => setMsg(event.target.value)} placeholder="type here..." w='80%' disabled={isUserLeft || disabled} />
+      <FaRegSmile onClick={() => setPickerVisible(!isPickerVisible)} style={{ fontSize: '30px', cursor: 'pointer' }} />
+      <label htmlFor="file" style={{ fontSize: '30px', cursor: 'pointer' }}><SlPicture /></label>
+      <Input type="file" id="file" style={{ display: 'none' }} onChange={handlePic} />
+    </Form>
     )
 }
 
-ChatInput.propTypes = {}
+ChatInput.propTypes = {
+    disabled: PropTypes.bool
+}
+
 
 export default ChatInput;

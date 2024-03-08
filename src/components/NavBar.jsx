@@ -26,7 +26,7 @@ const NavBar = () => {
         <NavLink to="/chats">CHATS </NavLink>
         <NavLink to="/calls">CALLS </NavLink>
         <NavLink to="/teams">TEAMS</NavLink>
-        <NotificationList userHandle={userHandle} />
+        <NotificationList userHandle={userHandle}  />
       </Box>
       {userData && (
         <Dropdown username={userData.handle} avatarUrl={userData.avatarUrl} />

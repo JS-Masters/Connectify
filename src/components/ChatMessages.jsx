@@ -10,7 +10,6 @@ const ChatMessages = () => {
   const [messages, setMessages] = useState([]);
   const { chatId } = useParams();
   const { userData } = useContext(AppContext);
-  // const [leftChat, setLeftChat] = useState(false);
   const [isCurrentUserLeft, setIsCurrentUserLeft] = useState(false);
 
 
@@ -26,7 +25,6 @@ const ChatMessages = () => {
 
     return () => {
       unsubscribe();
-      // setLeftChat(true);
     };
   }, [chatId, isCurrentUserLeft]);
 
@@ -99,10 +97,7 @@ const ChatMessages = () => {
           />
         ))
       )}
-      {/* <Form onSubmit={sendMessage} style={{ position: 'absolute', bottom: 30, width: '70%', backgroundColor: '#242424', color: 'white' }}>
-        <Input placeholder="type here..." name="newMessage" disabled={isCurrentUserLeft} />
-      </Form> */}
-      <ChatInput/>
+      <ChatInput disabled={isCurrentUserLeft} />
       <Box display="flex" justifyContent="flex-end" mt={4}>
         <Button colorScheme="red" onClick={handleLeaveChat} disabled={isCurrentUserLeft}>
           Leave Chat
@@ -110,6 +105,7 @@ const ChatMessages = () => {
       </Box>
     </Box>
   );
+
 };
 
 export default ChatMessages;

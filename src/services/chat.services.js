@@ -61,7 +61,7 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
     await updateUsersChats(allParticipants, newChatId);
     const notificationPromises = chatMembers.map(async (member) => {
       if (member !== loggedInUsername) {
-        await sendNotification(member, 'New chat!', 'You have been added to a new chat.');
+        await sendNotification(member, 'New chat!', 'You have been added to a new chat.', newChatId);
       }
     });
 
@@ -97,7 +97,8 @@ export const getChatMessagesById = (listenFn, chatId) => {
   return onValue(q, listenFn);
 };
 
-export const addMessageToChat = async (chatId, message, author, picURL) => {
+
+export const addMessageToChat = async (chatId, message, author) => {
   try {
     const msgRef = await push(ref(db, `chats/${chatId}/messages`), {});
     const newMessageId = msgRef.key;
@@ -106,7 +107,6 @@ export const addMessageToChat = async (chatId, message, author, picURL) => {
       id: newMessageId,
       author: author,
       content: message,
-      img: picURL || null,
       createdOn: new Date().toLocaleString(),
     });
 
@@ -115,7 +115,7 @@ export const addMessageToChat = async (chatId, message, author, picURL) => {
 
     const notificationPromises = Object.keys(chatData.participants).map(async (participant) => {
       if (participant !== author) {
-        await sendNotification(participant, 'New message!', `You have new message from ${author}.`);
+        await sendNotification(participant, 'New message!', `You have new message from ${author}.`, chatId);
       }
     });
 
@@ -167,7 +167,7 @@ export const deleteMessageFromChat = async (chatId, messageId, deletedBy) => {
 
 // }
 
-export const sendNotification = async (userHandle, title, body) => {
+export const sendNotification = async (userHandle, title, body, chatId) => {
   try {
     const notificationRef = await push(ref(db, `notifications/${userHandle}`), {});
     const notificationId = notificationRef.key;
@@ -178,6 +178,7 @@ export const sendNotification = async (userHandle, title, body) => {
       body,
       createdOn: new Date().toLocaleString(),
       read: false,
+      chatId,  
     });
   } catch (error) {
     console.log(error.message);
@@ -200,15 +201,17 @@ export const deleteNotification = async (userHandle, notificationId) => {
     console.log(error.message);
   }
 }
-
 export const getNotificationsByUserHandle = async (userHandle) => {
   try {
     const notificationsSnapshot = await get(ref(db, `notifications/${userHandle}`));
-    return notificationsSnapshot.val() || [];
+    if (!notificationsSnapshot.exists()) {
+      return null;
+    }
+    return notificationsSnapshot.val();
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
 export const getReactionsByMessage = (chatId, messageId, listenFn) => {
   const q = query(ref(db, `chats/${chatId}/messages/${messageId}/reactions`));
@@ -304,5 +307,4 @@ export const leaveChat = async (chatId, userHandle) => {
     return false; 
   }
 };
-
 

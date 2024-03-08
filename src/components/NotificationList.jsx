@@ -1,16 +1,23 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { markNotificationAsRead, deleteNotification, getNotificationsByUserHandle } from '../services/chat.services';
+import { markNotificationAsRead, deleteNotification, getNotificationsByUserHandle} from '../services/chat.services';
+import { Link } from 'react-router-dom';
 
 const NotificationList = ({ userHandle }) => {
   const [notifications, setNotifications] = useState([]);
 
-  useEffect(() => {
-    getNotificationsByUserHandle(userHandle).then((notifications) => {
-
+  
+useEffect(() => {
+  getNotificationsByUserHandle(userHandle).then((notifications) => {
+    if (notifications !== null) {
       setNotifications(notifications);
-    });
-  }, [userHandle]);
+    } else {
+      setNotifications({});
+    }
+  }).catch((error) => {
+    console.error("Error fetching notifications:", error);
+  });
+}, [userHandle]);
 
   const handleMarkAsRead = (notificationId) => {
     markNotificationAsRead(userHandle, notificationId).then(() => {
@@ -39,7 +46,7 @@ const NotificationList = ({ userHandle }) => {
         {notifications ? Object.keys(notifications).map((notificationId) => (
           <li key={notificationId}>
             <h3>{notifications[notificationId].title}</h3>
-            <p>{notifications[notificationId].body}</p>
+           <Link to={`/chats/${notifications[notificationId].chatId}`}> <p>{notifications[notificationId].body}</p></Link>
             <p>{notifications[notificationId].createdOn}</p>
             <button
               onClick={() => handleMarkAsRead(notificationId)}
@@ -61,3 +68,4 @@ export default NotificationList;
 // NotificationList.propTypes = {
 //   userHandle: PropTypes.string.isRequired,
 // };
+

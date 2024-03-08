@@ -126,7 +126,6 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
           ) : (
             <>
               <CardBody>
-                {/* Message content */}
                 <Text>{message.content}</Text>
                 {message.img && <Image src={message.img} alt="Image" w='200px' />}
 
