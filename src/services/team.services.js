@@ -9,13 +9,13 @@ export const getTeamMembers = async (teamId) => {
 
     if (!teamMembersRef.exists()) {
       throw new Error('There was problem with retrieving team members from database');
-    };
+    }
     const teamMembers = teamMembersRef.val();
     return teamMembers;
 
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 export const getTeamsByUserHandle = async (userHandle) => {
@@ -28,7 +28,7 @@ export const getTeamsByUserHandle = async (userHandle) => {
 
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 const updateUsersTeams = async (teamMembers, newTeamId, teamName) => {
@@ -46,7 +46,7 @@ const updateUsersTeams = async (teamMembers, newTeamId, teamName) => {
 
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 export const createTeam = async (teamName, teamOwner, teamMembers) => {
@@ -70,7 +70,7 @@ export const createTeam = async (teamName, teamOwner, teamMembers) => {
 
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 export const getTeamsByIds = async (teamIds) => {

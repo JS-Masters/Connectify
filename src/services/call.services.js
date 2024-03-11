@@ -25,7 +25,7 @@ export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteI
     const userSnapshot = await getUserByHandle(userToCallHandle);
     if (!userSnapshot.exists()) {
       throw new Error(DATABASE_ERROR_MSG)
-    };
+    }
     const userVal = userSnapshot.val();
     const userId = userVal.uid;
 
@@ -44,7 +44,7 @@ export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteI
 
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 export const changeIncomingCallStatus = async (callId, uid, status) => {
@@ -53,7 +53,7 @@ export const changeIncomingCallStatus = async (callId, uid, status) => {
     await update(callRef, { status: status });
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 
@@ -80,7 +80,7 @@ export const endCall = async (userToCall, dyteRoomId) => {
     const userSnapshot = await getUserByHandle(userToCall);
     if (!userSnapshot.exists()) {
       throw new Error(DATABASE_ERROR_MSG)
-    };
+    }
     const userVal = userSnapshot.val();
     const userId = userVal.uid;
     const incomingCalls = await getIncomingCallsByUid(userId);
@@ -88,10 +88,10 @@ export const endCall = async (userToCall, dyteRoomId) => {
     if (incomingCalls) {
       const callId = Object.values(incomingCalls).filter((call) => call.dyteRoomId === dyteRoomId)[0].id;
       await remove(ref(db, `incomingCalls/${userId}/${callId}`));
-    };
+    }
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 export const getIncomingCallsByUid = async (uid) => {
@@ -102,10 +102,10 @@ export const getIncomingCallsByUid = async (uid) => {
     // };
     if (incomingCallsSnapshot) {
       return incomingCallsSnapshot.val();
-    };
+    }
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 export const setUserHasRejectedCall = async (userHandle) => {
@@ -114,7 +114,7 @@ export const setUserHasRejectedCall = async (userHandle) => {
     await update(userRef, { hasRejectedCall: true });
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 

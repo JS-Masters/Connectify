@@ -28,13 +28,13 @@ export const getTeamChannels = async (teamId) => {
     const teamChannelsSnapshot = await get(ref(db, `teams/${teamId}/channels`));
     if (!teamChannelsSnapshot.exists()) {
       throw new Error(DATABASE_ERROR_MSG);
-    };  
+    }  
     const teamChannels = Object.values(teamChannelsSnapshot.val());
 
     return teamChannels;
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 export const getChannelMessagesById = (listenFn, teamId, channelId) => {
@@ -70,7 +70,7 @@ export const addMessageToChannel = async (teamId, channelId, message, author) =>
     await Promise.all(notificationPromises);
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 export const editMessageInChannel = async (teamId, channelId, messageId, newContent) => {
@@ -89,7 +89,7 @@ export const editMessageInChannel = async (teamId, channelId, messageId, newCont
     }
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 export const deleteMessageFromChannel = async (teamId, channelId, messageId, deletedBy) => {
@@ -101,5 +101,5 @@ export const deleteMessageFromChannel = async (teamId, channelId, messageId, del
     });
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
