@@ -5,23 +5,14 @@ import { DELETE_MESSAGE, DELETE_REPLY } from "../common/constants";
 
 
 const updateUsersChats = async (chatMembers, newChatId) => {
-<<<<<<< Updated upstream
   try {
     const chatPromises = Object.keys(chatMembers).map(async (member) => {
       const memberChats = await getChatsByUserHandle(member);
       return { member, chats: memberChats };
     });
-=======
-
-  const chatPromises = Object.keys(chatMembers).map(async (member) => {
-    const memberChats = await getChatsByUserHandle(member);
-    return { member, chats: memberChats };
-  });
->>>>>>> Stashed changes
 
     const allChats = await Promise.all(chatPromises);
 
-<<<<<<< Updated upstream
     const updatePromises = allChats.map(async ({ member, chats }) => {
       await updateUserByHandle(member, 'chats', { ...chats, [newChatId]: { participants: chatMembers } });
     });
@@ -30,13 +21,6 @@ const updateUsersChats = async (chatMembers, newChatId) => {
   } catch (error) {
     console.log(error.message);
   }
-=======
-  const updatePromises = allChats.map(async ({ member, chats }) => {
-    await updateUserByHandle(member, 'chats', { ...chats, [newChatId]: { participants: chatMembers } });
-  });
-
-  await Promise.all(updatePromises);
->>>>>>> Stashed changes
 };
 
 
@@ -46,8 +30,8 @@ const doesChatAlreadyExists = (loggedInUserChats, newChatMembers) => {
     const hasMatchingParticipants = newChatMembers.every(member => chatParticipants.includes(member));
     if (hasMatchingParticipants) {
       return chatId;
-    };
-  };
+    }
+  }
   return null;
 };
 
@@ -89,7 +73,7 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
     return newChatId;
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 
@@ -141,7 +125,7 @@ export const addMessageToChat = async (chatId, message, author) => {
     await Promise.all(notificationPromises);
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 export const editMessageInChat = async (chatId, messageId, newContent) => {
@@ -160,7 +144,7 @@ export const editMessageInChat = async (chatId, messageId, newContent) => {
     }
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 
@@ -173,7 +157,7 @@ export const deleteMessageFromChat = async (chatId, messageId, deletedBy) => {
     });
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
 
 // export const listenToLoggedUserChats = (listenFn, userHandle, chatId) => {
