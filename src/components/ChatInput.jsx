@@ -47,7 +47,7 @@ const ChatInput = ({disabled}) => {
             return;
         }
 
-        await addMessageToChat(chatId, msg, userData.handle, picURL);
+        await addMessageToChat(chatId, msg, userData.handle, picURL, userData.avatarUrl);
         setMsg('');
         setPicURL('');
         setShowMenu(false);

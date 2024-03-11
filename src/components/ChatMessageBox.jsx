@@ -115,7 +115,7 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
         <>
           <CardHeader>
             <HStack>
-              <Avatar src={userData.avatarUrl} />
+              <Avatar src={message.avatarUrl} />
               <Heading as='h3' size='sm'>{message.author}</Heading>
               <Text>{message.createdOn}</Text>
             </HStack>
