@@ -1,18 +1,27 @@
 import { get, limitToFirst, onValue, orderByChild, push, query, ref, set, getDatabase, remove, update } from "@firebase/database"
 import { db } from "../config/firebase-config"
-import { updateUserByHandle } from "./user.services";
+import { getUsersByChatId, updateUserByHandle } from "./user.services";
 import { DELETE_MESSAGE, DELETE_REPLY } from "../common/constants";
 
 
 const updateUsersChats = async (chatMembers, newChatId) => {
+<<<<<<< Updated upstream
   try {
     const chatPromises = Object.keys(chatMembers).map(async (member) => {
       const memberChats = await getChatsByUserHandle(member);
       return { member, chats: memberChats };
     });
+=======
+
+  const chatPromises = Object.keys(chatMembers).map(async (member) => {
+    const memberChats = await getChatsByUserHandle(member);
+    return { member, chats: memberChats };
+  });
+>>>>>>> Stashed changes
 
     const allChats = await Promise.all(chatPromises);
 
+<<<<<<< Updated upstream
     const updatePromises = allChats.map(async ({ member, chats }) => {
       await updateUserByHandle(member, 'chats', { ...chats, [newChatId]: { participants: chatMembers } });
     });
@@ -21,6 +30,13 @@ const updateUsersChats = async (chatMembers, newChatId) => {
   } catch (error) {
     console.log(error.message);
   }
+=======
+  const updatePromises = allChats.map(async ({ member, chats }) => {
+    await updateUserByHandle(member, 'chats', { ...chats, [newChatId]: { participants: chatMembers } });
+  });
+
+  await Promise.all(updatePromises);
+>>>>>>> Stashed changes
 };
 
 
@@ -181,7 +197,7 @@ export const sendNotification = async (userHandle, title, body, chatId) => {
       body,
       createdOn: new Date().toLocaleString(),
       read: false,
-      chatId,  
+      chatId,
     });
   } catch (error) {
     console.log(error.message);
@@ -263,7 +279,7 @@ export const getRepliesByMessage = (chatId, messageId, listenFn) => {
   return onValue(q, listenFn);
 }
 
-export const  editReplyInChat = async (chatId, messageId, replyId, newContent
+export const editReplyInChat = async (chatId, messageId, replyId, newContent
 ) => {
   const replyRef = ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}`);
   const snapshot = await get(replyRef);
@@ -303,11 +319,28 @@ export const leaveChat = async (chatId, userHandle) => {
       return true;
     } else {
       console.log('Chat not found');
-      return false; 
+      return false;
     }
   } catch (error) {
     console.log(error.message);
-    return false; 
+    return false;
   }
 };
 
+
+
+
+export const fetchChatData = async (chatIds, logedInUserHandle) => {
+
+  const userHandlesPromises = chatIds.map(async (chatId) => {
+    const response = await getUsersByChatId(chatId);
+    return Object.keys(response)
+  });
+
+  const allUsersHandles = (await Promise.all(userHandlesPromises)).flat();
+  const asSet = new Set(allUsersHandles);
+  const usersHandles = [...asSet].filter((handle) => handle !== logedInUserHandle);
+
+  return usersHandles;
+
+};
