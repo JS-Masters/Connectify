@@ -27,6 +27,7 @@ import { Button, useToast } from "@chakra-ui/react";
 import { v4 } from "uuid";
 import { ATENDED_STATUS, WAITING_STATUS } from "./common/constants";
 import { ref, remove } from "firebase/database";
+import Calendar from "./pages/Calendar/Calendar";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,6 +43,7 @@ const router = createBrowserRouter(
       <Route path="teams" element={<Authenticated><Teams /></Authenticated>} />
       <Route path="teams/:teamId" element={<Authenticated><Teams /></Authenticated>} />
       <Route path="teams/:teamId/channels/:channelId" element={<Authenticated><Teams /></Authenticated>} />
+      <Route path="calendar" element={<Authenticated><Calendar /></Authenticated>} />
     </Route>
   )
 );
