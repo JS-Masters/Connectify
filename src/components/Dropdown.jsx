@@ -19,9 +19,9 @@ import {
 } from "../services/user.services";
 import AppContext from "../providers/AppContext";
 import { statuses } from "../common/constants";
-import UserStatusIcon from "./UserStatusIcon";
 
 const Dropdown = ({ username = null, avatarUrl = null }) => {
+  
   const [showMenu, setShowMenu] = useState(false);
   const [showStatusMenu, setShowStatusMenu] = useState(false);
   const { userData, setContext } = useContext(AppContext);
@@ -124,7 +124,38 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
         </Text>
         <Avatar style={{ cursor: "pointer" }} name={username} src={avatarUrl}>
           <AvatarBadge w="1em" bg="teal.500">
-            {<UserStatusIcon currentStatus={userData.currentStatus} size={"12px"} toggleStatusMenu={toggleStatusMenu}/>}
+            {userData.currentStatus === statuses.online &&
+              <Box
+                onClick={toggleStatusMenu}
+                w='12px'
+                h='12px'
+                borderRadius="50%"
+                bg="green"
+              />}
+            {userData.currentStatus === statuses.inMeeting &&
+              <Box
+                onClick={toggleStatusMenu}
+                w='12px'
+                h='12px'
+                borderRadius="50%"
+                bg="orange"
+              />}
+            {userData.currentStatus === statuses.doNotDisturb &&
+              <Box
+                onClick={toggleStatusMenu}
+                w='12px'
+                h='12px'
+                borderRadius="50%"
+                bg="red"
+              />}
+            {userData.currentStatus === statuses.offline &&
+              <Box
+                onClick={toggleStatusMenu}
+                w='12px'
+                h='12px'
+                borderRadius="50%"
+                border="3px solid gray"
+              />}
           </AvatarBadge>
         </Avatar>
       </HStack>

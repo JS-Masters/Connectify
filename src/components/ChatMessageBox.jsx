@@ -18,7 +18,6 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
   const [isEditingReply, setIsEditingReply] = useState(false);
   const [editedReplyContent, setEditedReplyContent] = useState('');
 
-  const { userData } = useContext(AppContext);
 
 
   useEffect(() => {
@@ -104,7 +103,6 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
 
 
   return (
-
     <Card onMouseEnter={handleHoverEnter} onMouseLeave={handleHoverLeave} borderTop="8px" borderColor="purple.400" bg="white" >
 
       {'deleteMessage' in message ? (
