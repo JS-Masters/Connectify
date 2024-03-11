@@ -131,3 +131,24 @@ export const createDyteMeeting = async (dbMeetingId, teamId) => {
     console.log(error.message);
   }
 };
+
+export const joinMeeting = (dyteRoomId, userData, listenFn) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${DYTE_KEY}`
+    },
+    body:
+      `{
+            "name":"${userData.handle}",
+            "preset_name":"Connectify_Preset",
+            "custom_participant_id":"${userData.uid}"
+            }`
+  };
+
+  fetch(`${DYTE_URL}/meetings/${dyteRoomId}/participants`, options)
+    .then(response => response.json())
+    .then(response => listenFn(response.data.token))
+    .catch(e => console.error(e));
+};
