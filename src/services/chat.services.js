@@ -4,20 +4,23 @@ import { updateUserByHandle } from "./user.services";
 import { DELETE_MESSAGE, DELETE_REPLY } from "../common/constants";
 
 
-const updateUsersChats = async (chatMembers, newChatId) => { 
-
+const updateUsersChats = async (chatMembers, newChatId) => {
+  try {
     const chatPromises = Object.keys(chatMembers).map(async (member) => {
-    const memberChats = await getChatsByUserHandle(member);
-    return { member, chats: memberChats };
-  });
+      const memberChats = await getChatsByUserHandle(member);
+      return { member, chats: memberChats };
+    });
 
-  const allChats = await Promise.all(chatPromises);
+    const allChats = await Promise.all(chatPromises);
 
-  const updatePromises = allChats.map(async ({ member, chats }) => {
-    await updateUserByHandle(member, 'chats', { ...chats, [newChatId]: {participants : chatMembers} });
-  });
-   
-  await Promise.all(updatePromises);
+    const updatePromises = allChats.map(async ({ member, chats }) => {
+      await updateUserByHandle(member, 'chats', { ...chats, [newChatId]: { participants: chatMembers } });
+    });
+
+    await Promise.all(updatePromises);
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 
@@ -48,7 +51,7 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
     }
 
     const chatRef = await push(ref(db, 'chats'), {});
-    const newChatId = chatRef.key; 
+    const newChatId = chatRef.key;
 
     await set(ref(db, `chats/${newChatId}`), {
       id: newChatId,
