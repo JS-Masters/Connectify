@@ -86,7 +86,7 @@ const UploadForm = () => {
           />
           {selectedFileUrl ? (
             <>
-              <Img h="500px" w="400px" src={selectedFileUrl} alt="Selected" />
+              <Img h="300px" w="300px" src={selectedFileUrl} alt="Selected" />
               <Button type="submit">Upload</Button>
             </>
           ) : (

@@ -19,6 +19,8 @@ export const ATENDED_STATUS = 'atended';
 
 export const DATABASE_ERROR_MSG = 'There was a problem getting data from database';
 
+export const DEFAULT_AVATAR_URL = 'https://images.assetsdelivery.com/compings_v2/triken/triken1608/triken160800029.jpg';
+
 export const REACTIONS = {
     Like: '👍',
     Love: '❤️',
@@ -26,4 +28,4 @@ export const REACTIONS = {
     Wow: '😮',
     Sad: '🙁',
     Angry: '😠'
-  }
+}

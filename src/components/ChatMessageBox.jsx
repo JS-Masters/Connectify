@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Button, Card, CardBody, CardFooter, CardHeader, HStack, Heading, Image, Text, Textarea } from '@chakra-ui/react';
 import Reactions from './Reactions';
@@ -6,6 +6,7 @@ import { REACTIONS } from '../common/constants';
 import { getRepliesByMessage } from '../services/chat.services';
 import { v4 } from 'uuid';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import AppContext from '../providers/AppContext';
 
 const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDeleteReply, currentUserHandle, chatId, userHandle, isReply, showReactions, reply }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -16,6 +17,9 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
   const [repliesToMessage, setReplies] = useState([]);
   const [isEditingReply, setIsEditingReply] = useState(false);
   const [editedReplyContent, setEditedReplyContent] = useState('');
+
+  const { userData } = useContext(AppContext);
+
 
   useEffect(() => {
     const unsubscribe = getRepliesByMessage(chatId, message.id, (snapshot) => {
@@ -111,7 +115,7 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
         <>
           <CardHeader>
             <HStack>
-              <Avatar src='https://images.assetsdelivery.com/compings_v2/triken/triken1608/triken160800029.jpg' />
+              <Avatar src={userData.avatarUrl} />
               <Heading as='h3' size='sm'>{message.author}</Heading>
               <Text>{message.createdOn}</Text>
             </HStack>
@@ -203,24 +207,24 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
   );
 };
 
-ChatMessageBox.propTypes = {
-  message: PropTypes.object.isRequired,
-  onEdit: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onReply: PropTypes.func.isRequired,
-  onEditReply: PropTypes.func.isRequired,
-  onDeleteReply: PropTypes.func.isRequired,
-  currentUserHandle: PropTypes.string.isRequired,
-  chatId: PropTypes.string.isRequired,
-  reactions: PropTypes.object,
-  replies: PropTypes.array.isRequired,
-  repliesId: PropTypes.array.isRequired,
-  isReply: PropTypes.bool,
-  userHandle: PropTypes.string.isRequired,
-  showReactions: PropTypes.bool.isRequired,
-  reply: PropTypes.object,
+// ChatMessageBox.propTypes = {
+//   message: PropTypes.object.isRequired,
+//   onEdit: PropTypes.func.isRequired,
+//   onDelete: PropTypes.func.isRequired,
+//   onReply: PropTypes.func.isRequired,
+//   onEditReply: PropTypes.func.isRequired,
+//   onDeleteReply: PropTypes.func.isRequired,
+//   currentUserHandle: PropTypes.string.isRequired,
+//   chatId: PropTypes.string.isRequired,
+//   reactions: PropTypes.object,
+//   replies: PropTypes.array.isRequired,
+//   repliesId: PropTypes.array.isRequired,
+//   isReply: PropTypes.bool,
+//   userHandle: PropTypes.string.isRequired,
+//   showReactions: PropTypes.bool.isRequired,
+//   reply: PropTypes.object,
 
-};
+// };
 
 
 export default ChatMessageBox;
