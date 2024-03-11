@@ -8,7 +8,7 @@ export const getTeamMembers = async (teamId) => {
     const teamMembersRef = await get(ref(db, `teams/${teamId}/members`));
 
     if (!teamMembersRef.exists()) {
-      throw new Error('There was problem with retrieving team members from database');  
+      throw new Error('There was problem with retrieving team members from database');
     };
     const teamMembers = teamMembersRef.val();
     return teamMembers;
@@ -64,7 +64,7 @@ export const createTeam = async (teamName, teamOwner, teamMembers) => {
       members: allMembers,
       createdOn: new Date().toLocaleString()
     })
-  
+
     await updateUsersTeams(allMembers, teamRef.key, teamName);
     return teamRef.key;
 
@@ -89,6 +89,19 @@ export const getTeamsByIds = async (teamIds) => {
     return teams;
   } catch (error) {
     console.log(error.message);
-  };
+  }
 };
+
+export const getTeamById = async (teamId) => {
+  try {
+    const teamSnapshot = await get(ref(db, `teams/${teamId}`));
+    if (!teamSnapshot.exists()) {
+      throw new Error(DATABASE_ERROR_MSG);
+    }
+    return teamSnapshot.val();
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
