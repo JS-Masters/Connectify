@@ -8,13 +8,6 @@ import NotificationList from "./NotificationList";
 
 const NavBar = () => {
   const { userData } = useContext(AppContext);
-  const [userHandle, setUserHandle] = useState(null);
-
-  useEffect(() => {
-    if (userData) {
-      setUserHandle(userData.handle);
-    }
-  }, [userData]);
 
   return (
     <>
@@ -26,8 +19,8 @@ const NavBar = () => {
         <NavLink to="/chats">CHATS </NavLink>
         <NavLink to="/calls">CALLS </NavLink>
         <NavLink to="/teams">TEAMS </NavLink>
-        <NavLink to="/calendar">CALENDAR</NavLink>
-        <NotificationList userHandle={userHandle} />
+        <NavLink to="/calendar">CALENDAR </NavLink>
+        <NotificationList />
       </Box>
       {userData && (
         <Dropdown username={userData.handle} avatarUrl={userData.avatarUrl} />

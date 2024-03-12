@@ -5,6 +5,7 @@ import ChatMessageBox from "./ChatMessageBox";
 import ChatInput from "./ChatInput";
 import AppContext from "../providers/AppContext";
 import { Box, Button } from "@chakra-ui/react";
+import { SYSTEM_AVATAR } from "../common/constants";
 
 const ChatMessages = () => {
   const [messages, setMessages] = useState([]);
@@ -23,10 +24,8 @@ const ChatMessages = () => {
         setMessages(newMessages);
       }
     }, chatId);
+    return () =>  unsubscribe();
 
-    return () => {
-      unsubscribe();
-    };
   }, [chatId, isCurrentUserLeft]);
 
 
@@ -63,6 +62,7 @@ const ChatMessages = () => {
   }
 
   const handleLeaveChat = async () => {
+    //try/ catch
     const success = await leaveChat(chatId, userData.handle);
 
     if (success) {
@@ -72,7 +72,7 @@ const ChatMessages = () => {
         createdOn: new Date().toLocaleString(),
       };
 
-      await addMessageToChat(chatId, leaveMessage.content, leaveMessage.author);
+      await addMessageToChat(chatId, leaveMessage.content, leaveMessage.author, null, SYSTEM_AVATAR);
       setIsCurrentUserLeft(true);
     } else {
       console.log('Failed to leave the chat.');

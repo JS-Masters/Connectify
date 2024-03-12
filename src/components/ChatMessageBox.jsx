@@ -9,6 +9,7 @@ import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import AppContext from '../providers/AppContext';
 
 const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDeleteReply, currentUserHandle, chatId, userHandle, isReply, showReactions, reply }) => {
+  
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
   const [isHovered, setIsHovered] = useState(false);

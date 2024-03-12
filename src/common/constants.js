@@ -21,6 +21,8 @@ export const DATABASE_ERROR_MSG = 'There was a problem getting data from databas
 
 export const DEFAULT_AVATAR_URL = 'https://images.assetsdelivery.com/compings_v2/triken/triken1608/triken160800029.jpg';
 
+export const SYSTEM_AVATAR = 'https://icon-library.com/images/system-icon-png/system-icon-png-27.jpg';
+
 export const REACTIONS = {
     Like: '👍',
     Love: '❤️',

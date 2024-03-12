@@ -120,6 +120,7 @@ export const addMessageToChat = async (chatId, message, author, picURL, authorUr
 
     const notificationPromises = Object.keys(chatData.participants).map(async (participant) => {
       if (participant !== author) {
+
         await sendNotification(participant, 'New message!', `You have new message from ${author}.`, chatId);
       }
     });
@@ -182,7 +183,6 @@ export const sendNotification = async (userHandle, title, body, chatId) => {
       title,
       body,
       createdOn: new Date().toLocaleString(),
-      read: false,
       chatId,
     });
   } catch (error) {
@@ -190,13 +190,13 @@ export const sendNotification = async (userHandle, title, body, chatId) => {
   }
 }
 
-export const markNotificationAsRead = async (userHandle, notificationId) => {
-  try {
-    await set(ref(db, `notifications/${userHandle}/${notificationId}/read`), true);
-  } catch (error) {
-    console.log(error.message);
-  }
-}
+// export const markNotificationAsRead = async (userHandle, notificationId) => {
+//   try {
+//     await set(ref(db, `notifications/${userHandle}/${notificationId}/read`), true);
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// }
 
 
 export const deleteNotification = async (userHandle, notificationId) => {
@@ -205,17 +205,24 @@ export const deleteNotification = async (userHandle, notificationId) => {
   } catch (error) {
     console.log(error.message);
   }
-}
-export const getNotificationsByUserHandle = async (userHandle) => {
+};
+
+export const deleteNotificationsForOpenChat = async (notificationsToDelete, userHandle) => {
   try {
-    const notificationsSnapshot = await get(ref(db, `notifications/${userHandle}`));
-    if (!notificationsSnapshot.exists()) {
-      return null;
-    }
-    return notificationsSnapshot.val();
-  } catch (error) {
+    const deletePromises = notificationsToDelete.map(async(n) => await deleteNotification(userHandle, n.id));
+    await Promise.all(deletePromises);
+  } catch(error) {
     console.log(error.message);
   }
+};
+
+export const getNotificationsByUserHandle =  (listenFn, userHandle) => {
+  const q = query(
+    ref(db, `notifications/${userHandle}`),
+    // orderByChild('createdOn'),
+    limitToFirst(50)
+  )
+  return onValue(q, listenFn);
 };
 
 export const getReactionsByMessage = (chatId, messageId, listenFn) => {
