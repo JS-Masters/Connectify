@@ -1,6 +1,6 @@
 import { Button, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { getAllUsers } from "../services/user.services";
+import { getAllUsers, isLoggedUserBanned } from "../services/user.services";
 import { addIncomingCallToDb, createCall, endCall } from "../services/call.services";
 import { useContext } from "react";
 import AppContext from "../providers/AppContext";
@@ -24,14 +24,18 @@ const Calls = () => {
   }, []);
 
 
-  const handleInputChange = (event) => {
+  const handleInputChange = async (event) => {
+    setSearchTerm(event.target.value);
     if (event.target.value.length) {
-      const filteredUsers = users.filter((u) => u.toLowerCase().includes(event.target.value)); // startsWith(event.target.value) ???
-      setUsersBySearchTerm(filteredUsers);
+      const filteredUsers = users.filter((u) => u.toLowerCase().startsWith(event.target.value));
+     const checkBanPromises =  filteredUsers.map(async (userToCheckIfBanned) => await isLoggedUserBanned(userData.handle, userToCheckIfBanned));
+     const checkedUsersBySearchTerm = await Promise.all(checkBanPromises);
+     const checkedUsers = checkedUsersBySearchTerm.filter(Boolean);
+      setUsersBySearchTerm(checkedUsers);
     } else {
       setUsersBySearchTerm([]);
     };
-    setSearchTerm(event.target.value);
+  
   };
 
   const startCall = async (userToCallHandle) => {
