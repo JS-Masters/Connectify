@@ -88,6 +88,15 @@ export const getChatsByUserHandle = async (userHandle) => {
   } catch (error) {
     console.log(error.message);
   }
+};
+
+export const listenForNewChats = (listenFn, userHandle) => {
+  const q = query(
+    ref(db, `users/${userHandle}/chats`),
+    orderByChild('createdOn'),
+    limitToFirst(50)
+  )
+  return onValue(q, listenFn);
 }
 
 

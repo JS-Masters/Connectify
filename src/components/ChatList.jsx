@@ -3,7 +3,7 @@ import CreateChatPopUp from './CreateChatPopUp';
 import { useContext, useEffect, useState } from 'react';
 import AppContext from '../providers/AppContext';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchChatData, getChatsByUserHandle } from '../services/chat.services';
+import { fetchChatData, getChatsByUserHandle, listenForNewChats } from '../services/chat.services';
 import { Avatar, AvatarBadge, Box, Heading } from '@chakra-ui/react';
 import { v4 } from 'uuid';
 import { addAvatarAndStatus } from '../services/user.services';
@@ -18,11 +18,25 @@ const ChatList = () => {
   const [users, setUsers] = useState([]); // Array<object{handle: string, avatarUrl: string, currentStatus: string}>
 
   useEffect(() => {
-    getChatsByUserHandle(userData.handle).then((chats) => {
-      if (chats) {
-        setMyChats(chats);
-      }
-    });
+    if(userData) {
+      const unsubscribe = listenForNewChats((snapshot) => {
+        const chatsData = snapshot.exists() ? snapshot.val() : null;
+        if(chatsData){
+          setMyChats(chatsData);
+        }
+
+      }, userData.handle);
+      return () =>  unsubscribe();
+    }
+
+
+
+
+    // getChatsByUserHandle(userData.handle).then((chats) => {
+    //   if (chats) {
+    //     setMyChats(chats);
+    //   }
+    // });
   }, [chatId]);
 
   useEffect(() => {
