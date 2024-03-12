@@ -163,6 +163,7 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
       {showMenu && (
         <List
           position="absolute"
+          zIndex='5'
           color="purple.400"
           p="5px 0"
           fontSize="large"
