@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import Popup from "reactjs-popup";
 import AppContext from "../providers/AppContext";
 import { useNavigate } from "react-router-dom";
-import { getAllUsers } from "../services/user.services";
+import { checkUsersIfBannedLoggedUser, getAllUsers } from "../services/user.services";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import { v4 } from "uuid";
 import { createNewChat } from "../services/chat.services";
@@ -36,12 +36,9 @@ const CreateChatPopUp = () => {
 
   useEffect(() => {
     if (users.length) {
-      const usersFiltered = users.filter(
-        (u) =>
-          u.toLowerCase().includes(searchField.toLowerCase()) &&
-          u !== userData.handle
-      );
-      setFoundUsers(usersFiltered);
+      const usersFiltered = users.filter((u) => u.toLowerCase().startsWith(searchField.toLowerCase()) && u !== userData.handle);
+      checkUsersIfBannedLoggedUser(usersFiltered, userData.handle)
+      .then(setFoundUsers)
     }
   }, [searchField, users]);
 
@@ -119,7 +116,7 @@ const CreateChatPopUp = () => {
                   : "No users selected yet!"}
               </div>
               <List>
-                {foundUsers.length &&
+                {searchField && Boolean(foundUsers.length) &&
                   foundUsers.map((user) => (
                     <Button
                       rightIcon={<AddIcon />}

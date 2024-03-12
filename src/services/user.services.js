@@ -250,16 +250,27 @@ export const unbanUser = async (userHandle, userToUnban) => {
 };
 
 export const isLoggedUserBanned = async (loggedUser, userHandleToCheck) => {
+
   try {
     const loggedUserBannedBySnapshot = await get(ref(db, `users/${loggedUser}/bannedBy`));
-
-    if (loggedUserBannedBySnapshot) {
+    // if (loggedUserBannedBySnapshot) {
       const loggedUserBannedBy = loggedUserBannedBySnapshot.val();
-      if(Object.keys(loggedUserBannedBy).includes(userHandleToCheck)) {
+      if(loggedUserBannedBy && Object.keys(loggedUserBannedBy).includes(userHandleToCheck)) {
         return null;
       }
       return userHandleToCheck;
-    }
+    // }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const checkUsersIfBannedLoggedUser = async (usersToCheck, loggedUser) => {
+  try {
+    const checkBanPromises =  usersToCheck.map(async (userToCheckIfBanned) => await isLoggedUserBanned(loggedUser, userToCheckIfBanned));
+    const checkedUsersBySearchTerm = await Promise.all(checkBanPromises);
+    const checkedUsers = checkedUsersBySearchTerm.filter(Boolean);
+    return checkedUsers;
   } catch (error) {
     console.log(error.message);
   }
