@@ -3,11 +3,12 @@ import CreateChatPopUp from './CreateChatPopUp';
 import { useContext, useEffect, useState } from 'react';
 import AppContext from '../providers/AppContext';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchChatData, getChatsByUserHandle, listenForNewChats } from '../services/chat.services';
-import { Avatar, AvatarBadge, Box, Heading } from '@chakra-ui/react';
+import { addMessageToChat, fetchChatData, getChatsByUserHandle, handleLeaveChat, leaveChat, listenForNewChats } from '../services/chat.services';
+import { Avatar, AvatarBadge, Box, Button, Heading } from '@chakra-ui/react';
 import { v4 } from 'uuid';
 import { addAvatarAndStatus } from '../services/user.services';
 import UserStatusIconChats from './UserStatusIconChats';
+import { NO_USERS_AVATAR, NO_USERS_MESSAGE, SYSTEM_AVATAR, statuses } from '../common/constants';
 
 const ChatList = () => {
 
@@ -16,28 +17,23 @@ const ChatList = () => {
   const navigate = useNavigate();
   const [myChats, setMyChats] = useState(null);
   const [users, setUsers] = useState([]); // Array<object{handle: string, avatarUrl: string, currentStatus: string}>
+  const [leaveChatTrigger, setLeaveChatTrigger] = useState(false);
 
   useEffect(() => {
-    if(userData) {
+    if (userData) {
       const unsubscribe = listenForNewChats((snapshot) => {
         const chatsData = snapshot.exists() ? snapshot.val() : null;
-        if(chatsData){
+        if (chatsData) {
           setMyChats(chatsData);
+        } else {
+          setMyChats(null)
         }
 
       }, userData.handle);
-      return () =>  unsubscribe();
+      return () => unsubscribe();
     }
 
-
-
-
-    // getChatsByUserHandle(userData.handle).then((chats) => {
-    //   if (chats) {
-    //     setMyChats(chats);
-    //   }
-    // });
-  }, [chatId]);
+  }, [chatId, leaveChatTrigger]);
 
   useEffect(() => {
 
@@ -50,20 +46,28 @@ const ChatList = () => {
             .then(setUsers)
         })
         .catch((err) => console.log(err.message));
-
     }
-
   }, [myChats]);
+
+
+  const handleLeaveChatClick = (chatID, userHandle) => {
+    handleLeaveChat(chatID, userHandle)
+    .then(() => setLeaveChatTrigger(!leaveChatTrigger));
+  };
 
   return (
     <>
       {<CreateChatPopUp />}
       {myChats ? (
-        Object.keys(myChats).map((chatId) => {
-          const chatParticipantsHandles = Object.keys(myChats[chatId].participants).filter((participant) => participant !== userData.handle);
-          const chatMembers = users.filter((u) => chatParticipantsHandles.includes(u.handle));
+        Object.keys(myChats).map((chatID) => {
+          const chatParticipantsHandles = Object.keys(myChats[chatID].participants).filter((participant) => participant !== userData.handle);
+          let chatMembers = []
+          {
+            chatParticipantsHandles.length === 0 ? chatMembers = [{ handle: NO_USERS_MESSAGE, avatarUrl: NO_USERS_AVATAR, currentStatus: statuses.offline }]
+            : chatMembers = users.filter((u) => chatParticipantsHandles.includes(u.handle))
+          }
           return (
-            <Box border='1px solid gray' size='md' cursor='pointer' key={v4()} onClick={() => navigate(`/chats/${chatId}`)}>
+            <Box border='1px solid gray' size='md' cursor='pointer' key={v4()} onClick={() => navigate(`/chats/${chatID}`)}>
               {chatMembers.map((member) =>
                 <span key={v4()}>
                   <Avatar size='sm' style={{ cursor: "pointer" }} src={member.avatarUrl}>
@@ -72,6 +76,7 @@ const ChatList = () => {
                     </AvatarBadge>
                   </Avatar>
                   <Heading display='inline' as='h3' size='sm'>{member.handle}</Heading>
+                  <Button colorScheme="red" onClick={() => handleLeaveChatClick(chatID, userData.handle)}>X</Button>
                 </span>
               )}
             </Box>

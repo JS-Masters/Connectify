@@ -23,6 +23,10 @@ export const DEFAULT_AVATAR_URL = 'https://images.assetsdelivery.com/compings_v2
 
 export const SYSTEM_AVATAR = 'https://icon-library.com/images/system-icon-png/system-icon-png-27.jpg';
 
+export const NO_USERS_MESSAGE = 'No users in this chat';
+
+export const NO_USERS_AVATAR = 'https://thumbs.dreamstime.com/z/group-icon-users-teamwork-sign-vector-no-stop-group-icon-users-teamwork-sign-person-silhouette-symbol-prohibited-ban-stop-148090714.jpg?ct=jpeg';
+
 export const REACTIONS = {
     Like: '👍',
     Love: '❤️',

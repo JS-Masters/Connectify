@@ -11,7 +11,6 @@ const ChatMessages = () => {
   const [messages, setMessages] = useState([]);
   const { chatId } = useParams();
   const { userData } = useContext(AppContext);
-  const [isCurrentUserLeft, setIsCurrentUserLeft] = useState(false);
 
 
   useEffect(() => {
@@ -19,14 +18,12 @@ const ChatMessages = () => {
     const unsubscribe = getChatMessagesById((snapshot) => {
       const msgData = snapshot.exists() ? snapshot.val() : {};
       const newMessages = Object.values(msgData);
-
-      if (!isCurrentUserLeft) {
         setMessages(newMessages);
-      }
+
     }, chatId);
     return () =>  unsubscribe();
 
-  }, [chatId, isCurrentUserLeft]);
+  }, [chatId]);
 
 
   const handleEditMessage = async (messageId, newContent) => {
@@ -61,25 +58,6 @@ const ChatMessages = () => {
     await deleteReplyFromChat(chatId, messageId, replyId, userData.handle);
   }
 
-  const handleLeaveChat = async () => {
-    //try/ catch
-    const success = await leaveChat(chatId, userData.handle);
-
-    if (success) {
-      const leaveMessage = {
-        content: `${userData.handle} has left the chat.`,
-        author: 'System',
-        createdOn: new Date().toLocaleString(),
-      };
-
-      await addMessageToChat(chatId, leaveMessage.content, leaveMessage.author, null, SYSTEM_AVATAR);
-      setIsCurrentUserLeft(true);
-    } else {
-      console.log('Failed to leave the chat.');
-    }
-  };
-
-
   return (
     <Box overflowY='scroll' whiteSpace='nowrap' h='93%'>
       {messages && (
@@ -98,12 +76,7 @@ const ChatMessages = () => {
           />
         ))
       )}
-      <ChatInput disabled={isCurrentUserLeft} />
-      <Box display="flex" justifyContent="flex-end" mt={4}>
-        <Button colorScheme="red" onClick={handleLeaveChat} disabled={isCurrentUserLeft}>
-          Leave Chat
-        </Button>
-      </Box>
+      <ChatInput />
     </Box>
   );
 

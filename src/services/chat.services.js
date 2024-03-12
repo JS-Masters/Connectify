@@ -1,7 +1,7 @@
 import { get, limitToFirst, onValue, orderByChild, push, query, ref, set, getDatabase, remove, update } from "@firebase/database"
 import { db } from "../config/firebase-config"
 import { getUsersByChatId, updateUserByHandle } from "./user.services";
-import { DELETE_MESSAGE, DELETE_REPLY } from "../common/constants";
+import { DELETE_MESSAGE, DELETE_REPLY, SYSTEM_AVATAR } from "../common/constants";
 
 
 const updateUsersChats = async (chatMembers, newChatId) => {
@@ -119,7 +119,7 @@ export const addMessageToChat = async (chatId, message, author, picURL, authorUr
       id: newMessageId,
       author: author,
       content: message,
-      img: picURL || null,
+      img: picURL,
       createdOn: new Date().toLocaleString(),
       authorUrl
     });
@@ -313,29 +313,31 @@ export const leaveChat = async (chatId, userHandle) => {
     if (chatData) {
       const newParticipants = { ...chatData.participants };
       delete newParticipants[userHandle];
-
-      await update(ref(db, `chats/${chatId}`), {
-        participants: newParticipants,
-      });
-
-      return true;
-    } else {
-      console.log('Chat not found');
-      return false;
-    }
+      if(Object.keys(newParticipants).length === 0) {
+        await remove(ref(db, `chats/${chatId}`));
+        await remove(ref(db, `users/${userHandle}/chats/${chatId}`));
+      }else{
+        await update(ref(db, `chats/${chatId}`), {
+          participants: newParticipants,
+        });
+  
+        await remove(ref(db, `users/${userHandle}/chats/${chatId}`));
+  
+        const removeParticipantFromMembersPromises = Object.keys(newParticipants).map(async(p) => await remove(ref(db, `users/${p}/chats/${chatId}/participants/${userHandle}`)));
+        await Promise.all(removeParticipantFromMembersPromises);
+      }
+    } 
   } catch (error) {
     console.log(error.message);
-    return false;
+
   }
 };
-
-
 
 
 export const fetchChatData = async (chatIds, logedInUserHandle) => {
 
   const userHandlesPromises = chatIds.map(async (chatId) => {
-    const response = await getUsersByChatId(chatId);
+    const response = await getUsersByChatId(chatId); // !!!
     return Object.keys(response)
   });
 
@@ -345,4 +347,25 @@ export const fetchChatData = async (chatIds, logedInUserHandle) => {
 
   return usersHandles;
 
+};
+
+export const handleLeaveChat = async (chatID, userHandle) => {
+  try {
+    await leaveChat(chatID, userHandle);
+
+    const leaveMessage = {
+      content: `${userHandle} has left the chat.`,
+      author: 'System',
+      createdOn: new Date().toLocaleString(),
+    };
+
+    const chatSnapshot = await get(ref(db, `chats/${chatID}`));
+    if (!chatSnapshot.exists()) {
+      return;
+    } 
+      await addMessageToChat(chatID, leaveMessage.content, leaveMessage.author, null, SYSTEM_AVATAR);
+    
+  } catch (error) {
+    console.log(error.message);
+  }
 };
