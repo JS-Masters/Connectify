@@ -29,3 +29,7 @@ export const REACTIONS = {
     Sad: '🙁',
     Angry: '😠'
 }
+
+export const GIPHY_BASE_URL = 'http://api.giphy.com/v1/gifs/';
+
+export const GIPHY_API_KEY = 'Zj1aiHyjCjbvRrd2UWN4CSdCGtOZt5vo';
