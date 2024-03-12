@@ -93,7 +93,7 @@ export const getChatsByUserHandle = async (userHandle) => {
 export const listenForNewChats = (listenFn, userHandle) => {
   const q = query(
     ref(db, `users/${userHandle}/chats`),
-    orderByChild('createdOn'),
+    // orderByChild('createdOn'),
     limitToFirst(50)
   )
   return onValue(q, listenFn);

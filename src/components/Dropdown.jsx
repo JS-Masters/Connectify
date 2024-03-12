@@ -19,9 +19,10 @@ import {
 } from "../services/user.services";
 import AppContext from "../providers/AppContext";
 import { statuses } from "../common/constants";
+import BannedUsersPopUp from "../pages/BannedUsersPopUp";
 
 const Dropdown = ({ username = null, avatarUrl = null }) => {
-  
+
   const [showMenu, setShowMenu] = useState(false);
   const [showStatusMenu, setShowStatusMenu] = useState(false);
   const { userData, setContext } = useContext(AppContext);
@@ -173,7 +174,7 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
           alignItems="center"
           top="70px"
         >
-          <ListItem cursor="pointer">Profile</ListItem>
+          <BannedUsersPopUp />
           <UploadForm />
           <ListItem cursor="pointer" onClick={signOut}>
             Sign out
