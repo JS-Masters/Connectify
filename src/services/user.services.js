@@ -1,4 +1,4 @@
-import { get, set, ref, query, equalTo, orderByChild, update } from 'firebase/database';
+import { get, set, ref, query, equalTo, orderByChild, update, limitToFirst, onValue } from 'firebase/database';
 import { db } from '../config/firebase-config';
 import { DATABASE_ERROR_MSG, DEFAULT_AVATAR_URL, NO_USERS_MESSAGE } from '../common/constants';
 
@@ -89,6 +89,15 @@ export const getUserLastStatusByHandle = async (handle) => {
   } catch (error) {
     console.log(error.message)
   }
+};
+
+export const listenForStatusChange =  (listenFn, loggedUserHandle) => {
+  const q = query(
+    ref(db, `users/${loggedUserHandle}`),
+    // orderByChild('createdOn'),
+    limitToFirst(50)
+  )
+  return onValue(q, listenFn);
 };
 
 export const getUserAvatarByHandle = async (handle) => {

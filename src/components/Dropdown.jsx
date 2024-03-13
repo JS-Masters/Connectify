@@ -17,6 +17,7 @@ import {
   changeUserCurrentStatusInDb,
   changeUserLastStatusInDb,
   getUserStatusByHandle,
+  listenForStatusChange,
 } from "../services/user.services";
 import AppContext from "../providers/AppContext";
 import { statuses } from "../common/constants";
@@ -45,21 +46,14 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (userData) {
-        getUserStatusByHandle(userData.handle)
-          .then((currentUserStatus) => {
-           if(currentUserStatus === statuses.inMeeting) {
-            setUserIsInMeeting(true);
-           } else {
-            setUserIsInMeeting(false);
-           }
-
-          })
-      }
-    }, 500);
-    return () => clearInterval(interval);
-  }, [])
+    if (userData) {
+      const unsubscribe = listenForStatusChange((snapshot) => {
+        const userStatus = snapshot.exists() ? snapshot.val().currentStatus : userData.currentStatus;
+        (userStatus === statuses.inMeeting) ? setUserIsInMeeting(true) : setUserIsInMeeting(false);
+      }, userData.handle);
+      return () => unsubscribe();
+    }
+  }, []);
 
   const toggleMenu = () => {
     setShowStatusMenu(false);

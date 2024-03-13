@@ -22,7 +22,7 @@ const UserStatusIcon = ({ userHandle, iconSize, toggleStatusMenu = () => {} }) =
             }
           })
       }
-    }, 2000);
+    }, 800);
     return () => clearInterval(interval);
   }, [userStatus]);
 

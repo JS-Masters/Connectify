@@ -24,7 +24,7 @@ const Teams = () => {
         (Boolean(Object.keys(userTeamsData).length)) ? setTeams(Object.values(userTeamsData)) : setTeams(userTeamsData);
       }, userData.handle);
 
-      return () => unsubscribe()
+      return () => unsubscribe();
     }
   }, [teamId, channelId]);
 
