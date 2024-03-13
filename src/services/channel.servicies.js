@@ -63,7 +63,7 @@ export const addMessageToChannel = async (teamId, channelId, message, author) =>
 
     const notificationPromises = Object.keys(channelData.participants).map(async (participant) => {
       if (participant !== author) {
-        await sendNotification(participant, 'New message!', `You have new message from ${author}.`);
+        await sendNotification(participant, 'New team message!', `You have new message from ${author} in your channel.`, channelId, 'channels', teamId);
       }
     });
 

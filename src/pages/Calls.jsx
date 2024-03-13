@@ -20,6 +20,7 @@ const Calls = () => {
   const [userToCall, setUserToCall] = useState('');
   const [joinedCallDyteId, setJoinedCallDyteId] = useState('');
   const toast = useToast();
+  
   const showToast = (desc, status) => {
     toast({
       title: "User is busy",

@@ -92,21 +92,32 @@ export const getUserLastStatusByHandle = async (handle) => {
 };
 
 export const getUserAvatarByHandle = async (handle) => {
-
   try {
     const snapshot = await get(ref(db, `users/${handle}/avatarUrl`));
-
     if (!snapshot.exists()) {
       throw new Error(DATABASE_ERROR_MSG);
     }
-
     return snapshot.val();
 
   } catch (error) {
     console.log(error.message)
   }
+};
 
-}
+export const getUsersAvatarsByHandles = async (usersHandles) => {
+  try {
+    const membersAvatarsPromises = usersHandles.map(async (memberHandle) => {
+      const memberAvatar = await getUserAvatarByHandle(memberHandle);
+      return { handle: memberHandle, avatarUrl: memberAvatar };
+    });
+    const membersWithAvatars = await Promise.all(membersAvatarsPromises);
+    return membersWithAvatars;
+
+  } catch (error) {
+    console.log(error.message)
+  }
+};
+
 
 export const getUsersByChatId = async (chatId) => {
   try {

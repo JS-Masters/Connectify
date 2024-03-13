@@ -87,7 +87,7 @@ const CreateMeetingPopUp = ({ teamName }) => {
 
   return (
     <Popup trigger=
-      {<Button style={{ width: '400px', height: '45px', backgroundColor: 'blue' }}>Create/Edit Meeting</Button>}
+      {<Button style={{ width: '150px', height: '45px', backgroundColor: 'blue', fontSize:'14px' }}>Create/Edit Meeting</Button>}
       modal nested>
       {
         close => (

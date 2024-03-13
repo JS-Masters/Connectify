@@ -9,10 +9,9 @@ const Chats = () => {
 
   return (
     <Grid templateColumns="repeat(6, 1fr)">
-      <GridItem h='87vh' as='aside' border='2px solid green' colSpan={1}>
+      <GridItem h='87vh' as='aside' border='2px solid orange' colSpan={1}>
         <ChatList />
       </GridItem>
-
       {chatId &&
         <GridItem h='87vh' colSpan={5} border='2px solid green'>
           <ChatMessages />

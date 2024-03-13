@@ -47,6 +47,7 @@ const NotificationList = () => {
             <h3>{notification.title}</h3>
             {notification.type === 'chats' && <Link onClick={() => handleDelete(notification.id)} to={`/chats/${notification.eventId}`}> <p>{notification.body}</p></Link>}
             {notification.type === 'teams' && <Link onClick={() => handleDelete(notification.id)} to={`/teams/${notification.eventId}`}> <p>{notification.body}</p></Link>} 
+            {notification.type === 'channels' && <Link onClick={() => handleDelete(notification.id)} to={`/teams/${notification.teamId}/channels/${notification.eventId}`}> <p>{notification.body}</p></Link>} 
             <p>{notification.createdOn}</p>
             <button style={{ border: '1px solid black' }} onClick={() => handleDelete(notification.id)}>X </button>
           </li>

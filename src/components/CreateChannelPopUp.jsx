@@ -48,7 +48,7 @@ const CreateChannelPopUp = () => {
 
   return (
     <Popup trigger=
-      {<Button style={{ width: '400px', height: '45px', backgroundColor: 'green' }}>+</Button>}
+      {<Button style={{ width: '150px', height: '45px', backgroundColor: 'green', display:'block' }}>+</Button>}
       modal nested>
       {
         close => (

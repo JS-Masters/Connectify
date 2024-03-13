@@ -31,6 +31,8 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
   const navigate = useNavigate();
   const toast = useToast();
 
+  const [userIsInMeeting, setUserIsInMeeting] = useState(false);
+
   const showToast = () => {
     toast({
       title: "Sign out",
@@ -47,13 +49,15 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
       if (userData) {
         getUserStatusByHandle(userData.handle)
           .then((currentUserStatus) => {
-            setContext((prevContext) => ({
-              ...prevContext,
-              userData: { ...userData, currentStatus: currentUserStatus }
-            }));
+           if(currentUserStatus === statuses.inMeeting) {
+            setUserIsInMeeting(true);
+           } else {
+            setUserIsInMeeting(false);
+           }
+
           })
       }
-    }, 5000);
+    }, 500);
     return () => clearInterval(interval);
   }, [])
 
@@ -146,7 +150,7 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
           </AvatarBadge>
         </Avatar>
       </HStack>
-      {showStatusMenu && userData.currentStatus !== statuses.inMeeting && renderStatusMenu()}
+      {showStatusMenu && !userIsInMeeting && renderStatusMenu()}
       {showMenu && (
         <List
           position="absolute"

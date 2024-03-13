@@ -130,7 +130,7 @@ export const addMessageToChat = async (chatId, message, author, picURL, authorUr
     const notificationPromises = Object.keys(chatData.participants).map(async (participant) => {
       if (participant !== author) {
 
-        await sendNotification(participant, 'New message!', `You have new message from ${author}.`, chatId);
+        await sendNotification(participant, 'New message!', `You have new message from ${author}.`, chatId, 'chats');
       }
     });
 
@@ -182,7 +182,7 @@ export const deleteMessageFromChat = async (chatId, messageId, deletedBy) => {
 
 // }
 
-export const sendNotification = async (userHandle, title, body, eventId, type) => {
+export const sendNotification = async (userHandle, title, body, eventId, type, teamId = '') => {
   try {
     const notificationRef = await push(ref(db, `notifications/${userHandle}`), {});
     const notificationId = notificationRef.key;
@@ -193,7 +193,8 @@ export const sendNotification = async (userHandle, title, body, eventId, type) =
       body,
       createdOn: new Date().toLocaleString(),
       eventId,
-      type
+      type,
+      teamId
     });
   } catch (error) {
     console.log(error.message);
@@ -210,14 +211,14 @@ export const deleteNotification = async (userHandle, notificationId) => {
 
 export const deleteNotificationsForOpenChat = async (notificationsToDelete, userHandle) => {
   try {
-    const deletePromises = notificationsToDelete.map(async(n) => await deleteNotification(userHandle, n.id));
+    const deletePromises = notificationsToDelete.map(async (n) => await deleteNotification(userHandle, n.id));
     await Promise.all(deletePromises);
-  } catch(error) {
+  } catch (error) {
     console.log(error.message);
   }
 };
 
-export const getNotificationsByUserHandle =  (listenFn, userHandle) => {
+export const getNotificationsByUserHandle = (listenFn, userHandle) => {
   const q = query(
     ref(db, `notifications/${userHandle}`),
     // orderByChild('createdOn'),
@@ -300,7 +301,7 @@ export const leaveChat = async (chatId, userHandle) => {
   try {
     const chatRef = ref(db, `chats/${chatId}`);
     const chatSnapshot = await get(chatRef);
-    if(!chatSnapshot.exists()) {
+    if (!chatSnapshot.exists()) {
       throw new Error(DATABASE_ERROR_MSG);
     }
     const chatData = chatSnapshot.val();
@@ -308,20 +309,20 @@ export const leaveChat = async (chatId, userHandle) => {
     if (chatData) {
       const newParticipants = { ...chatData.participants };
       delete newParticipants[userHandle];
-      if(Object.keys(newParticipants).length === 0) {
+      if (Object.keys(newParticipants).length === 0) {
         await remove(ref(db, `chats/${chatId}`));
         await remove(ref(db, `users/${userHandle}/chats/${chatId}`));
-      }else{
+      } else {
         await update(ref(db, `chats/${chatId}`), {
           participants: newParticipants,
         });
-  
+
         await remove(ref(db, `users/${userHandle}/chats/${chatId}`));
-  
-        const removeParticipantFromMembersPromises = Object.keys(newParticipants).map(async(p) => await remove(ref(db, `users/${p}/chats/${chatId}/participants/${userHandle}`)));
+
+        const removeParticipantFromMembersPromises = Object.keys(newParticipants).map(async (p) => await remove(ref(db, `users/${p}/chats/${chatId}/participants/${userHandle}`)));
         await Promise.all(removeParticipantFromMembersPromises);
       }
-    } 
+    }
   } catch (error) {
     console.log(error.message);
 
@@ -357,9 +358,9 @@ export const handleLeaveChat = async (chatID, userHandle) => {
     const chatSnapshot = await get(ref(db, `chats/${chatID}`));
     if (!chatSnapshot.exists()) {
       return;
-    } 
-      await addMessageToChat(chatID, leaveMessage.content, leaveMessage.author, null, SYSTEM_AVATAR);
-    
+    }
+    await addMessageToChat(chatID, leaveMessage.content, leaveMessage.author, null, SYSTEM_AVATAR);
+
   } catch (error) {
     console.log(error.message);
   }
