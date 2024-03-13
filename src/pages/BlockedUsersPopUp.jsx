@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../providers/AppContext";
 import { Button, Input, ListItem, Text } from "@chakra-ui/react";
-import { banUser, getAllUsers, getBannedUsers, unbanUser } from "../services/user.services";
+import { blockUser, getAllUsers, getBlockedUsers, unblockUser } from "../services/user.services";
 import Popup from "reactjs-popup";
 import { v4 } from "uuid";
 
@@ -16,7 +16,7 @@ const BlockedUsersPopUp = () => {
 
   useEffect(() => {
     if (userData) {
-      getBannedUsers(userData.handle)
+      getBlockedUsers(userData.handle)
         .then(setBlockedUsers)
     }
   }, [banUnbanClick]);
@@ -45,7 +45,7 @@ const BlockedUsersPopUp = () => {
 
 
   const handleBanUserClick = (userToBan) => {
-    banUser(userData.handle, userToBan)
+    blockUser(userData.handle, userToBan)
       .then(() => {
         setSearchTerm('');
         setUsersBySearchTerm([]);
@@ -54,7 +54,7 @@ const BlockedUsersPopUp = () => {
   };
 
   const handleUnbanUserClick = (userToUnban) => {
-    unbanUser(userData.handle, userToUnban)
+    unblockUser(userData.handle, userToUnban)
       .then(() => setBanUnbanClick(!banUnbanClick));
   };
 

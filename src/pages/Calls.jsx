@@ -1,6 +1,6 @@
-import { Avatar, AvatarBadge, Box, Button, Heading, Input, Text } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Box, Button, Heading, Input, Text, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { checkUsersIfBannedLoggedUser, getAllUsers } from "../services/user.services";
+import { checkUsersIfBannedLoggedUser, getAllUsers, getUserStatusByHandle } from "../services/user.services";
 import { addIncomingCallToDb, createCall, endCall } from "../services/call.services";
 import { useContext } from "react";
 import AppContext from "../providers/AppContext";
@@ -8,6 +8,7 @@ import { addUserToCall, createDyteCall } from "../services/dyte.services";
 import SingleCallRoom from "../components/SingleCallRoom";
 import { v4 } from "uuid";
 import UserStatusIconChats from "../components/UserStatusIconChats";
+import { statuses } from "../common/constants";
 
 const Calls = () => {
 
@@ -18,6 +19,17 @@ const Calls = () => {
   const [token, setToken] = useState('');
   const [userToCall, setUserToCall] = useState('');
   const [joinedCallDyteId, setJoinedCallDyteId] = useState('');
+  const toast = useToast();
+  const showToast = (desc, status) => {
+    toast({
+      title: "User is busy",
+      description: desc,
+      duration: 3000,
+      isClosable: true,
+      status: status,
+      position: "top"
+    });
+  };
 
   useEffect(() => {
     getAllUsers().then((users) => setUsers(Object.keys(users).map(user => ({ ...users[user] }))));
@@ -38,7 +50,14 @@ const Calls = () => {
 
   const startCall = async (userToCallHandle) => {
     try {
-      await createCall(userData.handle, userToCallHandle)
+      const userToCallCurrentStatus = await getUserStatusByHandle(userToCallHandle);
+
+      if (userToCallCurrentStatus === statuses.offline) {
+        showToast(`${userToCallHandle} is currently Offline. Please try again later`, "info");
+      } else if (userToCallCurrentStatus === statuses.inMeeting) {
+        showToast(`${userToCallHandle} is currently In a meeting. Please try again later`, "info");
+      } else {
+        await createCall(userData.handle, userToCallHandle)
         .then((newCallId) => createDyteCall(newCallId))
         .then((roomID) => addIncomingCallToDb(userToCallHandle, userData.handle, roomID))
         .then((roomID) => addUserToCall((data) => setToken(data), userData, roomID))
@@ -48,6 +67,7 @@ const Calls = () => {
           setUserToCall(userToCallHandle);
           setJoinedCallDyteId(roomID);
         });
+      }   
     } catch (error) {
       console.log(error.message);
     };

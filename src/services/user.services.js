@@ -179,7 +179,7 @@ export const updateUsersStatuses = async (users) => {
   return usersWithUpdatedStatuses;
 };
 
-export const getBannedUsers = async (userHandle) => {
+export const getBlockedUsers = async (userHandle) => {
   try {
     const bannedUsersSnapshot = await get(ref(db, `users/${userHandle}/blockedUsers`));
     if (bannedUsersSnapshot.exists()) {
@@ -194,7 +194,7 @@ export const getBannedUsers = async (userHandle) => {
 
 };
 
-export const banUser = async (userHandle, userToBan) => {
+export const blockUser = async (userHandle, userToBan) => {
   try {
     let prevBannedUsers = {};
     const prevBannedUsersSnapshot = await get(ref(db, `users/${userHandle}/blockedUsers`));
@@ -220,7 +220,7 @@ export const banUser = async (userHandle, userToBan) => {
   }
 };
 
-export const unbanUser = async (userHandle, userToUnban) => {
+export const unblockUser = async (userHandle, userToUnban) => {
   try {
     const prevBannedUsersSnapshot = await get(ref(db, `users/${userHandle}/blockedUsers`));
     if (!prevBannedUsersSnapshot.exists()) {
@@ -249,7 +249,7 @@ export const unbanUser = async (userHandle, userToUnban) => {
 
 };
 
-export const isLoggedUserBanned = async (loggedUser, userHandleToCheck) => {
+export const isLoggedUserBlocked = async (loggedUser, userHandleToCheck) => {
 
   try {
     const loggedUserBannedBySnapshot = await get(ref(db, `users/${loggedUser}/blockedBy`));
@@ -267,7 +267,7 @@ export const isLoggedUserBanned = async (loggedUser, userHandleToCheck) => {
 
 export const checkUsersIfBannedLoggedUser = async (usersToCheck, loggedUser) => {
   try {
-    const checkBanPromises =  usersToCheck.map(async (userToCheckIfBanned) => await isLoggedUserBanned(loggedUser, userToCheckIfBanned));
+    const checkBanPromises =  usersToCheck.map(async (userToCheckIfBanned) => await isLoggedUserBlocked(loggedUser, userToCheckIfBanned));
     const checkedUsersBySearchTerm = await Promise.all(checkBanPromises);
     const checkedUsers = checkedUsersBySearchTerm.filter(Boolean);
     return checkedUsers;
