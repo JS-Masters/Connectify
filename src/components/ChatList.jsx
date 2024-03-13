@@ -7,7 +7,7 @@ import { fetchChatData, handleLeaveChat, listenForNewChats } from '../services/c
 import { Avatar, AvatarBadge, Box, Button, Heading } from '@chakra-ui/react';
 import { v4 } from 'uuid';
 import { addAvatarAndStatus } from '../services/user.services';
-import UserStatusIconChats from './UserStatusIconChats';
+import UserStatusIcon from './UserStatusIconChats';
 import { NO_USERS_AVATAR, NO_USERS_MESSAGE, statuses } from '../common/constants';
 
 const ChatList = () => {
@@ -70,7 +70,7 @@ const ChatList = () => {
                 <span key={v4()}>
                   <Avatar size='sm' style={{ cursor: "pointer" }} src={member.avatarUrl}>
                     <AvatarBadge w="1em" bg="teal.500">
-                      {<UserStatusIconChats userHandle={member.handle} iconSize={'5px'}/>}
+                      {<UserStatusIcon userHandle={member.handle} iconSize={'5px'}/>}
                     </AvatarBadge>
                   </Avatar>
                   <Heading display='inline' as='h3' size='sm'>{member.handle}</Heading>

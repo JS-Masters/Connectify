@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../services/auth.service";
 import {
@@ -16,11 +16,12 @@ import UploadForm from "./UploadForm";
 import {
   changeUserCurrentStatusInDb,
   changeUserLastStatusInDb,
+  getUserStatusByHandle,
 } from "../services/user.services";
 import AppContext from "../providers/AppContext";
 import { statuses } from "../common/constants";
 import BlockedUsersPopUp from "../pages/BlockedUsersPopUp";
-import UserStatusIconChats from "./UserStatusIconChats";
+import UserStatusIcon from "./UserStatusIconChats";
 
 const Dropdown = ({ username = null, avatarUrl = null }) => {
 
@@ -40,6 +41,21 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
       position: "top",
     });
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (userData) {
+        getUserStatusByHandle(userData.handle)
+          .then((currentUserStatus) => {
+            setContext((prevContext) => ({
+              ...prevContext,
+              userData: { ...userData, currentStatus: currentUserStatus }
+            }));
+          })
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [])
 
   const toggleMenu = () => {
     setShowStatusMenu(false);
@@ -126,11 +142,11 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
         </Text>
         <Avatar style={{ cursor: "pointer" }} name={username} src={avatarUrl}>
           <AvatarBadge w="1em" bg="teal.500">
-          {<UserStatusIconChats userHandle={username} iconSize={'12px'} toggleStatusMenu={toggleStatusMenu}/>}
+            {<UserStatusIcon userHandle={username} iconSize={'12px'} toggleStatusMenu={toggleStatusMenu} />}
           </AvatarBadge>
         </Avatar>
       </HStack>
-      {showStatusMenu && renderStatusMenu()}
+      {showStatusMenu && userData.currentStatus !== statuses.inMeeting && renderStatusMenu()}
       {showMenu && (
         <List
           position="absolute"
@@ -143,7 +159,7 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
           flexDirection="column"
           alignItems="center"
           top="70px"
-          // onClick={setShowMenu(!showMenu)}
+        // onClick={setShowMenu(!showMenu)}
         >
           <BlockedUsersPopUp />
           <UploadForm />

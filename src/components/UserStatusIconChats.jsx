@@ -3,7 +3,7 @@ import { statuses } from "../common/constants";
 import { useEffect, useState } from 'react';
 import { getUserStatusByHandle } from '../services/user.services';
 
-const UserStatusIconChats = ({ userHandle, iconSize, toggleStatusMenu = () => {} }) => {
+const UserStatusIcon = ({ userHandle, iconSize, toggleStatusMenu = () => {} }) => {
 
   const [userStatus, setUserStatus] = useState('');
 
@@ -14,7 +14,6 @@ const UserStatusIconChats = ({ userHandle, iconSize, toggleStatusMenu = () => {}
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log('interval');
       if (userStatus && userHandle) {
         getUserStatusByHandle(userHandle)
           .then((memberStatus) => {
@@ -65,4 +64,4 @@ const UserStatusIconChats = ({ userHandle, iconSize, toggleStatusMenu = () => {}
   )
 };
 
-export default UserStatusIconChats;
+export default UserStatusIcon;

@@ -7,7 +7,7 @@ import AppContext from "../providers/AppContext";
 import { addUserToCall, createDyteCall } from "../services/dyte.services";
 import SingleCallRoom from "../components/SingleCallRoom";
 import { v4 } from "uuid";
-import UserStatusIconChats from "../components/UserStatusIconChats";
+import UserStatusIcon from "../components/UserStatusIconChats";
 import { statuses } from "../common/constants";
 
 const Calls = () => {
@@ -91,7 +91,7 @@ const Calls = () => {
         {Boolean(usersBySearchTerm.length) && usersBySearchTerm.map((user) =>
           <div key={v4()} style={{ marginBottom: '25px' }}>
             <Avatar size='sm' src={user.avatarUrl}>
-              <AvatarBadge w="1em" bg="teal.500">{<UserStatusIconChats memberHandle={user.handle} />}</AvatarBadge>
+              <AvatarBadge w="1em" bg="teal.500">{<UserStatusIcon userHandle={user.handle} iconSize={'5px'} />}</AvatarBadge>
             </Avatar>
             <Heading display='inline' as='h3' size='sm'>{user.handle}</Heading>
             <Button style={{ float: 'right', color: 'blue' }} onClick={() => startCall(user.handle)}>CALL {user.handle}</Button>
