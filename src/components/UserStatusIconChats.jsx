@@ -3,19 +3,20 @@ import { statuses } from "../common/constants";
 import { useEffect, useState } from 'react';
 import { getUserStatusByHandle } from '../services/user.services';
 
-const UserStatusIconChats = ({ memberHandle }) => {
+const UserStatusIconChats = ({ userHandle, iconSize, toggleStatusMenu = () => {} }) => {
 
   const [userStatus, setUserStatus] = useState('');
 
-useEffect(() => {
-  getUserStatusByHandle(memberHandle)
-  .then(setUserStatus)
-},[])
+  useEffect(() => {
+    getUserStatusByHandle(userHandle)
+      .then(setUserStatus)
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (userStatus && memberHandle) {
-        getUserStatusByHandle(memberHandle)
+      console.log('interval');
+      if (userStatus && userHandle) {
+        getUserStatusByHandle(userHandle)
           .then((memberStatus) => {
             if (memberStatus !== userStatus) {
               setUserStatus(memberStatus);
@@ -23,7 +24,6 @@ useEffect(() => {
           })
       }
     }, 5000);
-
     return () => clearInterval(interval);
   }, [userStatus]);
 
@@ -31,29 +31,33 @@ useEffect(() => {
     <>
       {userStatus === statuses.online &&
         <Box
-          w='5px'
-          h='5px'
+          onClick={toggleStatusMenu}
+          w={iconSize}
+          h={iconSize}
           borderRadius="50%"
           bg="green"
         />}
-      {userStatus === statuses.inMeeting && 
+      {userStatus === statuses.inMeeting &&
         <Box
-        w='5px'
-        h='5px'
-        borderRadius="50%"
-        bg="orange"
+          onClick={toggleStatusMenu}
+          w={iconSize}
+          h={iconSize}
+          borderRadius="50%"
+          bg="orange"
         />}
-      {userStatus === statuses.doNotDisturb && 
+      {userStatus === statuses.doNotDisturb &&
         <Box
-        w='5px'
-        h='5px'
-        borderRadius="50%"
-        bg="red"
+          onClick={toggleStatusMenu}
+          w={iconSize}
+          h={iconSize}
+          borderRadius="50%"
+          bg="red"
         />}
       {userStatus === statuses.offline &&
         <Box
-          w='5px'
-          h='5px'
+          onClick={toggleStatusMenu}
+          w={iconSize}
+          h={iconSize}
           borderRadius="50%"
           border="3px solid gray"
         />}

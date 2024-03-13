@@ -64,7 +64,7 @@ const App = () => {
 
   const showToast = (desc, status) => {
     toast({
-      title: "Create team",
+      title: "Rejected Call",
       description: desc,
       duration: 5000,
       isClosable: true,
@@ -107,10 +107,8 @@ const App = () => {
           const incomingCalls = snapshot.val();
           const callsWaiting = Object.values(incomingCalls).filter((call) => call.status === WAITING_STATUS);
           if (callsWaiting.length) {
-            // вкарвай само по един кол като въведем status: in a meeting/call на всеки user
-            // СЛЕД ИМПЛЕМЕНТИРАНЕ НА In A Meeting STATUS, ДА НЕ МОЖЕ ДА СЕ НАБИРА ЮЗЪРА, КОЙТО Е В СРЕЩА !!!!!
             callsWaiting.map((call) => {
-              setIncomingCall([{ callId: call.id, dyteRoomId: call.dyteRoomId, caller: call.caller }]); // вкарвай само по един кол като въведем status: in a meeting/call на всеки user
+              setIncomingCall([{ callId: call.id, dyteRoomId: call.dyteRoomId, caller: call.caller }]);
             })
           } else {
             setIncomingCall([]);
@@ -140,7 +138,6 @@ const App = () => {
       return () => unsubscribe();
     };
   }, [user]);
-
 
   const setNotifications = (notifications) => {
     setContext((prevContext) => ({

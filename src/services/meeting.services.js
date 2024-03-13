@@ -1,9 +1,9 @@
-import { get, onValue, push, query, ref, set, update } from "firebase/database";
-import { DATABASE_ERROR_MSG, DYTE_URL } from "../common/constants";
+import { get, onValue, query, ref, set, update } from "firebase/database";
+import { DYTE_URL, statuses } from "../common/constants";
 import { DYTE_KEY } from "../common/dyte.api.auth";
 import { db } from "../config/firebase-config";
 import { getTeamMembers, getTeamsByUserHandle } from "./team.services";
-import { updateUserByHandle } from "./user.services";
+import { changeUserCurrentStatusInDb, updateUserByHandle } from "./user.services";
 
 
 export const listenForMeetingsByUserHandle = (listenFn, userHandle) => {
@@ -16,21 +16,20 @@ export const listenForMeetingsByUserHandle = (listenFn, userHandle) => {
 export const getMeetingsByUserHandle = async (userHandle) => {
   try {
     const userTeams = await getTeamsByUserHandle(userHandle);
-    if(userTeams) {
+    if (userTeams) {
       const userTeamsIds = Object.keys(userTeams);
 
       const meetingPromises = userTeamsIds.map(async (teamId) => {
-       const meetings = await getMeetingsByTeamId(teamId)
-    
-            if (meetings) {
-              const dateUpdatedMeetings = Object.values(meetings).map((meeting) => {
-                return { ...meeting, start: new Date(meeting.start), end: new Date(meeting.end) }
-              });    
-              return dateUpdatedMeetings;
-            }
-            return [];
+        const meetings = await getMeetingsByTeamId(teamId)
+        if (meetings) {
+          const dateUpdatedMeetings = Object.values(meetings).map((meeting) => {
+            return { ...meeting, start: new Date(meeting.start), end: new Date(meeting.end) }
+          });
+          return dateUpdatedMeetings;
+        }
+        return [];
       });
-  
+
       const allMeetings = await Promise.all(meetingPromises);
       return allMeetings.flat();
     }
@@ -139,14 +138,14 @@ export const createDyteMeeting = async (dbMeetingId, teamId) => {
 
 export const removeTeamMeetingsFromUser = async (userHandle, teamId) => {
   try {
-    const userMeetingsSnapshot = await get(ref(db,`users/${userHandle}/meetings`));
-    if(userMeetingsSnapshot.exists()) {
+    const userMeetingsSnapshot = await get(ref(db, `users/${userHandle}/meetings`));
+    if (userMeetingsSnapshot.exists()) {
       const userMeetings = userMeetingsSnapshot.val();
       const userMeetingsEntries = Object.entries(userMeetings);
-      if(userMeetingsEntries.length > 0) {
+      if (userMeetingsEntries.length > 0) {
         const userMeetingsUpdatedEntries = userMeetingsEntries.filter((m) => m[1] !== teamId);
         const userMeetingsUpdated = Object.fromEntries(userMeetingsUpdatedEntries);
-  
+
         await set(ref(db, `users/${userHandle}/meetings`), userMeetingsUpdated);
       }
     }
@@ -173,5 +172,6 @@ export const joinMeeting = (dyteRoomId, userData, listenFn) => {
   fetch(`${DYTE_URL}/meetings/${dyteRoomId}/participants`, options)
     .then(response => response.json())
     .then(response => listenFn(response.data.token))
+    .then(() => changeUserCurrentStatusInDb(userData.handle, statuses.inMeeting))
     .catch(e => console.error(e));
 };

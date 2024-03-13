@@ -3,12 +3,12 @@ import CreateChatPopUp from './CreateChatPopUp';
 import { useContext, useEffect, useState } from 'react';
 import AppContext from '../providers/AppContext';
 import { useNavigate, useParams } from 'react-router-dom';
-import { addMessageToChat, fetchChatData, getChatsByUserHandle, handleLeaveChat, leaveChat, listenForNewChats } from '../services/chat.services';
+import { fetchChatData, handleLeaveChat, listenForNewChats } from '../services/chat.services';
 import { Avatar, AvatarBadge, Box, Button, Heading } from '@chakra-ui/react';
 import { v4 } from 'uuid';
 import { addAvatarAndStatus } from '../services/user.services';
 import UserStatusIconChats from './UserStatusIconChats';
-import { NO_USERS_AVATAR, NO_USERS_MESSAGE, SYSTEM_AVATAR, statuses } from '../common/constants';
+import { NO_USERS_AVATAR, NO_USERS_MESSAGE, statuses } from '../common/constants';
 
 const ChatList = () => {
 
@@ -36,7 +36,6 @@ const ChatList = () => {
   }, [chatId, leaveChatTrigger]);
 
   useEffect(() => {
-
     if (myChats) {
       const chatIds = Object.keys(myChats);
       fetchChatData(chatIds, userData.handle)
@@ -71,7 +70,7 @@ const ChatList = () => {
                 <span key={v4()}>
                   <Avatar size='sm' style={{ cursor: "pointer" }} src={member.avatarUrl}>
                     <AvatarBadge w="1em" bg="teal.500">
-                      {<UserStatusIconChats memberHandle={member.handle} />}
+                      {<UserStatusIconChats userHandle={member.handle} iconSize={'5px'}/>}
                     </AvatarBadge>
                   </Avatar>
                   <Heading display='inline' as='h3' size='sm'>{member.handle}</Heading>

@@ -1,8 +1,8 @@
-
 import { ref, update } from "firebase/database";
-import { DYTE_URL } from "../common/constants";
+import { DYTE_URL, statuses } from "../common/constants";
 import { db } from "../config/firebase-config";
 import { DYTE_KEY } from "../common/dyte.api.auth";
+import { changeUserCurrentStatusInDb } from "./user.services";
 
 export const addDyteRoomIdToCall = async (dbCallId, dyteRoomId) => {
   await update(ref(db, `calls/${dbCallId}`), {
@@ -52,6 +52,7 @@ export const addUserToCall = (listenFn, userData, dyteRoomId) => {
   fetch(`${DYTE_URL}/meetings/${dyteRoomId}/participants`, options)
     .then(response => response.json())
     .then(response => listenFn(response.data.token))
+    .then(() => changeUserCurrentStatusInDb(userData.handle, statuses.inMeeting))
     .catch(e => console.error(e));
   return dyteRoomId;
 };

@@ -76,7 +76,19 @@ export const getUserStatusByHandle = async (handle) => {
   } catch (error) {
     console.log(error.message)
   }
+};
 
+export const getUserLastStatusByHandle = async (handle) => {
+  try {
+      const snapshot = await get(ref(db, `users/${handle}/lastStatus`));
+      if (!snapshot.exists()) {
+        throw new Error(DATABASE_ERROR_MSG);
+      }
+      return snapshot.val();
+  
+  } catch (error) {
+    console.log(error.message)
+  }
 };
 
 export const getUserAvatarByHandle = async (handle) => {
@@ -97,20 +109,16 @@ export const getUserAvatarByHandle = async (handle) => {
 }
 
 export const getUsersByChatId = async (chatId) => {
-
   try {
     const snapshot = await get(ref(db, `chats/${chatId}/participants`));
-
     if (!snapshot.exists()) {
       throw new Error(DATABASE_ERROR_MSG);
     }
-
     return snapshot.val();
 
   } catch (error) {
     console.log(error.message)
   }
-
 };
 
 
@@ -132,36 +140,10 @@ export const addAvatarAndStatus = async (usersHandles) => {
         currentStatus: statuses.offline
       }
     }
-
   });
   const usersUpdated = await Promise.all(usersUpdatedPromises);
   return usersUpdated;
 };
-
-// export const addAvatarAndStatus = async (usersHandles) => {
-
-//   const usersUpdatedPromises = usersHandles.map(async (handle) => {
-//     if(handle !== NO_USERS_MESSAGE) {
-//       const avatarUrl = await getUserAvatarByHandle(handle);
-//       const currentStatus = await getUserStatusByHandle(handle);
-//       return {
-//         handle,
-//         avatarUrl,
-//         currentStatus,
-//       }
-//     } else {
-//       return {
-//         handle: NO_USERS_MESSAGE,
-//         avatarUrl: NO_USERS_AVATAR,
-//         currentStatus: statuses.offline
-//       }
-//     }
-
-//   });
-//   const usersUpdated = await Promise.all(usersUpdatedPromises);
-//   return usersUpdated;
-// };
-
 
 export const updateUsersStatuses = async (users) => {
 

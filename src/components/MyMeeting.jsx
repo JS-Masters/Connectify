@@ -1,15 +1,21 @@
 import { DyteMeeting } from "@dytesdk/react-ui-kit";
 import { useDyteMeeting } from "@dytesdk/react-web-core";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { changeUserCurrentStatusInDb, getUserLastStatusByHandle } from "../services/user.services";
+import AppContext from "../providers/AppContext";
 
 const MyMeeting = ({ leaveCall }) => {
 
   const { meeting } = useDyteMeeting();
+  const { userData } = useContext(AppContext);
 
   useEffect(() => {
     meeting.self.on('roomLeft', () => {
       leaveCall();
-      // променяме статуса, че вече не е In a meeting
+      getUserLastStatusByHandle(userData.handle)
+        .then((previousStatus) => {
+          changeUserCurrentStatusInDb(userData.handle, previousStatus)
+        })
     });
   }, [meeting]);
 
