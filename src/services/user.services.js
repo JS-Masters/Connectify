@@ -181,10 +181,10 @@ export const updateUsersStatuses = async (users) => {
 
 export const getBannedUsers = async (userHandle) => {
   try {
-    const bannedUsersSnapshot = await get(ref(db, `users/${userHandle}/bannedUsers`));
+    const bannedUsersSnapshot = await get(ref(db, `users/${userHandle}/blockedUsers`));
     if (bannedUsersSnapshot.exists()) {
-      const bannedUsers = bannedUsersSnapshot.val();
-      return Object.keys(bannedUsers);
+      const blockedUsers = bannedUsersSnapshot.val();
+      return Object.keys(blockedUsers);
     }
     return [];
 
@@ -197,21 +197,21 @@ export const getBannedUsers = async (userHandle) => {
 export const banUser = async (userHandle, userToBan) => {
   try {
     let prevBannedUsers = {};
-    const prevBannedUsersSnapshot = await get(ref(db, `users/${userHandle}/bannedUsers`));
+    const prevBannedUsersSnapshot = await get(ref(db, `users/${userHandle}/blockedUsers`));
     if (prevBannedUsersSnapshot.exists()) {
       prevBannedUsers = prevBannedUsersSnapshot.val();
     }
-    await set(ref(db, `users/${userHandle}/bannedUsers`), {
+    await set(ref(db, `users/${userHandle}/blockedUsers`), {
       ...prevBannedUsers,
       [userToBan]: true
     });
 
     let prevBannedByUsers = {};
-    const userToBanSnapshot = await get(ref(db, `users/${userToBan}/bannedBy`));
+    const userToBanSnapshot = await get(ref(db, `users/${userToBan}/blockedBy`));
     if (userToBanSnapshot.exists()) {
       prevBannedByUsers = userToBanSnapshot.val();
     }
-    await set(ref(db, `users/${userToBan}/bannedBy`), {
+    await set(ref(db, `users/${userToBan}/blockedBy`), {
       ...prevBannedByUsers,
       [userHandle]: true
     });
@@ -222,25 +222,25 @@ export const banUser = async (userHandle, userToBan) => {
 
 export const unbanUser = async (userHandle, userToUnban) => {
   try {
-    const prevBannedUsersSnapshot = await get(ref(db, `users/${userHandle}/bannedUsers`));
+    const prevBannedUsersSnapshot = await get(ref(db, `users/${userHandle}/blockedUsers`));
     if (!prevBannedUsersSnapshot.exists()) {
       throw new Error(DATABASE_ERROR_MSG);
     }
     const prevBannedUsers = prevBannedUsersSnapshot.val();
     const updatedBannedUsers = { ...prevBannedUsers };
     delete updatedBannedUsers[userToUnban];
-    await set(ref(db, `users/${userHandle}/bannedUsers`), {
+    await set(ref(db, `users/${userHandle}/blockedUsers`), {
       ...updatedBannedUsers
     });
 
-    const userToUnbanSnapshot = await get(ref(db, `users/${userToUnban}/bannedBy`));
+    const userToUnbanSnapshot = await get(ref(db, `users/${userToUnban}/blockedBy`));
     if (!userToUnbanSnapshot.exists()) {
       throw new Error(DATABASE_ERROR_MSG);
     }
     const userToUnbanBannedByProp = userToUnbanSnapshot.val();
     const bannedByUpdated = { ...userToUnbanBannedByProp };
     delete bannedByUpdated[userHandle];
-    await set(ref(db, `users/${userToUnban}/bannedBy`), {
+    await set(ref(db, `users/${userToUnban}/blockedBy`), {
       ...bannedByUpdated,
     });
   } catch (error) {
@@ -252,10 +252,10 @@ export const unbanUser = async (userHandle, userToUnban) => {
 export const isLoggedUserBanned = async (loggedUser, userHandleToCheck) => {
 
   try {
-    const loggedUserBannedBySnapshot = await get(ref(db, `users/${loggedUser}/bannedBy`));
+    const loggedUserBannedBySnapshot = await get(ref(db, `users/${loggedUser}/blockedBy`));
     // if (loggedUserBannedBySnapshot) {
       const loggedUserBannedBy = loggedUserBannedBySnapshot.val();
-      if(loggedUserBannedBy && Object.keys(loggedUserBannedBy).includes(userHandleToCheck)) {
+      if(loggedUserBannedBy && Object.keys(loggedUserBannedBy).includes(userHandleToCheck.handle)) {
         return null;
       }
       return userHandleToCheck;

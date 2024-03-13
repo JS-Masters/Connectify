@@ -9,7 +9,7 @@ const BlockedUsersPopUp = () => {
 
   const { userData } = useContext(AppContext);
   const [searchTerm, setSearchTerm] = useState('');
-  const [bannedUsers, setBannedUsers] = useState([]);
+  const [blockedUsers, setBlockedUsers] = useState([]);
   const [users, setUsers] = useState([]);
   const [usersBySearchTerm, setUsersBySearchTerm] = useState([]);
   const [banUnbanClick, setBanUnbanClick] = useState(false);
@@ -17,7 +17,7 @@ const BlockedUsersPopUp = () => {
   useEffect(() => {
     if (userData) {
       getBannedUsers(userData.handle)
-        .then(setBannedUsers)
+        .then(setBlockedUsers)
     }
   }, [banUnbanClick]);
 
@@ -29,7 +29,7 @@ const BlockedUsersPopUp = () => {
 
   const handleInputChange = (event) => {
     if (event.target.value.length) {
-      const filteredUsers = users.filter((u) => u.toLowerCase().startsWith(event.target.value) && !bannedUsers.includes(u));
+      const filteredUsers = users.filter((u) => u.toLowerCase().startsWith(event.target.value) && !blockedUsers.includes(u));
       setUsersBySearchTerm(filteredUsers);
     } else {
       setUsersBySearchTerm([]);
@@ -70,7 +70,7 @@ const BlockedUsersPopUp = () => {
                 {() => handlePopUpClose(close)}>X</Button>
               <div style={{ width: '500px', height: '500px', border: '2px solid black', padding: "30px" }} className='content'>
                 <Input value={searchTerm} onChange={handleInputChange} />
-                {Boolean(bannedUsers.length) ? bannedUsers.map((user) => <Text key={v4()}>{user}<Button style={{ float: 'right', color: 'blue' }} onClick={() => handleUnbanUserClick(user)}>UNBLOCK</Button></Text>)
+                {Boolean(blockedUsers.length) ? blockedUsers.map((user) => <Text key={v4()}>{user}<Button style={{ float: 'right', color: 'blue' }} onClick={() => handleUnbanUserClick(user)}>UNBLOCK</Button></Text>)
                 : <h1>You don't have blocked users</h1>}
                 {Boolean(usersBySearchTerm.length) && usersBySearchTerm.map((user) =>  <Text key={v4()}>{user}<Button style={{ float: 'right', color: 'red' }} onClick={() => handleBanUserClick(user)}>BLOCK</Button></Text>)}
               </div>

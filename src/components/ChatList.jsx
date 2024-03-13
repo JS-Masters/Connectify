@@ -49,7 +49,6 @@ const ChatList = () => {
     }
   }, [myChats]);
 
-
   const handleLeaveChatClick = (chatID, userHandle) => {
     handleLeaveChat(chatID, userHandle)
     .then(() => setLeaveChatTrigger(!leaveChatTrigger));

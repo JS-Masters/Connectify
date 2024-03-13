@@ -332,7 +332,7 @@ export const leaveChat = async (chatId, userHandle) => {
 export const fetchChatData = async (chatIds, logedInUserHandle) => {
 
   const userHandlesPromises = chatIds.map(async (chatId) => {
-    const response = await getUsersByChatId(chatId); // !!!
+    const response = await getUsersByChatId(chatId);
     return Object.keys(response)
   });
 
