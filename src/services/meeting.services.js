@@ -1,5 +1,5 @@
 import { get, onValue, push, query, ref, set, update } from "firebase/database";
-import { DYTE_URL } from "../common/constants";
+import { DATABASE_ERROR_MSG, DYTE_URL } from "../common/constants";
 import { DYTE_KEY } from "../common/dyte.api.auth";
 import { db } from "../config/firebase-config";
 import { getTeamMembers, getTeamsByUserHandle } from "./team.services";
@@ -16,23 +16,23 @@ export const listenForMeetingsByUserHandle = (listenFn, userHandle) => {
 export const getMeetingsByUserHandle = async (userHandle) => {
   try {
     const userTeams = await getTeamsByUserHandle(userHandle);
-    // за LEAVE трябва тука един if(userTeams) да wrap-ва всичко надолу !!!!
-    const userTeamsIds = Object.keys(userTeams);
+    if(userTeams) {
+      const userTeamsIds = Object.keys(userTeams);
 
-    const meetingPromises = userTeamsIds.map(async (teamId) => {
-     const meetings = await getMeetingsByTeamId(teamId)
+      const meetingPromises = userTeamsIds.map(async (teamId) => {
+       const meetings = await getMeetingsByTeamId(teamId)
+    
+            if (meetings) {
+              const dateUpdatedMeetings = Object.values(meetings).map((meeting) => {
+                return { ...meeting, start: new Date(meeting.start), end: new Date(meeting.end) }
+              });    
+              return dateUpdatedMeetings;
+            }   
+      });
   
-          if (meetings) {
-            const dateUpdatedMeetings = Object.values(meetings).map((meeting) => {
-              return { ...meeting, start: new Date(meeting.start), end: new Date(meeting.end) }
-            });    
-            return dateUpdatedMeetings;
-          }   
-    });
-
-    const allMeetings = await Promise.all(meetingPromises);
-    return allMeetings.flat();
-
+      const allMeetings = await Promise.all(meetingPromises);
+      return allMeetings.flat();
+    }
   } catch (error) {
     console.log(error.message);
   }
@@ -65,7 +65,7 @@ export const getMeetingsIdsByUserHandle = async (handle) => {
 };
 
 
-export const updateUsersMeetings = async (teamMembers, meetingId) => {
+export const updateUsersMeetings = async (teamMembers, dyteMeetingId, teamId) => {
   try {
     const meetingPromises = teamMembers.map(async (member) => {
       const memberMeetingsIds = await getMeetingsIdsByUserHandle(member);
@@ -75,7 +75,7 @@ export const updateUsersMeetings = async (teamMembers, meetingId) => {
     const allMeetings = await Promise.all(meetingPromises);
 
     const updatePromises = allMeetings.map(async ({ member, meetings }) => {
-      await updateUserByHandle(member, 'meetings', { ...meetings, [meetingId]: true });
+      await updateUserByHandle(member, 'meetings', { ...meetings, [dyteMeetingId]: teamId });
     });
 
     await Promise.all(updatePromises);
@@ -101,8 +101,6 @@ export const createMeetingInDb = async (meetingId, title, start, end, teamId) =>
       start: startTimestamp,
       end: endTimestamp
     });
-    const teamMembers = await getTeamMembers(teamId);
-    await updateUsersMeetings(Object.keys(teamMembers), meetingId);
 
   } catch (error) {
     console.log(error.message);
@@ -126,7 +124,32 @@ export const createDyteMeeting = async (dbMeetingId, teamId) => {
 
     await addDyteRoomIdToMeeting(dbMeetingId, result.data.id, teamId);
 
+    const teamMembers = await getTeamMembers(teamId);
+    await updateUsersMeetings(Object.keys(teamMembers), dbMeetingId, teamId);
+
+
+
     return result.data.id;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const removeTeamMeetingsFromUser = async (userHandle, teamId) => {
+  try {
+    const userMeetingsSnapshot = await get(ref(db,`users/${userHandle}/meetings`));
+    if(!userMeetingsSnapshot.exists()) {
+      throw new Error(DATABASE_ERROR_MSG);
+    }
+    const userMeetings = userMeetingsSnapshot.val();
+    const userMeetingsEntries = Object.entries(userMeetings);
+    if(userMeetingsEntries.length > 0) {
+      const userMeetingsUpdatedEntries = userMeetingsEntries.filter((m) => m[1] !== teamId);
+      const userMeetingsUpdated = Object.fromEntries(userMeetingsUpdatedEntries);
+
+      await set(ref(db, `users/${userHandle}/meetings`), userMeetingsUpdated);
+    }
+
   } catch (error) {
     console.log(error.message);
   }

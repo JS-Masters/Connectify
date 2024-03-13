@@ -1,12 +1,14 @@
-import { Button } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Button, useConst } from "@chakra-ui/react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getTeamChannels } from "../services/channel.servicies";
 import { v4 } from "uuid";
 import CreateChannelPopUp from "./CreateChannelPopUp";
+import AppContext from "../providers/AppContext";
 
-const TeamChannels = () => {
+const TeamChannels = ({selectedTeam}) => {
 
+  const {userData} = useContext(AppContext);
   const { teamId, channelId } = useParams();
   const navigate = useNavigate();
   const [channels, setChannels] = useState([]);
@@ -24,7 +26,7 @@ const TeamChannels = () => {
             <Button key={v4()} onClick={() => navigate(`/teams/${teamId}/channels/${channel.id}`)} style={{ width: '400px', backgroundColor: 'yellow' }}>{channel.title}</Button>
             : <Button key={v4()} onClick={() => navigate(`/teams/${teamId}/channels/${channel.id}`)} style={{ width: '400px' }}>{channel.title}</Button>
           )}
-          {<CreateChannelPopUp />}
+          {selectedTeam.owner === userData.handle && <CreateChannelPopUp />} 
         </div>}
     </>
   );

@@ -12,7 +12,7 @@ import { createDyteMeeting, createMeetingInDb, getMeetingsByTeamId } from "../se
 
 
 
-const CreateMeeting = ({ teamName }) => {
+const CreateMeetingPopUp = ({ teamName }) => {
 
   const [weekendsVisible, setWeekendsVisible] = useState(true);
   const [currentEvents, setCurrentEvents] = useState([]);
@@ -141,4 +141,4 @@ const CreateMeeting = ({ teamName }) => {
   );
 };
 
-export default CreateMeeting;
+export default CreateMeetingPopUp;

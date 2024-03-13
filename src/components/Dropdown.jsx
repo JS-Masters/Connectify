@@ -19,7 +19,7 @@ import {
 } from "../services/user.services";
 import AppContext from "../providers/AppContext";
 import { statuses } from "../common/constants";
-import BannedUsersPopUp from "../pages/BannedUsersPopUp";
+import BlockedUsersPopUp from "../pages/BlockedUsersPopUp";
 
 const Dropdown = ({ username = null, avatarUrl = null }) => {
 
@@ -173,8 +173,9 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
           flexDirection="column"
           alignItems="center"
           top="70px"
+          // onClick={setShowMenu(!showMenu)}
         >
-          <BannedUsersPopUp />
+          <BlockedUsersPopUp />
           <UploadForm />
           <ListItem cursor="pointer" onClick={signOut}>
             Sign out

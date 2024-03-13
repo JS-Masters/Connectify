@@ -17,12 +17,18 @@ const Calendar = () => {
   const { user, userData } = useContext(AppContext);
   const [meetings, setMeetings] = useState([]);
   const [meetingToken, setMeetingToken] = useState('');
+  const [userHasNoTeams, setUserHasNoTeams] = useState(false);
 
   useEffect(() => {
     if (userData) {
       getMeetingsByUserHandle(userData.handle)
         .then((meetings) => {
-          setMeetings(meetings)
+          if(meetings) {
+            setMeetings(meetings);
+          }else {
+            setUserHasNoTeams(true);
+          }
+          
         })
     }
 
@@ -48,7 +54,7 @@ const Calendar = () => {
 
 
   const renderEventContent = (eventInfo) => {
-    console.log();
+    
     return (
       <>
         <b>{eventInfo.timeText}</b>
@@ -61,8 +67,8 @@ const Calendar = () => {
 
   return (
     <>
-      {meetings.length > 0 &&
-        <div > {/* we can add styles to this div (change calendar size for example !!!) */}
+      {(meetings.length > 0 || userHasNoTeams) &&
+      <div > {/* we can add styles to this div (change calendar size for example !!!) */}
           <div className='demo-app'>
             <Sidebar
               weekendsVisible={weekendsVisible}

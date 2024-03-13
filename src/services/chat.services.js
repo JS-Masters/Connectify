@@ -1,7 +1,7 @@
 import { get, limitToFirst, onValue, orderByChild, push, query, ref, set, getDatabase, remove, update } from "@firebase/database"
 import { db } from "../config/firebase-config"
 import { getUsersByChatId, updateUserByHandle } from "./user.services";
-import { DELETE_MESSAGE, DELETE_REPLY, SYSTEM_AVATAR } from "../common/constants";
+import { DATABASE_ERROR_MSG, DELETE_MESSAGE, DELETE_REPLY, SYSTEM_AVATAR } from "../common/constants";
 
 
 const updateUsersChats = async (chatMembers, newChatId) => {
@@ -308,6 +308,9 @@ export const leaveChat = async (chatId, userHandle) => {
   try {
     const chatRef = ref(db, `chats/${chatId}`);
     const chatSnapshot = await get(chatRef);
+    if(!chatSnapshot.exists()) {
+      throw new Error(DATABASE_ERROR_MSG);
+    }
     const chatData = chatSnapshot.val();
 
     if (chatData) {

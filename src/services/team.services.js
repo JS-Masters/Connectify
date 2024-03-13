@@ -1,7 +1,8 @@
-import { get, push, ref, set } from "@firebase/database";
+import { get, push, ref, set, remove } from "@firebase/database";
 import { db } from "../config/firebase-config";
 import { updateUserByHandle } from "./user.services";
 import { DATABASE_ERROR_MSG } from "../common/constants";
+import { removeTeamMeetingsFromUser } from "./meeting.services";
 
 export const getTeamMembers = async (teamId) => {
   try {
@@ -103,5 +104,28 @@ export const getTeamById = async (teamId) => {
   } catch (error) {
     console.log(error.message);
   }
-}
+};
+
+export const leaveTeam = async (teamId, userToRemove) => {
+  try {
+    await remove(ref(db, `teams/${teamId}/members/${userToRemove}`));
+    await remove(ref(db, `users/${userToRemove}/teams/${teamId}`));
+
+    const teamMembers = await getTeamMembers(teamId);
+    const removeMemberInOtherUsersPromises = Object.keys(teamMembers).map(async (member) => await updateTeamMembersInUser(member, teamId, userToRemove));
+
+    await Promise.all(removeMemberInOtherUsersPromises);
+    await removeTeamMeetingsFromUser(userToRemove, teamId);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const updateTeamMembersInUser = async (userHandle, teamId, userToRemove) => {
+  try {
+    await remove(ref(db, `users/${userHandle}/teams/${teamId}/members/${userToRemove}`));
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 

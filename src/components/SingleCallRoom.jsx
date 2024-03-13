@@ -7,7 +7,6 @@ import MyMeeting from "./MyMeeting";
 const SingleCallRoom = ({ token, leaveCall }) => {
 
   const [client, initClient] = useDyteClient();
-  // const [loadingCall, setLoadingCall] = useState(true);
 
   useEffect(() => {
     if (token) {
@@ -18,15 +17,11 @@ const SingleCallRoom = ({ token, leaveCall }) => {
           video: false
         }
       })
-      // setLoadingCall(false);
-
     }
   }, []);
 
+  if (!client) return <div>CONNECTING...</div>;
 
-  // if(loadingCall) {
-  //   return <h1>CONNECTING...</h1>
-  // };
 
   return (
     <>

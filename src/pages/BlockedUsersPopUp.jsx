@@ -5,7 +5,7 @@ import { banUser, getAllUsers, getBannedUsers, unbanUser } from "../services/use
 import Popup from "reactjs-popup";
 import { v4 } from "uuid";
 
-const BannedUsersPopUp = () => {
+const BlockedUsersPopUp = () => {
 
   const { userData } = useContext(AppContext);
   const [searchTerm, setSearchTerm] = useState('');
@@ -61,7 +61,7 @@ const BannedUsersPopUp = () => {
   return (
     <>
       <Popup trigger=
-        {<ListItem cursor="pointer">Banned Users</ListItem>}
+        {<ListItem cursor="pointer">Blocked Users</ListItem>}
         modal nested>
         {
           close => (
@@ -70,8 +70,9 @@ const BannedUsersPopUp = () => {
                 {() => handlePopUpClose(close)}>X</Button>
               <div style={{ width: '500px', height: '500px', border: '2px solid black', padding: "30px" }} className='content'>
                 <Input value={searchTerm} onChange={handleInputChange} />
-                {Boolean(bannedUsers.length) && bannedUsers.map((user) => <Text key={v4()}>{user}<Button style={{ float: 'right', color: 'blue' }} onClick={() => handleUnbanUserClick(user)}>UNBAN</Button></Text>)}
-                {Boolean(usersBySearchTerm.length) && usersBySearchTerm.map((user) =>  <Text key={v4()}>{user}<Button style={{ float: 'right', color: 'red' }} onClick={() => handleBanUserClick(user)}>BAN</Button></Text>)}
+                {Boolean(bannedUsers.length) ? bannedUsers.map((user) => <Text key={v4()}>{user}<Button style={{ float: 'right', color: 'blue' }} onClick={() => handleUnbanUserClick(user)}>UNBLOCK</Button></Text>)
+                : <h1>You don't have blocked users</h1>}
+                {Boolean(usersBySearchTerm.length) && usersBySearchTerm.map((user) =>  <Text key={v4()}>{user}<Button style={{ float: 'right', color: 'red' }} onClick={() => handleBanUserClick(user)}>BLOCK</Button></Text>)}
               </div>
             </div>
           )
@@ -81,4 +82,4 @@ const BannedUsersPopUp = () => {
   )
 };
 
-export default BannedUsersPopUp;
+export default BlockedUsersPopUp;

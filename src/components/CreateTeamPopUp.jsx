@@ -112,6 +112,8 @@ const CreateTeamPopUp = () => {
       await Promise.all(channels.map(async (channelTitle) => {
         await addChannelToTeam(newTeamId, channelTitle, userData.handle);
       }));
+
+      
       handlePopUpClose(close);
       navigate(`/teams/${newTeamId}`);
     } catch (error) {
