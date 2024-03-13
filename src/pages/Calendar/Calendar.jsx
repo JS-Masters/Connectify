@@ -23,7 +23,7 @@ const Calendar = () => {
     if (userData) {
       getMeetingsByUserHandle(userData.handle)
         .then((meetings) => {
-          if(meetings) {
+          if(meetings.length > 0) {
             setMeetings(meetings);
           }else {
             setUserHasNoTeams(true);

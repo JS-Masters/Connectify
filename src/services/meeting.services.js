@@ -27,12 +27,14 @@ export const getMeetingsByUserHandle = async (userHandle) => {
                 return { ...meeting, start: new Date(meeting.start), end: new Date(meeting.end) }
               });    
               return dateUpdatedMeetings;
-            }   
+            }
+            return [];
       });
   
       const allMeetings = await Promise.all(meetingPromises);
       return allMeetings.flat();
     }
+    return [];
   } catch (error) {
     console.log(error.message);
   }
@@ -138,18 +140,16 @@ export const createDyteMeeting = async (dbMeetingId, teamId) => {
 export const removeTeamMeetingsFromUser = async (userHandle, teamId) => {
   try {
     const userMeetingsSnapshot = await get(ref(db,`users/${userHandle}/meetings`));
-    if(!userMeetingsSnapshot.exists()) {
-      throw new Error(DATABASE_ERROR_MSG);
+    if(userMeetingsSnapshot.exists()) {
+      const userMeetings = userMeetingsSnapshot.val();
+      const userMeetingsEntries = Object.entries(userMeetings);
+      if(userMeetingsEntries.length > 0) {
+        const userMeetingsUpdatedEntries = userMeetingsEntries.filter((m) => m[1] !== teamId);
+        const userMeetingsUpdated = Object.fromEntries(userMeetingsUpdatedEntries);
+  
+        await set(ref(db, `users/${userHandle}/meetings`), userMeetingsUpdated);
+      }
     }
-    const userMeetings = userMeetingsSnapshot.val();
-    const userMeetingsEntries = Object.entries(userMeetings);
-    if(userMeetingsEntries.length > 0) {
-      const userMeetingsUpdatedEntries = userMeetingsEntries.filter((m) => m[1] !== teamId);
-      const userMeetingsUpdated = Object.fromEntries(userMeetingsUpdatedEntries);
-
-      await set(ref(db, `users/${userHandle}/meetings`), userMeetingsUpdated);
-    }
-
   } catch (error) {
     console.log(error.message);
   }

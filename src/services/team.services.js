@@ -1,4 +1,4 @@
-import { get, push, ref, set, remove } from "@firebase/database";
+import { get, push, ref, set, remove, query, onValue, limitToFirst } from "@firebase/database";
 import { db } from "../config/firebase-config";
 import { updateUserByHandle } from "./user.services";
 import { DATABASE_ERROR_MSG } from "../common/constants";
@@ -127,5 +127,15 @@ export const updateTeamMembersInUser = async (userHandle, teamId, userToRemove) 
   } catch (error) {
     console.log(error.message);
   }
+};
+
+export const listenForTeamsByUserHandle = (listenFn, loggedUserHandle) => {
+  const q = query(
+    ref(db, `users/${loggedUserHandle}/teams`),
+    // orderByChild('createdOn'),
+    limitToFirst(50)
+  )
+  return onValue(q, listenFn);
+
 };
 

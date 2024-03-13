@@ -31,16 +31,6 @@ const NotificationList = () => {
     }
   }, [userData, chatId]);
 
-  // const handleMarkAsRead = (notificationId) => {
-  //   markNotificationAsRead(userHandle, notificationId).then(() => {
-  //     setNotifications((prevNotifications) => {
-  //       const newNotifications = { ...prevNotifications };
-  //       newNotifications[notificationId].read = true;
-  //       return newNotifications;
-  //     });
-  //   });
-  // };
-
   const handleDelete = (notificationId) => {
     deleteNotification(userData.handle, notificationId).then(() => {
       setNotifications((prevNotifications) => prevNotifications.filter((n) => n.id !== notificationId));
@@ -55,14 +45,9 @@ const NotificationList = () => {
         {notifications.length > 0 && (notifications.sort((a, b) => a.createdOn - b.createdOn).map((notification) => (
           <li key={notification.id}>
             <h3>{notification.title}</h3>
-            <Link onClick={() => handleDelete(notification.id)} to={`/chats/${notification.chatId}`}> <p>{notification.body}</p></Link>
+            {notification.type === 'chats' && <Link onClick={() => handleDelete(notification.id)} to={`/chats/${notification.eventId}`}> <p>{notification.body}</p></Link>}
+            {notification.type === 'teams' && <Link onClick={() => handleDelete(notification.id)} to={`/teams/${notification.eventId}`}> <p>{notification.body}</p></Link>} 
             <p>{notification.createdOn}</p>
-            {/* <button
-              onClick={() => handleMarkAsRead(notificationId)}
-              disabled={notifications[notificationId].read}
-            >
-              Mark as Read
-            </button> */}
             <button style={{ border: '1px solid black' }} onClick={() => handleDelete(notification.id)}>X </button>
           </li>
         )))}

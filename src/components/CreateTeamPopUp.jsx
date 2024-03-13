@@ -8,6 +8,7 @@ import { v4 } from "uuid";
 import { createTeam } from "../services/team.services";
 import { addChannelToTeam } from "../services/channel.servicies";
 import { useNavigate } from "react-router-dom";
+import { sendNotification } from "../services/chat.services";
 
 const CreateTeamPopUp = () => {
 
@@ -113,6 +114,9 @@ const CreateTeamPopUp = () => {
         await addChannelToTeam(newTeamId, channelTitle, userData.handle);
       }));
 
+      await Promise.all(selectedUsers.map(async(user) => {
+        await sendNotification(user,'New team!', 'You have been added to a new team.', newTeamId, 'teams');
+      }))
       
       handlePopUpClose(close);
       navigate(`/teams/${newTeamId}`);

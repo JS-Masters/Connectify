@@ -64,7 +64,7 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
     await updateUsersChats(allParticipants, newChatId);
     const notificationPromises = chatMembers.map(async (member) => {
       if (member !== loggedInUsername) {
-        await sendNotification(member, 'New chat!', 'You have been added to a new chat.', newChatId);
+        await sendNotification(member, 'New chat!', 'You have been added to a new chat.', newChatId, 'chats');
       }
     });
 
@@ -182,7 +182,7 @@ export const deleteMessageFromChat = async (chatId, messageId, deletedBy) => {
 
 // }
 
-export const sendNotification = async (userHandle, title, body, chatId) => {
+export const sendNotification = async (userHandle, title, body, eventId, type) => {
   try {
     const notificationRef = await push(ref(db, `notifications/${userHandle}`), {});
     const notificationId = notificationRef.key;
@@ -192,21 +192,13 @@ export const sendNotification = async (userHandle, title, body, chatId) => {
       title,
       body,
       createdOn: new Date().toLocaleString(),
-      chatId,
+      eventId,
+      type
     });
   } catch (error) {
     console.log(error.message);
   }
-}
-
-// export const markNotificationAsRead = async (userHandle, notificationId) => {
-//   try {
-//     await set(ref(db, `notifications/${userHandle}/${notificationId}/read`), true);
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// }
-
+};
 
 export const deleteNotification = async (userHandle, notificationId) => {
   try {
