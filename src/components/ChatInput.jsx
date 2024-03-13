@@ -7,13 +7,14 @@ import AppContext from "../providers/AppContext";
 
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import { Box, Image, Input } from "@chakra-ui/react";
+import { Box, Input } from "@chakra-ui/react";
 import { FaRegSmile } from "react-icons/fa";
 import { SlPicture } from "react-icons/sl";
 import { PiGifFill } from "react-icons/pi";
-import { uploadMessagePhoto } from "../services/storage.service";
+import { uploadMessageFile } from "../services/storage.service";
 import { DeleteIcon } from "@chakra-ui/icons";
 import Giphy from './Giphy/Giphy';
+import FilePreview from './FIlePreview';
 
 
 
@@ -21,7 +22,7 @@ const ChatInput = ({ disabled }) => {
 
     const [msg, setMsg] = useState('');
     const [isPickerVisible, setPickerVisible] = useState(false);
-    const [picURL, setPicURL] = useState('');
+    const [fileUrl, setFileUrl] = useState('');
     const [isUserLeft, setIsUserLeft] = useState(false);
     const [giphy, setGiphy] = useState(false);
 
@@ -29,14 +30,14 @@ const ChatInput = ({ disabled }) => {
     const { chatId } = useParams();
     const { userData } = useContext(AppContext);
 
-    const handlePic = (e) => {
+    const handleFile = (e) => {
         e.preventDefault();
 
         if (e.target.files[0] !== null) {
             const file = e.target.files[0];
             const filePath = `${userData.handle}/${chatId}/${file.name}`;
-            uploadMessagePhoto(photoURL => {
-                setPicURL(photoURL);
+            uploadMessageFile(fileUrl => {
+                setFileUrl(fileUrl);
             }, file, filePath);
         }
     }
@@ -44,17 +45,17 @@ const ChatInput = ({ disabled }) => {
     const sendMessage = async (event) => {
         event.preventDefault();
 
-        if (!msg.trim() && !picURL) {
+        if (!msg.trim() && !fileUrl) {
             return;
         }
 
-        await addMessageToChat(chatId, msg, userData.handle, picURL, userData.avatarUrl);
+        await addMessageToChat(chatId, msg, userData.handle, fileUrl, userData.avatarUrl);
         setMsg('');
-        setPicURL('');
+        setFileUrl('');
     };
 
     const handleGif = (url) => {
-        setPicURL(url);
+        setFileUrl(url);
         setGiphy(false);
     }
 
@@ -66,15 +67,15 @@ const ChatInput = ({ disabled }) => {
                     setMsg(msg + e.native);
                 }} />
             </Box>}
-            {picURL && <Box position='absolute' width='fit-content' h='200px' borderRadius='3px' p='20px' top='-189px' left='0' bg='gray.800'>
-                <Image src={picURL} alt="Image" w='200px' maxH='170px' />
-                <DeleteIcon position="absolute" cursor='pointer' top="0" right="0" color="red.500" onClick={() => { setPicURL('') }} />
+            {fileUrl && <Box position='absolute' width='fit-content' h='200px' borderRadius='3px' p='20px' top='-189px' left='0' bg='gray.800'>
+                <FilePreview fileUrl={fileUrl} />
+                <DeleteIcon position="absolute" cursor='pointer' top="5px" right="5px" color="red.500" onClick={() => { setFileUrl('') }} />
             </Box>}
             {giphy && <Giphy handleGif={handleGif} />}
             <Input value={msg} onChange={(event) => setMsg(event.target.value)} placeholder="type here..." w='80%' disabled={isUserLeft || disabled} />
             <FaRegSmile onClick={() => { setGiphy(false); setPickerVisible(!isPickerVisible) }} style={{ fontSize: '30px', cursor: 'pointer' }} />
             <label htmlFor="file" onClick={() => { setGiphy(false); setPickerVisible(false) }} style={{ fontSize: '30px', cursor: 'pointer' }}><SlPicture /></label>
-            <Input type="file" id="file" style={{ display: 'none' }} onChange={handlePic} />
+            <Input type="file" id="file" style={{ display: 'none' }} onChange={handleFile} />
             <label style={{
                 background: 'transparent',
                 border: 'none',
