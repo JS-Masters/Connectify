@@ -46,7 +46,6 @@ const Calls = () => {
     } else {
       setUsersBySearchTerm([]);
     };
-
   };
 
   const startCall = async (userToCallHandle) => {

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { getTeamMembers } from "../services/team.services";
 import { getUsersAvatarsByHandles } from "../services/user.services";
-import { Avatar, AvatarBadge, GridItem, Heading } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Button, GridItem, Heading } from "@chakra-ui/react";
 import UserStatusIcon from "./UserStatusIconChats";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
+import AddMemberToTeamPopUp from "./AddMemberToTeamPopUp";
 
 
 const TeamMembers = () => {
@@ -17,6 +18,7 @@ const TeamMembers = () => {
       .then((teamMembersHandles) => getUsersAvatarsByHandles(Object.keys(teamMembersHandles)))
       .then(setTeamMembers)
   }, []);
+
 
   return (
     <GridItem h='50vh' as='aside' border='2px solid orange' colSpan={1}>
@@ -31,6 +33,7 @@ const TeamMembers = () => {
           <br />
         </span>
       )}
+      {<AddMemberToTeamPopUp/>}
     </GridItem>
   )
 };
