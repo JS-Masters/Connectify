@@ -21,9 +21,9 @@ const Calls = () => {
   const [joinedCallDyteId, setJoinedCallDyteId] = useState('');
   const toast = useToast();
   
-  const showToast = (desc, status) => {
+  const showToast = (title, desc, status) => {
     toast({
-      title: "User is busy",
+      title: title,
       description: desc,
       duration: 3000,
       isClosable: true,
@@ -53,9 +53,9 @@ const Calls = () => {
       const userToCallCurrentStatus = await getUserStatusByHandle(userToCallHandle);
 
       if (userToCallCurrentStatus === statuses.offline) {
-        showToast(`${userToCallHandle} is currently Offline. Please try again later`, "info");
+        showToast('User is Offline!', `${userToCallHandle} is currently offline. Please try again later`, "info");
       } else if (userToCallCurrentStatus === statuses.inMeeting) {
-        showToast(`${userToCallHandle} is currently In a meeting. Please try again later`, "info");
+        showToast('User is Busy!', `${userToCallHandle} is currently In a meeting. Please try again later`, "info");
       } else {
         await createCall(userData.handle, userToCallHandle)
         .then((newCallId) => createDyteCall(newCallId))

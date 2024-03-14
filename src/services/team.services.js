@@ -150,7 +150,6 @@ export const addNewMemberToTeam = async (teamId, newMemberHandle) => {
     const newMemberTeams = await getTeamsByUserHandle(newMemberHandle);
     const team = await getTeamNameByTeamId(teamId);
     await updateUserByHandle(newMemberHandle, 'teams', { ...newMemberTeams, [teamId]: { members: teamMembersUpdated, teamName: team.teamName, id: teamId } });
-
   } catch (error) {
     console.log(error.message);
   }
