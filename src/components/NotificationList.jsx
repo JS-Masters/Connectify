@@ -1,31 +1,32 @@
 import { useContext, useEffect, useState } from 'react';
-import { deleteNotification, deleteNotificationsForOpenChat, getNotificationsByUserHandle } from '../services/chat.services';
+import { deleteNotification, deleteNotificationsForOpenChat, listenForNotificationsByUserHandle } from '../services/chat.services';
 import { Link, useParams } from 'react-router-dom';
 import AppContext from '../providers/AppContext';
 
 const NotificationList = () => {
   const [notifications, setNotifications] = useState([]);
   const { userData } = useContext(AppContext);
-  const { chatId } = useParams();
+  const { chatId, channelId } = useParams();
 
   useEffect(() => {
     if (userData) {
-      const unsubscribe = getNotificationsByUserHandle((snapshot) => {
+      const unsubscribe = listenForNotificationsByUserHandle((snapshot) => {
         const notificationsData = snapshot.exists() ? snapshot.val() : {};
-        const notificationsUpdated = Object.values(notificationsData);
+        const userNotifications = Object.values(notificationsData);
 
-        if (notificationsUpdated.length > 0) {
-
+        if (userNotifications.length > 0) {
           if (chatId) {
-            const notificationsFiltered = notificationsUpdated.filter((n) => n.chatId !== chatId);
-            const notificationsForDelete = notificationsUpdated.filter((n) => n.chatId === chatId);
-            deleteNotificationsForOpenChat(notificationsForDelete, userData.handle)
+            const notificationsFiltered = userNotifications.filter((n) => n.eventId !== chatId);
+            deleteNotificationsForOpenChat(userNotifications.filter((n) => n.eventId === chatId), userData.handle)
               .then(() => setNotifications(notificationsFiltered));
-          } else {
-            setNotifications(notificationsUpdated);
+          } else if(channelId){
+            const notificationsFiltered = userNotifications.filter((n) => n.eventId !== channelId);
+            deleteNotificationsForOpenChat(userNotifications.filter((n) => n.eventId === channelId), userData.handle)
+              .then(() => setNotifications(notificationsFiltered)); 
+          }else {
+            setNotifications(userNotifications);
           }
         };
-
       }, userData.handle);
       return () => unsubscribe();
     }

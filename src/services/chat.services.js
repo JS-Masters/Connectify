@@ -218,7 +218,7 @@ export const deleteNotificationsForOpenChat = async (notificationsToDelete, user
   }
 };
 
-export const getNotificationsByUserHandle = (listenFn, userHandle) => {
+export const listenForNotificationsByUserHandle = (listenFn, userHandle) => {
   const q = query(
     ref(db, `notifications/${userHandle}`),
     // orderByChild('createdOn'),
