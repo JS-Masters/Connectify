@@ -13,7 +13,7 @@ export const addChannelToTeam = async (teamId, channelTitle, createdBy) => {
       title: channelTitle,
       createdOn: new Date().toLocaleDateString(),
       createdBy,
-      participants: teamMembers,
+      // participants: teamMembers,
       messages: {}
     })
     return channelRef.key;
@@ -56,6 +56,7 @@ export const getChannelMessagesById = (listenFn, teamId, channelId) => {
 };
 
 export const addMessageToChannel = async (teamId, channelId, message, author) => {
+
   try {
     const msgRef = await push(ref(db, `teams/${teamId}/channels/${channelId}/messages`), {});
     const newMessageId = msgRef.key;
@@ -67,12 +68,10 @@ export const addMessageToChannel = async (teamId, channelId, message, author) =>
       createdOn: new Date().toLocaleString(),
     });
 
-    const channelSnapshot = await get(ref(db, `teams/${teamId}/channels/${channelId}`));
-    const channelData = channelSnapshot.val();
-
-    const notificationPromises = Object.keys(channelData.participants).map(async (participant) => {
-      if (participant !== author) {
-        await sendNotification(participant, 'New team message!', `You have new message from ${author} in your channel.`, channelId, 'channels', teamId);
+    const teamMembers = await getTeamMembers(teamId);
+    const notificationPromises = Object.keys(teamMembers).map(async (member) => {
+      if (member !== author) {
+        await sendNotification(member, 'New team message!', `You have new message from ${author} in your channel.`, channelId, 'channels', teamId);
       }
     });
 
