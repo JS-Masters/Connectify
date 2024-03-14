@@ -23,19 +23,28 @@ export const addChannelToTeam = async (teamId, channelTitle, createdBy) => {
   }
 };
 
-export const getTeamChannels = async (teamId) => {
-  try {
-    const teamChannelsSnapshot = await get(ref(db, `teams/${teamId}/channels`));
-    if (!teamChannelsSnapshot.exists()) {
-      throw new Error(DATABASE_ERROR_MSG);
-    }  
-    const teamChannels = Object.values(teamChannelsSnapshot.val());
+export const listenForNewTeamChannels = (listenFn, teamId) => {
+  const q = query(
+    ref(db, `teams/${teamId}/channels`),
+    limitToFirst(50)
+  )
+  return onValue(q, listenFn);
 
-    return teamChannels;
-  } catch (error) {
-    console.log(error.message);
-  }
 };
+
+// export const getTeamChannels = async (teamId) => {
+//   try {
+//     const teamChannelsSnapshot = await get(ref(db, `teams/${teamId}/channels`));
+//     if (!teamChannelsSnapshot.exists()) {
+//       throw new Error(DATABASE_ERROR_MSG);
+//     }  
+//     const teamChannels = Object.values(teamChannelsSnapshot.val());
+
+//     return teamChannels;
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 
 export const getChannelMessagesById = (listenFn, teamId, channelId) => {
   const q = query(

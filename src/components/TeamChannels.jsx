@@ -1,13 +1,10 @@
-import { Avatar, AvatarBadge, Button, Grid, GridItem, Heading, useConst } from "@chakra-ui/react";
+import { Button, Grid, GridItem } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { getTeamChannels } from "../services/channel.servicies";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { listenForNewTeamChannels } from "../services/channel.servicies";
 import { v4 } from "uuid";
 import CreateChannelPopUp from "./CreateChannelPopUp";
 import AppContext from "../providers/AppContext";
-import { getTeamMembers } from "../services/team.services";
-import { getUserAvatarByHandle, getUsersAvatarsByHandles } from "../services/user.services";
-import UserStatusIcon from "./UserStatusIconChats";
 import TeamMembers from "./TeamMembers";
 
 const TeamChannels = ({ selectedTeam }) => {
@@ -18,8 +15,16 @@ const TeamChannels = ({ selectedTeam }) => {
   const [channels, setChannels] = useState([]);
 
   useEffect(() => {
-    getTeamChannels(teamId)
-      .then((teamChannels) => setChannels(teamChannels))
+    const unsubscribe = listenForNewTeamChannels((snapshot) => {
+      const teamChannels = snapshot.exists() ? snapshot.val() : [];
+      setChannels(Object.values(teamChannels))
+    }, teamId);
+    return () => unsubscribe();
+
+
+
+    // getTeamChannels(teamId)
+    //   .then((teamChannels) => setChannels(teamChannels))
   }, [teamId, channelId]);
 
   return (
@@ -37,8 +42,6 @@ const TeamChannels = ({ selectedTeam }) => {
         </GridItem>
         {<TeamMembers/>}
       </Grid>
-
-
     </>
   );
 };
