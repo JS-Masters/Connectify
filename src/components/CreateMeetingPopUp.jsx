@@ -8,7 +8,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
-import { createDyteMeeting, createMeetingInDb, getMeetingsByTeamId } from "../services/meeting.services";
+import { createDyteMeeting, createMeetingInDb, deleteMeeting, getMeetingsByTeamId } from "../services/meeting.services";
 
 
 
@@ -71,6 +71,11 @@ const CreateMeetingPopUp = ({ teamName }) => {
     })
   };
 
+  const handleDeleteMeeting = (event) => {
+    event.remove();
+    deleteMeeting(event.id, teamId);
+  };
+
   const renderEventContent = (eventInfo) => {
     return (
       <>
@@ -80,7 +85,7 @@ const CreateMeetingPopUp = ({ teamName }) => {
         <br />
         {!(teamMeetings.find((meeting) => meeting.id === eventInfo.event.id)) &&
           <button style={{ border: '1px solid black', padding: '3px' }} onClick={() => createMeeting(eventInfo.event.id, eventInfo.event.title, eventInfo.event.start, eventInfo.event.end)}>Create Meeting</button>}
-        <button style={{ border: '1px solid black', padding: '3px' }} onClick={() => eventInfo.event.remove()}>Delete</button>
+        <button style={{ border: '1px solid black', padding: '3px' }} onClick={() => handleDeleteMeeting(eventInfo.event)}>Delete</button>
       </>
     );
   };

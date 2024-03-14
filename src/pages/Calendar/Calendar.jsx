@@ -27,14 +27,29 @@ const Calendar = () => {
             setMeetings(meetings);
           }else {
             setUserHasNoTeams(true);
-          }
-          
+          }   
         })
     }
+  }, [user]);
 
-    // listen for meetings in users/userData.handle/meetings !!! listenForMeetingsByUserHandle !!!
-
-  }, [user]) // [] или [userData/user] ???
+  // useEffect(() => {
+  //   if (userData) {
+  //     const unsubscribe = listenForMeetingsByUserHandle(((snapshot) => {
+  //       if(snapshot.exists()){
+  //         console.log(snapshot.val());
+  //         getMeetingsByUserHandle(userData.handle)
+  //         .then((meetings) => {
+  //           if(meetings && meetings.length > 0) {
+  //             setMeetings(meetings);
+  //           }else {
+  //             setUserHasNoTeams(true);
+  //           }    
+  //         })
+  //       }
+  //     }), userData.handle);   
+  //     return () => unsubscribe();
+  //   };
+  // }, [userData]) 
 
 
   const handleWeekendsToggle = () => {
@@ -53,13 +68,11 @@ const Calendar = () => {
   }
 
 
-  const renderEventContent = (eventInfo) => {
-    
+  const renderEventContent = (eventInfo) => { 
     return (
       <>
         <b>{eventInfo.timeText}</b>
         <i>{eventInfo.event.title}</i>
-
         <button onClick={() => handleJoinMeeting(eventInfo.event.extendedProps.dyteMeetingId)}>JOIN</button>
       </>
     );

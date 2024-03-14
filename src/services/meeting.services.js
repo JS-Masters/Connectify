@@ -1,4 +1,4 @@
-import { get, onValue, query, ref, set, update } from "firebase/database";
+import { get, limitToFirst, onValue, query, ref, remove, set, update } from "firebase/database";
 import { DYTE_URL, statuses } from "../common/constants";
 import { DYTE_KEY } from "../common/dyte.api.auth";
 import { db } from "../config/firebase-config";
@@ -8,7 +8,8 @@ import { changeUserCurrentStatusInDb, updateUserByHandle } from "./user.services
 
 export const listenForMeetingsByUserHandle = (listenFn, userHandle) => {
   const q = query(
-    ref(db, `users/${userHandle}/meetings`)
+    ref(db, `users/${userHandle}/meeting`),
+    limitToFirst(50)
   )
   return onValue(q, listenFn);
 };
@@ -22,14 +23,12 @@ export const getMeetingsByUserHandle = async (userHandle) => {
       const meetingPromises = userTeamsIds.map(async (teamId) => {
         const meetings = await getMeetingsByTeamId(teamId)
         if (meetings) {
-          const dateUpdatedMeetings = Object.values(meetings).map((meeting) => {
-            return { ...meeting, start: new Date(meeting.start), end: new Date(meeting.end) }
-          });
+          const dateUpdatedMeetings = Object.values(meetings).map((meeting) =>
+            ({ ...meeting, start: new Date(meeting.start), end: new Date(meeting.end) }));
           return dateUpdatedMeetings;
         }
         return [];
       });
-
       const allMeetings = await Promise.all(meetingPromises);
       return allMeetings.flat();
     }
@@ -52,38 +51,38 @@ export const getMeetingsByTeamId = async (teamId) => {
   }
 };
 
-export const getMeetingsIdsByUserHandle = async (handle) => {
-  try {
-    const meetingsSnapshot = await get(ref(db, `users/${handle}/meetings`));
-    if (!meetingsSnapshot.exists()) {
-      return null;
-    }
-    return meetingsSnapshot.val();
+// export const getMeetingsIdsByUserHandle = async (handle) => {
+//   try {
+//     const meetingsSnapshot = await get(ref(db, `users/${handle}/meetings`));
+//     if (!meetingsSnapshot.exists()) {
+//       return null;
+//     }
+//     return meetingsSnapshot.val();
 
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 
 
-export const updateUsersMeetings = async (teamMembers, dyteMeetingId, teamId) => {
-  try {
-    const meetingPromises = teamMembers.map(async (member) => {
-      const memberMeetingsIds = await getMeetingsIdsByUserHandle(member);
-      return { member, meetings: memberMeetingsIds };
-    });
+// export const updateUsersMeetings = async (teamMembers, dyteMeetingId, teamId) => {
+//   try {
+//     const meetingPromises = teamMembers.map(async (member) => {
+//       const memberMeetingsIds = await getMeetingsIdsByUserHandle(member);
+//       return { member, meetings: memberMeetingsIds };
+//     });
 
-    const allMeetings = await Promise.all(meetingPromises);
+//     const allMeetings = await Promise.all(meetingPromises);
 
-    const updatePromises = allMeetings.map(async ({ member, meetings }) => {
-      await updateUserByHandle(member, 'meetings', { ...meetings, [dyteMeetingId]: teamId });
-    });
+//     const updatePromises = allMeetings.map(async ({ member, meetings }) => {
+//       await updateUserByHandle(member, 'meetings', { ...meetings, [dyteMeetingId]: teamId });
+//     });
 
-    await Promise.all(updatePromises);
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+//     await Promise.all(updatePromises);
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 
 
 export const addDyteRoomIdToMeeting = async (meetingId, dyteMeetingId, teamId) => {
@@ -102,7 +101,6 @@ export const createMeetingInDb = async (meetingId, title, start, end, teamId) =>
       start: startTimestamp,
       end: endTimestamp
     });
-
   } catch (error) {
     console.log(error.message);
   }
@@ -110,7 +108,6 @@ export const createMeetingInDb = async (meetingId, title, start, end, teamId) =>
 
 
 export const createDyteMeeting = async (dbMeetingId, teamId) => {
-
   const options = {
     method: 'POST',
     headers: {
@@ -122,37 +119,32 @@ export const createDyteMeeting = async (dbMeetingId, teamId) => {
   try {
     const response = await fetch(`${DYTE_URL}/meetings`, options);
     const result = await response.json();
-
     await addDyteRoomIdToMeeting(dbMeetingId, result.data.id, teamId);
-
-    const teamMembers = await getTeamMembers(teamId);
-    await updateUsersMeetings(Object.keys(teamMembers), dbMeetingId, teamId);
-
-
-
-    return result.data.id;
+    // const teamMembers = await getTeamMembers(teamId);
+    // await updateUsersMeetings(Object.keys(teamMembers), dbMeetingId, teamId);
+    // return result.data.id;
   } catch (error) {
     console.log(error.message);
   }
 };
 
-export const removeTeamMeetingsFromUser = async (userHandle, teamId) => {
-  try {
-    const userMeetingsSnapshot = await get(ref(db, `users/${userHandle}/meetings`));
-    if (userMeetingsSnapshot.exists()) {
-      const userMeetings = userMeetingsSnapshot.val();
-      const userMeetingsEntries = Object.entries(userMeetings);
-      if (userMeetingsEntries.length > 0) {
-        const userMeetingsUpdatedEntries = userMeetingsEntries.filter((m) => m[1] !== teamId);
-        const userMeetingsUpdated = Object.fromEntries(userMeetingsUpdatedEntries);
+// export const removeTeamMeetingsFromUser = async (userHandle, teamId) => {
+//   try {
+//     const userMeetingsSnapshot = await get(ref(db, `users/${userHandle}/meetings`));
+//     if (userMeetingsSnapshot.exists()) {
+//       const userMeetings = userMeetingsSnapshot.val();
+//       const userMeetingsEntries = Object.entries(userMeetings);
+//       if (userMeetingsEntries.length > 0) {
+//         const userMeetingsUpdatedEntries = userMeetingsEntries.filter((m) => m[1] !== teamId);
+//         const userMeetingsUpdated = Object.fromEntries(userMeetingsUpdatedEntries);
 
-        await set(ref(db, `users/${userHandle}/meetings`), userMeetingsUpdated);
-      }
-    }
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+//         await set(ref(db, `users/${userHandle}/meetings`), userMeetingsUpdated);
+//       }
+//     }
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 
 export const joinMeeting = (dyteRoomId, userData, listenFn) => {
   const options = {
@@ -174,4 +166,16 @@ export const joinMeeting = (dyteRoomId, userData, listenFn) => {
     .then(response => listenFn(response.data.token))
     .then(() => changeUserCurrentStatusInDb(userData.handle, statuses.inMeeting))
     .catch(e => console.error(e));
+};
+
+export const getMeetingById = async () => {
+
+
+
+
+};
+
+
+export const deleteMeeting = async (meetingId, teamId) => {
+ await remove(ref(db, `teams/${teamId}/meetings/${meetingId}`));
 };
