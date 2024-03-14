@@ -24,7 +24,7 @@ const TeamMembers = () => {
       .then(setTeamMembers)
     }, teamId);
     return () => unsubscribe();
-  }, []);
+  }, [teamId]);
 
   useEffect(() => {
     getTeamById(teamId)

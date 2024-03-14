@@ -144,12 +144,12 @@ export const addNewMemberToTeam = async (teamId, newMemberHandle) => {
     const teamMembersUpdated = { ...teamMembers, [newMemberHandle]: true };
     await update(ref(db, `teams/${teamId}/members`), teamMembersUpdated);
 
-    const updateOldEachMemberTeamPromises = Object.keys(teamMembersUpdated).map(async (memberHandle) => await update(ref(db, `users/${memberHandle}/teams/${teamId}/members`), teamMembersUpdated))
-    await Promise.all(updateOldEachMemberTeamPromises);
-
     const newMemberTeams = await getTeamsByUserHandle(newMemberHandle);
     const team = await getTeamNameByTeamId(teamId);
     await updateUserByHandle(newMemberHandle, 'teams', { ...newMemberTeams, [teamId]: { members: teamMembersUpdated, teamName: team.teamName, id: teamId } });
+
+    const updateEachOldMemberTeamPromises = Object.keys(teamMembersUpdated).map(async (memberHandle) => await update(ref(db, `users/${memberHandle}/teams/${teamId}/members`), teamMembersUpdated))
+    await Promise.all(updateEachOldMemberTeamPromises);
   } catch (error) {
     console.log(error.message);
   }
