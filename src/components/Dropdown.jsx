@@ -66,7 +66,7 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
 
   const signOut = async () => {
     await logoutUser();
-    changeUserCurrentStatusInDb(userData.handle, statuses.offline);
+   await changeUserCurrentStatusInDb(userData.handle, statuses.offline);
     setContext({ user: null, userData: null });
     showToast();
     navigate("/");

@@ -25,9 +25,10 @@ import SingleCallRoom from "./components/SingleCallRoom";
 import { changeIncomingCallStatus, endCall, listenForIncomingCalls, listenForRejectedCalls, setUserHasRejectedCall } from "./services/call.services";
 import { Button, useToast } from "@chakra-ui/react";
 import { v4 } from "uuid";
-import { ATENDED_STATUS, WAITING_STATUS } from "./common/constants";
+import { ATENDED_STATUS, WAITING_STATUS, statuses } from "./common/constants";
 import { ref, remove } from "firebase/database";
 import Calendar from "./pages/Calendar/Calendar";
+import { logoutUser } from "./services/auth.service";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -138,6 +139,22 @@ const App = () => {
       return () => unsubscribe();
     };
   }, [user]);
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleTabClose);
+
+    return () => window.removeEventListener('beforeunload', handleTabClose);
+  }, [userData]);
+
+  const handleTabClose = async () => {
+    try {
+      await logoutUser(); 
+      await changeUserCurrentStatusInDb(userData.handle, statuses.offline);
+      setContext({ user: null, userData: null });
+    } catch (error) {
+      console.error('Error updating user status:', error);
+    }
+  };
 
   const setNotifications = (notifications) => {
     setContext((prevContext) => ({
