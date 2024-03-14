@@ -7,8 +7,6 @@ const FilePreview = ({ fileUrl }) => {
 
     const [fileName, fileType] = getFileNameAndExtension(fileUrl);
 
-    console.log(fileName, fileType);
-
     const handleDownload = async () => {
 
         try {

@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Button, Card, CardBody, CardFooter, CardHeader, HStack, Heading, Image, Text, Textarea } from '@chakra-ui/react';
 import Reactions from './Reactions';
-import { REACTIONS } from '../common/constants';
 import { getRepliesByMessage } from '../services/chat.services';
 import { v4 } from 'uuid';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
@@ -140,7 +139,7 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
                 )}
 
                 {'reactions' in message && Object.values(message.reactions).map((reaction) => (
-                  <span key={v4()}>{REACTIONS[reaction]}</span>
+                  <span key={v4()}>{reaction}</span>
                 ))}
 
                 {isReplying && !isReply && (

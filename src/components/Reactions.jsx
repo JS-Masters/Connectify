@@ -9,10 +9,18 @@ import {
   removeReactionFromReply,
 } from "../services/chat.services";
 import PropTypes from "prop-types";
+import { AddIcon } from "@chakra-ui/icons";
+
+
+import { useDisclosure } from "@chakra-ui/react";
+import PickerModal from "./PickerModal";
+import { v4 } from "uuid";
 
 const Reactions = ({ chatId, messageId, userHandle, replyID }) => {
-    const [messageReactions, setMessageReactions] = useState({});
+  const [messageReactions, setMessageReactions] = useState({});
   const [replyReactions, setReplyReactions] = useState({});
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     const unsubscribeMessageReactions = getReactionsByMessage(
@@ -35,6 +43,7 @@ const Reactions = ({ chatId, messageId, userHandle, replyID }) => {
   }, [chatId, messageId, replyID]);
 
   const handleMessageReaction = async (reaction) => {
+    console.log(reaction);
     if (messageReactions && messageReactions[userHandle] === reaction) {
       await removeReactionFromMessage(chatId, messageId, userHandle);
     } else {
@@ -53,42 +62,45 @@ const Reactions = ({ chatId, messageId, userHandle, replyID }) => {
     <div>
       {replyID ? (
         <div>
-          {Object.keys(REACTIONS).map((reaction) => (
-            <span key={reaction} onClick={() => handleReplyReaction(reaction)}>
+          {REACTIONS.map((reaction) => (
+            <span key={v4()} onClick={() => handleReplyReaction(reaction)}>
               {replyReactions && replyReactions[userHandle] === reaction ? (
                 <span style={{ border: "1px solid blue" }}>
-                  {REACTIONS[reaction]}{" "}
+                  {reaction}{" "}
                 </span>
               ) : (
-                <span>{REACTIONS[reaction]} </span>
+                <span>{reaction} </span>
               )}
             </span>
           ))}
+          < AddIcon onClick={onOpen} />
         </div>
       ) : (
         <div>
-          {Object.keys(REACTIONS).map((reaction) => (
-            <span key={reaction} onClick={() => handleMessageReaction(reaction)}>
+          {REACTIONS.map((reaction) => (
+            <span key={v4()} onClick={() => handleMessageReaction(reaction)}>
               {messageReactions && messageReactions[userHandle] === reaction ? (
                 <span style={{ border: "1px solid blue" }}>
-                  {REACTIONS[reaction]}{" "}
+                  {reaction}{" "}
                 </span>
               ) : (
-                <span>{REACTIONS[reaction]} </span>
+                <span>{reaction} </span>
               )}
             </span>
           ))}
+          <AddIcon onClick={onOpen} />
         </div>
       )}
+      <PickerModal isOpen={isOpen} handleReaction={replyID ? handleReplyReaction : handleMessageReaction} onClose={onClose} />
     </div>
   );
 };
 
 Reactions.propTypes = {
-    chatId: PropTypes.string.isRequired,
-    messageId: PropTypes.string.isRequired,
-    userHandle: PropTypes.string.isRequired,
-    replyID: PropTypes.string,
-    };
+  chatId: PropTypes.string.isRequired,
+  messageId: PropTypes.string.isRequired,
+  userHandle: PropTypes.string.isRequired,
+  replyID: PropTypes.string,
+};
 
 export default Reactions;
