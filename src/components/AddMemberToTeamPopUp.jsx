@@ -6,14 +6,18 @@ import AppContext from "../providers/AppContext";
 import { getAllUsers } from "../services/user.services";
 import { v4 } from "uuid";
 import UserStatusIcon from "./UserStatusIconChats";
+import { addNewMemberToTeam } from "../services/team.services";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 const AddMemberToTeamPopUp = () => {
 
   const { userData } = useContext(AppContext);
+  const { teamId } = useParams();
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [usersBySearchTerm, setUsersBySearchTerm] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllUsers().then((users) => setUsers(Object.keys(users).map(user => ({ ...users[user] }))));
@@ -35,8 +39,10 @@ const AddMemberToTeamPopUp = () => {
     setUsersBySearchTerm([]);
   };
 
-  const handleAddMemberClick = () => {
-
+  const handleAddMemberClick = (newMemberHandle, close) => {
+    addNewMemberToTeam(teamId, newMemberHandle)
+    .then(() => handlePopUpClose(close))
+    // .then(() => navigate(`/teams/${teamId}`))
   };
 
   return (
@@ -59,7 +65,7 @@ const AddMemberToTeamPopUp = () => {
                       <AvatarBadge w="1em" bg="teal.500">{<UserStatusIcon userHandle={user.handle} iconSize={'5px'} />}</AvatarBadge>
                     </Avatar>
                     <Heading display='inline' as='h3' size='sm'>{user.handle}</Heading>
-                    <Button style={{ float: 'right', color: 'blue' }} onClick={handleAddMemberClick}>ADD Member</Button>
+                    <Button style={{ float: 'right', color: 'blue' }} onClick={() => handleAddMemberClick(user.handle, close)}>ADD Member</Button>
                   </div>
                 )}
               </div>

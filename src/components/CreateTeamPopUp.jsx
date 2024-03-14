@@ -97,15 +97,19 @@ const CreateTeamPopUp = () => {
   const handleCreateTeamClick = async (close) => {
     if (!teamName) {
       showToast('Choose a name for your team', 'info');
+      return;
     };
     if (teamName.length < 3 || teamName.length > 40) {
       showToast('Team name should be between 3 and 40 characters', 'info');
+      return;
     };
     if (!selectedUsers.length) {
       showToast('Choose people to connect with in your team', 'info');
+      return;
     };
     if (!channels.length) {
       showToast('Create at least one channel', 'info');
+      return;
     };
     try {
       const newTeamId = await createTeam(teamName, userData.handle, selectedUsers);

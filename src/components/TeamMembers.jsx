@@ -1,23 +1,35 @@
-import { useEffect, useState } from "react";
-import { getTeamMembers } from "../services/team.services";
+import { useContext, useEffect, useState } from "react";
+import { getTeamById, getTeamMembers, listenForNewTeamMember } from "../services/team.services";
 import { getUsersAvatarsByHandles } from "../services/user.services";
-import { Avatar, AvatarBadge, Button, GridItem, Heading } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, GridItem, Heading } from "@chakra-ui/react";
 import UserStatusIcon from "./UserStatusIconChats";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
 import AddMemberToTeamPopUp from "./AddMemberToTeamPopUp";
+import AppContext from "../providers/AppContext";
 
 
 const TeamMembers = () => {
 
+  const { userData } = useContext(AppContext);
   const { teamId } = useParams();
   const [teamMembers, setTeamMembers] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState({});
+
 
   useEffect(() => {
-    getTeamMembers(teamId)
-      .then((teamMembersHandles) => getUsersAvatarsByHandles(Object.keys(teamMembersHandles)))
+    const unsubscribe = listenForNewTeamMember((snapshot) => {
+      const teamMembers = snapshot.exists() ? snapshot.val() : [];
+      getUsersAvatarsByHandles(Object.keys(teamMembers))
       .then(setTeamMembers)
+    }, teamId);
+    return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    getTeamById(teamId)
+      .then(setSelectedTeam)
+  }, [teamId])
 
 
   return (
@@ -33,7 +45,7 @@ const TeamMembers = () => {
           <br />
         </span>
       )}
-      {<AddMemberToTeamPopUp/>}
+      {selectedTeam.owner === userData.handle && <AddMemberToTeamPopUp />}
     </GridItem>
   )
 };

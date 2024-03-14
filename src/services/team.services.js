@@ -1,4 +1,4 @@
-import { get, push, ref, set, remove, query, onValue, limitToFirst } from "@firebase/database";
+import { get, push, ref, set, remove, query, onValue, limitToFirst, update } from "@firebase/database";
 import { db } from "../config/firebase-config";
 import { updateUserByHandle } from "./user.services";
 import { DATABASE_ERROR_MSG } from "../common/constants";
@@ -112,7 +112,7 @@ export const leaveTeam = async (teamId, userToRemove) => {
     await remove(ref(db, `users/${userToRemove}/teams/${teamId}`));
 
     const teamMembers = await getTeamMembers(teamId);
-    const removeMemberInOtherUsersPromises = Object.keys(teamMembers).map(async (member) => await updateTeamMembersInUser(member, teamId, userToRemove));
+    const removeMemberInOtherUsersPromises = Object.keys(teamMembers).map(async (member) => await removeTeamMemberInUser(member, teamId, userToRemove));
 
     await Promise.all(removeMemberInOtherUsersPromises);
     await removeTeamMeetingsFromUser(userToRemove, teamId);
@@ -121,7 +121,7 @@ export const leaveTeam = async (teamId, userToRemove) => {
   }
 };
 
-export const updateTeamMembersInUser = async (userHandle, teamId, userToRemove) => {
+export const removeTeamMemberInUser = async (userHandle, teamId, userToRemove) => {
   try {
     await remove(ref(db, `users/${userHandle}/teams/${teamId}/members/${userToRemove}`));
   } catch (error) {
@@ -136,6 +136,45 @@ export const listenForTeamsByUserHandle = (listenFn, loggedUserHandle) => {
     limitToFirst(50)
   )
   return onValue(q, listenFn);
-
 };
+
+export const addNewMemberToTeam = async (teamId, newMemberHandle) => {
+  try {
+    const teamMembers = await getTeamMembers(teamId);
+    const teamMembersUpdated = { ...teamMembers, [newMemberHandle]: true };
+    await update(ref(db, `teams/${teamId}/members`), teamMembersUpdated);
+
+    const updateOldEachMemberTeamPromises = Object.keys(teamMembersUpdated).map(async (memberHandle) => await update(ref(db, `users/${memberHandle}/teams/${teamId}/members`), teamMembersUpdated))
+    await Promise.all(updateOldEachMemberTeamPromises);
+
+    const newMemberTeams = await getTeamsByUserHandle(newMemberHandle);
+    const team = await getTeamNameByTeamId(teamId);
+    await updateUserByHandle(newMemberHandle, 'teams', { ...newMemberTeams, [teamId]: { members: teamMembersUpdated, teamName: team.teamName, id: teamId } });
+
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const getTeamNameByTeamId = async (teamId) => {
+  try {
+    const teamSnapshot = await get(ref(db, `teams/${teamId}`));
+    if (!teamSnapshot.exists()) {
+      throw new Error(DATABASE_ERROR_MSG);
+    }
+    return teamSnapshot.val();
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const listenForNewTeamMember = (listenFn, teamId) => {
+  const q = query(
+    ref(db, `teams/${teamId}/members`),
+    // orderByChild('createdOn'),
+    limitToFirst(50)
+  )
+  return onValue(q, listenFn);
+}
+
 
