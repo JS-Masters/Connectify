@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { getTeamById, listenForNewTeamMember } from "../services/team.services";
-import { getUserStatusByHandle, getUsersAvatarsByHandles } from "../services/user.services";
+import { changeUserCurrentStatusInDb, getUserLastStatusByHandle, getUserStatusByHandle, getUsersAvatarsByHandles } from "../services/user.services";
 import { Avatar, AvatarBadge, GridItem, Heading, useToast } from "@chakra-ui/react";
 import UserStatusIcon from "./UserStatusIconChats";
 import { useParams } from "react-router-dom";
@@ -75,14 +75,17 @@ const TeamMembers = () => {
   };
 
   const leaveCall = async () => {
-    try {
-      await endCall(userToCall, joinedCallDyteId)
-    } catch (error) {
-      console.log(error.message);
-    };
-    setToken('');
-    setUserToCall('');
-    setJoinedCallDyteId('');
+    endCall(userToCall, joinedCallDyteId)
+      .then(() => getUserLastStatusByHandle(userData.handle))
+      .then((previousStatus) => {
+        changeUserCurrentStatusInDb(userData.handle, previousStatus)
+      })
+      .then(() => {
+        setToken('');
+        setUserToCall('');
+        setJoinedCallDyteId('');
+      })
+      .catch((error) => console.log(error.message))
   };
 
   return (
@@ -96,8 +99,8 @@ const TeamMembers = () => {
             </AvatarBadge>
           </Avatar>
           <Heading display='inline' as='h3' size='sm'>{member.handle}</Heading>
-          <ChatIcon style={{float:'right', margin:'5px'}}/>
-          <PhoneIcon onClick={() => startCall(member.handle)} style={{float:'right', margin:'5px', cursor:'pointer'}}/>
+          {/* <ChatIcon style={{float:'right', margin:'5px'}}/> */}
+          {member.handle !== userData.handle && <PhoneIcon onClick={() => startCall(member.handle)} style={{float:'right', margin:'5px', cursor:'pointer'}}/>}
           <br />
         </span>
       )}
