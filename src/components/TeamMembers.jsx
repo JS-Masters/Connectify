@@ -14,12 +14,12 @@ import { statuses } from "../common/constants";
 import SingleCallRoom from "./SingleCallRoom";
 
 
-const TeamMembers = () => {
+const TeamMembers = ({selectedTeam}) => {
 
   const { userData } = useContext(AppContext);
   const { teamId } = useParams();
   const [teamMembers, setTeamMembers] = useState([]);
-  const [selectedTeam, setSelectedTeam] = useState({});
+  // const [selectedTeam, setSelectedTeam] = useState({});
   const [token, setToken] = useState('');
   const [userToCall, setUserToCall] = useState('');
   const [joinedCallDyteId, setJoinedCallDyteId] = useState('');
@@ -34,10 +34,10 @@ const TeamMembers = () => {
     return () => unsubscribe();
   }, [teamId]);
 
-  useEffect(() => {
-    getTeamById(teamId)
-      .then(setSelectedTeam)
-  }, [teamId])
+  // useEffect(() => {
+  //   getTeamById(teamId)
+  //     .then(setSelectedTeam)
+  // }, [teamId])
 
 
   const showToast = (title, desc, status) => {
@@ -92,7 +92,7 @@ const TeamMembers = () => {
     <> 
     <GridItem h='50vh' as='aside' border='2px solid orange' colSpan={1}>
       {teamMembers.map((member) =>
-        <span key={v4()}>
+        <span key={member.handle}>
           <Avatar size='sm' src={member.avatarUrl}>
             <AvatarBadge w="1em" bg="teal.500">
               {<UserStatusIcon userHandle={member.handle} iconSize={'5px'} />}

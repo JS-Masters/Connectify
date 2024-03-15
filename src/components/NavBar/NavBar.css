@@ -1,0 +1,30 @@
+#logo-img {
+    display: inline;
+    float: left ;
+    width: 200px ;
+    margin-left: 30px;
+}
+
+.active>img {
+    border: 2px dashed rgb(228, 209, 41) !important;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+#nav-buttons-div {
+    display: flex;
+    gap: 100px;
+    padding-top: 25px;
+}
+
+#nav-buttons-div>a>img {
+    border: 2px solid transparent;
+    border-radius: 5px;
+    padding: 8px;
+}
+
+#nav-buttons-div>a>img:hover {
+    border: 2px solid rgb(124, 124, 97);
+    border-radius: 5px;
+    padding: 8px;
+}

@@ -197,7 +197,9 @@ const App = () => {
   };
 
   return (
-    <>
+    <div>
+
+    
       <AppContext.Provider value={{ ...context, setContext, setNotifications }}>
         <RouterProvider router={router} />
       </AppContext.Provider>
@@ -212,7 +214,7 @@ const App = () => {
         <div style={{ height: '50vh', width: 'auto' }} >
           <SingleCallRoom token={incomingToken} leaveCall={leaveCall} />
         </div >}
-    </>
+    </div>
   );
 };
 export default App;

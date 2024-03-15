@@ -77,7 +77,9 @@ export const addMessageToChannel = async (teamId, channelId, message, author) =>
 
     await Promise.all(notificationPromises);
   } catch (error) {
+    
     console.log(error.message);
+    // can throw Error in catch + после го catch-ваме в компонента и може да покажем Баннер ако искаме да покажем някоя грешка на потребителя
   }
 };
 

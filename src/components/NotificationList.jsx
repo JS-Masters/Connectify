@@ -2,8 +2,9 @@ import { useContext, useEffect, useState } from 'react';
 import { deleteNotification, deleteNotificationsForOpenChat, listenForNotificationsByUserHandle } from '../services/chat.services';
 import { Link, useParams } from 'react-router-dom';
 import AppContext from '../providers/AppContext';
+import { Box, Modal, ModalContent } from '@chakra-ui/react';
 
-const NotificationList = () => {
+const NotificationList = ({isOpen, onClose}) => {
   const [notifications, setNotifications] = useState([]);
   const { userData } = useContext(AppContext);
   const { chatId, channelId } = useParams();
@@ -19,11 +20,11 @@ const NotificationList = () => {
             const notificationsFiltered = userNotifications.filter((n) => n.eventId !== chatId);
             deleteNotificationsForOpenChat(userNotifications.filter((n) => n.eventId === chatId), userData.handle)
               .then(() => setNotifications(notificationsFiltered));
-          } else if(channelId){
+          } else if (channelId) {
             const notificationsFiltered = userNotifications.filter((n) => n.eventId !== channelId);
             deleteNotificationsForOpenChat(userNotifications.filter((n) => n.eventId === channelId), userData.handle)
-              .then(() => setNotifications(notificationsFiltered)); 
-          }else {
+              .then(() => setNotifications(notificationsFiltered));
+          } else {
             setNotifications(userNotifications);
           }
         };
@@ -40,21 +41,31 @@ const NotificationList = () => {
 
   return (
 
-    <div>
-      {notifications.length > 0 ? <h2 style={{ color: 'red' }}>{notifications.length} Notifications</h2> : <h2 style={{ color: 'green' }}>0 notifications</h2>}
-      <ul>
-        {notifications.length > 0 && (notifications.sort((a, b) => a.createdOn - b.createdOn).map((notification) => (
-          <li key={notification.id}>
-            <h3>{notification.title}</h3>
-            {notification.type === 'chats' && <Link onClick={() => handleDelete(notification.id)} to={`/chats/${notification.eventId}`}> <p>{notification.body}</p></Link>}
-            {notification.type === 'teams' && <Link onClick={() => handleDelete(notification.id)} to={`/teams/${notification.eventId}`}> <p>{notification.body}</p></Link>} 
-            {notification.type === 'channels' && <Link onClick={() => handleDelete(notification.id)} to={`/teams/${notification.teamId}/channels/${notification.eventId}`}> <p>{notification.body}</p></Link>} 
-            <p>{notification.createdOn}</p>
-            <button style={{ border: '1px solid black' }} onClick={() => handleDelete(notification.id)}>X </button>
-          </li>
-        )))}
-      </ul>
-    </div>
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        {/* <ModalOverlay /> */}
+        <ModalContent w='fit-content' bg='transparent'>
+          <Box>
+            {notifications.length > 0 ? <h2 style={{ color: 'red' }}>{notifications.length} Notifications</h2> : <h2 style={{ color: 'green' }}>0 notifications</h2>}
+            <ul>
+              {notifications.length > 0 && (notifications.sort((a, b) => a.createdOn - b.createdOn).map((notification) => (
+                <li key={notification.id}>
+                  <h3>{notification.title}</h3>
+                  {notification.type === 'chats' && <Link onClick={() => handleDelete(notification.id)} to={`/chats/${notification.eventId}`}> <p>{notification.body}</p></Link>}
+                  {notification.type === 'teams' && <Link onClick={() => handleDelete(notification.id)} to={`/teams/${notification.eventId}`}> <p>{notification.body}</p></Link>}
+                  {notification.type === 'channels' && <Link onClick={() => handleDelete(notification.id)} to={`/teams/${notification.teamId}/channels/${notification.eventId}`}> <p>{notification.body}</p></Link>}
+                  <p>{notification.createdOn}</p>
+                  <button style={{ border: '1px solid black' }} onClick={() => handleDelete(notification.id)}>X </button>
+                </li>
+              )))}
+            </ul>
+          </Box>
+        </ModalContent>
+      </Modal>
+
+
+
+    </>
   );
 };
 

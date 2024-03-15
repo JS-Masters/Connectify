@@ -112,6 +112,7 @@ export const getIncomingCallsByUid = async (uid) => {
 };
 
 export const setUserHasRejectedCall = async (userHandle) => {
+  console.log(userHandle);
   try {
     const userRef = ref(db, `users/${userHandle}`);
     await update(userRef, { hasRejectedCall: true });

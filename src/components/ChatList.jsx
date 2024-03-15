@@ -33,7 +33,7 @@ const ChatList = () => {
       return () => unsubscribe();
     }
 
-  }, [chatId, leaveChatTrigger]);
+  }, [leaveChatTrigger]);
 
   useEffect(() => {
     if (myChats) {
@@ -50,7 +50,7 @@ const ChatList = () => {
 
   const handleLeaveChatClick = (chatID, userHandle) => {
     handleLeaveChat(chatID, userHandle)
-    .then(() => setLeaveChatTrigger(!leaveChatTrigger));
+      .then(() => setLeaveChatTrigger(!leaveChatTrigger));
   };
 
   return (
@@ -62,15 +62,15 @@ const ChatList = () => {
           let chatMembers = []
           {
             chatParticipantsHandles.length === 0 ? chatMembers = [{ handle: NO_USERS_MESSAGE, avatarUrl: NO_USERS_AVATAR, currentStatus: statuses.offline }]
-            : chatMembers = users.filter((u) => chatParticipantsHandles.includes(u.handle))
+              : chatMembers = users.filter((u) => chatParticipantsHandles.includes(u.handle))
           }
           return (
             <Box border='1px solid gray' size='md' cursor='pointer' key={v4()} onClick={() => navigate(`/chats/${chatID}`)}>
               {chatMembers.map((member) =>
-                <span key={v4()}>
+                <span key={member.handle}>
                   <Avatar size='sm' style={{ cursor: "pointer" }} src={member.avatarUrl}>
                     <AvatarBadge w="1em" bg="teal.500">
-                      {<UserStatusIcon userHandle={member.handle} iconSize={'5px'}/>}
+                      {<UserStatusIcon userHandle={member.handle} iconSize={'5px'} />}
                     </AvatarBadge>
                   </Avatar>
                   <Heading display='inline' as='h3' size='sm'>{member.handle}</Heading>

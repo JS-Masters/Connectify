@@ -40,7 +40,7 @@ const TeamChannels = ({ selectedTeam }) => {
               {selectedTeam.owner === userData.handle && <CreateChannelPopUp />}
             </>}
         </GridItem>
-        <TeamMembers/>
+        <TeamMembers selectedTeam={selectedTeam}/>
       </Grid>
     </>
   );
