@@ -4,40 +4,10 @@ import { Link, useParams } from 'react-router-dom';
 import AppContext from '../providers/AppContext';
 import { Box, Modal, ModalContent } from '@chakra-ui/react';
 
-const NotificationList = ({isOpen, onClose}) => {
-  const [notifications, setNotifications] = useState([]);
-  const { userData } = useContext(AppContext);
-  const { chatId, channelId } = useParams();
+const NotificationList = ({ notifications, handleDelete, isOpen, onClose }) => {
 
-  useEffect(() => {
-    if (userData) {
-      const unsubscribe = listenForNotificationsByUserHandle((snapshot) => {
-        const notificationsData = snapshot.exists() ? snapshot.val() : {};
-        const userNotifications = Object.values(notificationsData);
 
-        if (userNotifications.length > 0) {
-          if (chatId) {
-            const notificationsFiltered = userNotifications.filter((n) => n.eventId !== chatId);
-            deleteNotificationsForOpenChat(userNotifications.filter((n) => n.eventId === chatId), userData.handle)
-              .then(() => setNotifications(notificationsFiltered));
-          } else if (channelId) {
-            const notificationsFiltered = userNotifications.filter((n) => n.eventId !== channelId);
-            deleteNotificationsForOpenChat(userNotifications.filter((n) => n.eventId === channelId), userData.handle)
-              .then(() => setNotifications(notificationsFiltered));
-          } else {
-            setNotifications(userNotifications);
-          }
-        };
-      }, userData.handle);
-      return () => unsubscribe();
-    }
-  }, [userData, chatId]);
 
-  const handleDelete = (notificationId) => {
-    deleteNotification(userData.handle, notificationId).then(() => {
-      setNotifications((prevNotifications) => prevNotifications.filter((n) => n.id !== notificationId));
-    });
-  };
 
   return (
 
@@ -46,16 +16,32 @@ const NotificationList = ({isOpen, onClose}) => {
         {/* <ModalOverlay /> */}
         <ModalContent w='fit-content' bg='transparent'>
           <Box>
-            {notifications.length > 0 ? <h2 style={{ color: 'red' }}>{notifications.length} Notifications</h2> : <h2 style={{ color: 'green' }}>0 notifications</h2>}
+            {/* {notifications.length > 0 ? <h2 style={{ color: 'red' }}>{notifications.length} Notifications</h2> : <h2 style={{ color: 'green' }}>0 notifications</h2>} */}
             <ul>
               {notifications.length > 0 && (notifications.sort((a, b) => a.createdOn - b.createdOn).map((notification) => (
                 <li key={notification.id}>
                   <h3>{notification.title}</h3>
-                  {notification.type === 'chats' && <Link onClick={() => handleDelete(notification.id)} to={`/chats/${notification.eventId}`}> <p>{notification.body}</p></Link>}
-                  {notification.type === 'teams' && <Link onClick={() => handleDelete(notification.id)} to={`/teams/${notification.eventId}`}> <p>{notification.body}</p></Link>}
-                  {notification.type === 'channels' && <Link onClick={() => handleDelete(notification.id)} to={`/teams/${notification.teamId}/channels/${notification.eventId}`}> <p>{notification.body}</p></Link>}
+                  {notification.type === 'chats' &&
+                    <Link to={`/chats/${notification.eventId}`}
+                      onClick={() => {
+                        handleDelete(notification.id);
+                        onClose();
+                      }}> <p>{notification.body}</p>
+                    </Link>}
+                  {notification.type === 'teams' && <Link to={`/teams/${notification.eventId}`} onClick={() => {
+                    handleDelete(notification.id);
+                    onClose();
+                  }}><p>{notification.body}</p>
+                  </Link>}
+                  {notification.type === 'channels' && <Link to={`/teams/${notification.teamId}/channels/${notification.eventId}`} onClick={() => {
+                    handleDelete(notification.id);
+                    onClose();
+                  }}><p>{notification.body}</p>
+                  </Link>}
                   <p>{notification.createdOn}</p>
-                  <button style={{ border: '1px solid black' }} onClick={() => handleDelete(notification.id)}>X </button>
+                  <button style={{ border: '1px solid black' }} onClick={() => {
+                    handleDelete(notification.id)
+                  }}>X</button>
                 </li>
               )))}
             </ul>
