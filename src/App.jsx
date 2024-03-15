@@ -107,7 +107,7 @@ const App = () => {
         if (snapshot.exists()) {
           const incomingCalls = snapshot.val();
           const callsWaiting = Object.values(incomingCalls).filter((call) => call.status === WAITING_STATUS);
-          if (callsWaiting.length) {
+          if (callsWaiting.length > 0) {
             callsWaiting.map((call) => {
               setIncomingCall([{ callId: call.id, dyteRoomId: call.dyteRoomId, caller: call.caller }]);
             })
@@ -205,7 +205,7 @@ const App = () => {
         return <div key={v4()}>
           <h3>{call.caller} is Calling</h3>
           <Button onClick={() => joinCall(call.dyteRoomId, call.callId)}>ANSWER</Button>
-          <Button onClick={() => rejectCall(call.callId, call.caller)}>REJCET</Button>
+          <Button onClick={() => rejectCall(call.callId, call.caller)}>REJECT</Button>
         </div>
       })}
       {incomingToken &&

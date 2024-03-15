@@ -14,10 +14,13 @@ export const listenForIncomingCalls = (listenFn, loggedUserUid) => {
 
 export const listenForRejectedCalls = (listenFn, loggedUserHandle) => {
   const q = query(
-    ref(db, `users/${loggedUserHandle}`)
+    ref(db, `users/${loggedUserHandle}`),
+    limitToFirst(50)
   )
   return onValue(q, listenFn);
 };
+
+
 
 
 export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteId) => {
@@ -77,10 +80,15 @@ export const createCall = async (madeCall, recievedCall) => {
 
 export const endCall = async (userToCall, dyteRoomId) => {
   try {
-    const incomingCalls = await getIncomingCallsByUid(userToCall.uid);
+    const userSnapshot = await getUserByHandle(userToCall);
+    if(!userSnapshot.exists()){
+      throw new Error(DATABASE_ERROR_MSG)
+    }
+    const user = userSnapshot.val()
+    const incomingCalls = await getIncomingCallsByUid(user.uid);
     if (incomingCalls) {
       const callId = Object.values(incomingCalls).filter((call) => call.dyteRoomId === dyteRoomId)[0].id;
-      await remove(ref(db, `incomingCalls/${userToCall.uid}/${callId}`));
+      await remove(ref(db, `incomingCalls/${user.uid}/${callId}`));
     }
   } catch (error) {
     console.log(error.message);
