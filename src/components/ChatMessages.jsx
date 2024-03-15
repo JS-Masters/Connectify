@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef} from "react";
 import { useParams } from "react-router";
 import { editMessageInChat, getChatMessagesById, deleteMessageFromChat, replyToMessage, editReplyInChat, deleteReplyFromChat, leaveChat, addMessageToChat } from "../services/chat.services";
 import ChatMessageBox from "./ChatMessageBox";
@@ -11,6 +11,8 @@ const ChatMessages = () => {
   const [messages, setMessages] = useState([]);
   const { chatId } = useParams();
   const { userData } = useContext(AppContext);
+  const messagesEndRef = useRef(null);
+
 
 
   useEffect(() => {
@@ -25,6 +27,10 @@ const ChatMessages = () => {
 
   }, [chatId]);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }
+  , [messages]);
 
   const handleEditMessage = async (messageId, newContent) => {
     try {
@@ -77,7 +83,9 @@ const ChatMessages = () => {
         ))
       )}
       <ChatInput />
+      <div ref={messagesEndRef} />
     </Box>
+
   );
 
 };

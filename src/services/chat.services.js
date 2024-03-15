@@ -274,27 +274,35 @@ export const getRepliesByMessage = (chatId, messageId, listenFn) => {
   return onValue(q, listenFn);
 }
 
-export const editReplyInChat = async (chatId, messageId, replyId, newContent
-) => {
-  const replyRef = ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}`);
-  const snapshot = await get(replyRef);
-  if (snapshot.exists()) {
-    await set(replyRef, {
-      ...snapshot.val(),
-      content: newContent,
-      editedOn: new Date().toLocaleString(),
-    });
-  } else {
-    console.log('No such reply!');
+export const editReplyInChat = async (chatId, messageId, replyId, newContent) => {
+  const db = getDatabase();
+  try {
+    const replyRef = ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}`);
+    const snapshot = await get(replyRef);
+    if (snapshot.exists()) {
+      await set(replyRef, {
+        ...snapshot.val(),
+        content: newContent,
+        editedOn: new Date().toLocaleString(),
+      });
+    } else {
+      console.log('No such reply!');
+    }
+  } catch (error) {
+    console.log(error.message);
   }
 }
 
 export const deleteReplyFromChat = async (chatId, messageId, replyId, deletedBy) => {
-  await set(ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}`), {
-    deleteMessage: DELETE_REPLY,
-    deletedOn: new Date().toLocaleDateString(),
-    deletedBy
-  });
+  try {
+    await set(ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}`), {
+      deleteMessage: DELETE_REPLY,
+      deletedOn: new Date().toLocaleDateString(),
+      deletedBy
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 export const leaveChat = async (chatId, userHandle) => {
