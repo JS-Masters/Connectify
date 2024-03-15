@@ -1,12 +1,11 @@
-import { Avatar, AvatarBadge, Box, Heading, Image, useDisclosure, Text } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Box, Heading, Image, useDisclosure, Text, Modal, ModalContent, Spacer } from "@chakra-ui/react";
 // import PropTypes from "prop-types";
 import Dropdown from "../Dropdown";
 import { useContext, useState, useEffect } from "react";
 import AppContext from "../../providers/AppContext";
-import { NavLink, Outlet, useParams } from "react-router-dom";
+import { Link, NavLink, Outlet, useParams } from "react-router-dom";
 import NotificationList from "../NotificationList";
 import "./NavBar.css";
-import NotificationsModal from "../NotificationsModal";
 import { deleteNotification, deleteNotificationsForOpenChat, listenForNotificationsByUserHandle } from "../../services/chat.services";
 
 const NavBar = () => {
@@ -48,31 +47,63 @@ const NavBar = () => {
 
   return (
     <>
+      <Box id="nav-buttons-div"  >
+        <Image id="logo-img" src="../../LOGO.png"></Image>
+        <NavLink to="/chats"><img src="../../chats.png"></img></NavLink>
+        <NavLink to="/calls"><img src="../../calls.png"></img></NavLink>
+        <NavLink to="/teams"><img src="../../teams.png"></img></NavLink>
+        <NavLink to="/calendar"><img src="../../calendar.png"></img></NavLink>
+        <Spacer />
 
-      <div id="nav-buttons-div">
-        <Image id="logo-img" src="../../public/LOGO.png"></Image>
-        <NavLink to="/chats"><img src="../../public/chats.png"></img></NavLink>
-        <NavLink to="/calls"><img src="../../public/calls.png"></img></NavLink>
-        <NavLink to="/teams"><img src="../../public/teams.png"></img></NavLink>
-        <NavLink to="/calendar"><img src="../../public/calendar.png"></img></NavLink>
-        
-        <Avatar onClick={onOpen} src="../../public/bell.png" >
-          <AvatarBadge>
+        <Avatar onClick={onOpen} src="../../bell.png" cursor='pointer'>
+          <AvatarBadge w="1em" border='none' >
             <Text>{notifications.length}</Text>
           </AvatarBadge>
+          <Modal isOpen={isOpen} onClose={onClose} >
+          {/* <ModalOverlay /> */}
+          <ModalContent w='fit-content' bg='gray' marginTop='90px'>
+            <Box id="notifications-box">
+              <ul>
+                {notifications.length > 0 && (notifications.sort((a, b) => a.createdOn - b.createdOn).map((notification) => (
+                  <li id="single-notification" key={notification.id}>
+                    <span>{notification.title}</span>
+                    <button style={{ border: '1px solid black' }} onClick={() => {
+                      handleDelete(notification.id)
+                    }}>X</button>
+                    {notification.type === 'chats' &&
+                      <Link to={`/chats/${notification.eventId}`}
+                        onClick={() => {
+                          handleDelete(notification.id);
+                          onClose();
+                        }}> <p>{notification.body}</p>
+                      </Link>}
+                    {notification.type === 'teams' && <Link to={`/teams/${notification.eventId}`} onClick={() => {
+                      handleDelete(notification.id);
+                      onClose();
+                    }}><p>{notification.body}</p>
+                    </Link>}
+                    {notification.type === 'channels' && <Link to={`/teams/${notification.teamId}/channels/${notification.eventId}`} onClick={() => {
+                      handleDelete(notification.id);
+                      onClose();
+                    }}><p>{notification.body}</p>
+                    </Link>}
+                    <p>{notification.createdOn}</p>
+                  </li>
+                )))}
+              </ul>
+            </Box>
+          </ModalContent>
+        </Modal>
         </Avatar>
-        <NotificationList notifications={notifications} handleDelete={handleDelete} isOpen={isOpen} onClose={onClose} />
-        {/* <NotificationsModal onOpen={onOpen}/> */}
 
         {userData && (
           <Dropdown username={userData.handle} avatarUrl={userData.avatarUrl} />
         )}
 
-      </div>
+        
+      </Box>
 
-      
 
-      {/* <Outlet /> */}
     </>
   );
 };

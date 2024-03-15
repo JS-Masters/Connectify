@@ -133,7 +133,7 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
 
 
   return (
-    <Box pos="relative" float='right'>
+    <Box pos="relative" float='right' marginRight='50px'>
       <HStack>
         <Text style={{ cursor: "pointer" }} onClick={toggleMenu}>
           {username}
