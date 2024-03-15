@@ -1,6 +1,6 @@
 import { Avatar, AvatarBadge, Box, Button, Heading, Input, Text, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { checkUsersIfBannedLoggedUser, getAllUsers, getUserStatusByHandle } from "../services/user.services";
+import { changeUserCurrentStatusInDb, checkUsersIfBannedLoggedUser, getAllUsers, getUserLastStatusByHandle, getUserStatusByHandle } from "../services/user.services";
 import { addIncomingCallToDb, createCall, endCall } from "../services/call.services";
 import { useContext } from "react";
 import AppContext from "../providers/AppContext";
@@ -20,7 +20,7 @@ const Calls = () => {
   const [userToCall, setUserToCall] = useState('');
   const [joinedCallDyteId, setJoinedCallDyteId] = useState('');
   const toast = useToast();
-  
+
   const showToast = (title, desc, status) => {
     toast({
       title: title,
@@ -58,30 +58,34 @@ const Calls = () => {
         showToast('User is Busy!', `${userToCallHandle} is currently In a meeting. Please try again later`, "info");
       } else {
         await createCall(userData.handle, userToCallHandle)
-        .then((newCallId) => createDyteCall(newCallId))
-        .then((roomID) => addIncomingCallToDb(userToCallHandle, userData.handle, roomID))
-        .then((roomID) => addUserToCall((data) => setToken(data), userData, roomID))
-        .then((roomID) => {
-          setSearchTerm('');
-          setUsersBySearchTerm([]);
-          setUserToCall(userToCallHandle);
-          setJoinedCallDyteId(roomID);
-        });
-      }   
+          .then((newCallId) => createDyteCall(newCallId))
+          .then((roomID) => addIncomingCallToDb(userToCallHandle, userData.handle, roomID))
+          .then((roomID) => addUserToCall((data) => setToken(data), userData, roomID))
+          .then((roomID) => {
+            setSearchTerm('');
+            setUsersBySearchTerm([]);
+            setUserToCall(userToCallHandle);
+            setJoinedCallDyteId(roomID);
+          });
+      }
     } catch (error) {
       console.log(error.message);
     };
   };
 
-  const leaveCall = async () => {
-    try {
-      await endCall(userToCall, joinedCallDyteId)
-    } catch (error) {
-      console.log(error.message);
-    };
-    setToken('');
-    setUserToCall('');
-    setJoinedCallDyteId('');
+  const leaveCall = () => {
+
+    endCall(userToCall, joinedCallDyteId)
+      .then(() => getUserLastStatusByHandle(userData.handle))
+      .then((previousStatus) => {
+        changeUserCurrentStatusInDb(userData.handle, previousStatus)
+      })
+      .then(() => {
+        setToken('');
+        setUserToCall('');
+        setJoinedCallDyteId('');
+      })
+      .catch((error) => console.log(error.message))
   };
 
   return (

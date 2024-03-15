@@ -77,17 +77,10 @@ export const createCall = async (madeCall, recievedCall) => {
 
 export const endCall = async (userToCall, dyteRoomId) => {
   try {
-    const userSnapshot = await getUserByHandle(userToCall);
-    if (!userSnapshot.exists()) {
-      throw new Error(DATABASE_ERROR_MSG)
-    }
-    const userVal = userSnapshot.val();
-    const userId = userVal.uid;
-    const incomingCalls = await getIncomingCallsByUid(userId);
-
+    const incomingCalls = await getIncomingCallsByUid(userToCall.uid);
     if (incomingCalls) {
       const callId = Object.values(incomingCalls).filter((call) => call.dyteRoomId === dyteRoomId)[0].id;
-      await remove(ref(db, `incomingCalls/${userId}/${callId}`));
+      await remove(ref(db, `incomingCalls/${userToCall.uid}/${callId}`));
     }
   } catch (error) {
     console.log(error.message);
@@ -102,7 +95,9 @@ export const getIncomingCallsByUid = async (uid) => {
     // };
     if (incomingCallsSnapshot) {
       return incomingCallsSnapshot.val();
-    }
+    } else {
+      return null;
+    } 
   } catch (error) {
     console.log(error.message);
   }

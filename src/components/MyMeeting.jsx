@@ -1,7 +1,6 @@
 import { DyteMeeting } from "@dytesdk/react-ui-kit";
 import { useDyteMeeting } from "@dytesdk/react-web-core";
 import { useContext, useEffect } from "react";
-import { changeUserCurrentStatusInDb, getUserLastStatusByHandle } from "../services/user.services";
 import AppContext from "../providers/AppContext";
 
 const MyMeeting = ({ leaveCall }) => {
@@ -12,12 +11,8 @@ const MyMeeting = ({ leaveCall }) => {
   useEffect(() => {
     meeting.self.on('roomLeft', () => {
       leaveCall();
-      getUserLastStatusByHandle(userData.handle)
-        .then((previousStatus) => {
-          changeUserCurrentStatusInDb(userData.handle, previousStatus)
-        })
     });
-  }, [meeting]);
+  }, [meeting, userData]);
 
   return (
     <div style={{ height: '50vh', width: 'auto' }}>

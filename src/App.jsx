@@ -13,7 +13,7 @@ import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import { auth, db } from "./config/firebase-config";
-import { changeUserCurrentStatusInDb, getUserData } from "./services/user.services";
+import { changeUserCurrentStatusInDb, getUserData, getUserLastStatusByHandle } from "./services/user.services";
 import Chats from "./pages/Chats";
 import Calls from "./pages/Calls";
 import ChatMessages from "./components/ChatMessages";
@@ -79,7 +79,7 @@ const App = () => {
       getUserData(user.uid)
         .then((snapshot) => {
           if (snapshot.exists()) {
-            const oldUserData =  snapshot.val()[Object.keys(snapshot.val())[0]];
+            const oldUserData = snapshot.val()[Object.keys(snapshot.val())[0]];
             changeUserCurrentStatusInDb(oldUserData.handle, oldUserData.lastStatus);
           }
         })
@@ -125,7 +125,7 @@ const App = () => {
   }, [user]);
 
   useEffect(() => {
-    if (userData) {    
+    if (userData) {
       const unsubscribe = listenForRejectedCalls((snapshot) => {
         if (snapshot.exists()) {
           const userDocument = snapshot.val();
@@ -150,7 +150,7 @@ const App = () => {
     try {
       await logoutUser(); 
       await changeUserCurrentStatusInDb(userData.handle, statuses.offline);
-      setContext({ user: null, userData: null });
+      // setContext({ user: null, userData: null });
     } catch (error) {
       console.error('Error updating user status:', error);
     }
@@ -179,14 +179,21 @@ const App = () => {
     };
   };
 
-  const leaveCall = async () => {
-    try {
-      await endCall(userData.handle, joinedCallDyteId);
-    } catch (error) {
-      console.log(error.message);
-    };
-    setIncomingToken('');
-    setJoinedCallDyteId('');
+  const leaveCall = () => {
+
+    endCall(userData, joinedCallDyteId)
+      .then(() => getUserLastStatusByHandle(userData.handle))
+      .then((previousStatus) => {
+        console.log(previousStatus);
+        changeUserCurrentStatusInDb(userData.handle, previousStatus)
+      })
+      .then(() => {
+        setIncomingToken('');
+        setJoinedCallDyteId('');
+      })
+      .catch((error) => console.log(error.message))
+
+
   };
 
   return (

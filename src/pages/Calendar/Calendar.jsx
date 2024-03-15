@@ -8,6 +8,7 @@ import './Calendar.css';
 import AppContext from '../../providers/AppContext'
 import { getMeetingsByUserHandle, joinMeeting, listenForMeetingsByUserHandle } from '../../services/meeting.services'
 import SingleCallRoom from '../../components/SingleCallRoom'
+import { changeUserCurrentStatusInDb, getUserLastStatusByHandle } from '../../services/user.services'
 
 const Calendar = () => {
 
@@ -23,11 +24,11 @@ const Calendar = () => {
     if (userData) {
       getMeetingsByUserHandle(userData.handle)
         .then((meetings) => {
-          if(meetings.length > 0) {
+          if (meetings.length > 0) {
             setMeetings(meetings);
-          }else {
+          } else {
             setUserHasNoTeams(true);
-          }   
+          }
         })
     }
   }, [user]);
@@ -62,13 +63,21 @@ const Calendar = () => {
 
   const handleJoinMeeting = (dyteRoomId) => {
     joinMeeting(dyteRoomId, userData, (data) => setMeetingToken(data));
-  }
+  };
+  
   const leaveMeeting = () => {
-    setMeetingToken('');
-  }
+    getUserLastStatusByHandle(userData.handle)
+      .then((previousStatus) => {
+        changeUserCurrentStatusInDb(userData.handle, previousStatus)
+      })
+      .then(() => {
+        setMeetingToken('');
+      })
+      .catch((error) => console.log(error.message))
+  };
 
 
-  const renderEventContent = (eventInfo) => { 
+  const renderEventContent = (eventInfo) => {
     return (
       <>
         <b>{eventInfo.timeText}</b>
@@ -81,7 +90,7 @@ const Calendar = () => {
   return (
     <>
       {(meetings.length > 0 || userHasNoTeams) &&
-      <div > {/* we can add styles to this div (change calendar size for example !!!) */}
+        <div > {/* we can add styles to this div (change calendar size for example !!!) */}
           <div className='demo-app'>
             <Sidebar
               weekendsVisible={weekendsVisible}
@@ -119,8 +128,6 @@ const Calendar = () => {
           <SingleCallRoom token={meetingToken} leaveCall={leaveMeeting} />
         </div>}
     </>
-
-
   );
 };
 

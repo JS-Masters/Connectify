@@ -48,7 +48,7 @@ export const getAllUsers = async () => {
 // }
 
 export const changeUserCurrentStatusInDb = async (handle, status) => {
-  update(ref(db, `users/${handle}`),
+ await update(ref(db, `users/${handle}`),
     {
       currentStatus: status
     });
