@@ -1,6 +1,6 @@
-import { useState, useEffect} from 'react';
+import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Avatar, Box, Button, Card, CardBody, CardFooter, CardHeader, HStack, Heading, Image, Text, Textarea } from '@chakra-ui/react';
+import { Avatar, Box, Button, Card, CardBody, CardFooter, CardHeader, HStack, Heading, Image, Spacer, Text, Textarea } from '@chakra-ui/react';
 import Reactions from './Reactions';
 import { getRepliesByMessage } from '../services/chat.services';
 import { v4 } from 'uuid';
@@ -8,9 +8,13 @@ import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import AppContext from '../providers/AppContext';
 import FilePreview from './FIlePreview';
 import ReplyMessage from "./ReplyMessage";
+import { useParams } from 'react-router-dom';
 
-const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDeleteReply, currentUserHandle, chatId, userHandle, isReply }) => {
 
+const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDeleteReply }) => {
+
+  const { userData } = useContext(AppContext);
+  const { chatId } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
   const [isHovered, setIsHovered] = useState(false);
@@ -82,7 +86,7 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
     }
   };
 
-  
+
   return (
     <Card onMouseEnter={handleHoverEnter} onMouseLeave={handleHoverLeave} borderTop="8px" borderColor="purple.400" bg="white" >
 
@@ -92,14 +96,28 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
         </Text>
       ) : (
         <>
-          <CardHeader>
-            <HStack>
-              <Avatar src={message.authorUrl} />
+          <Box style={{ border: '1px solid black' }}>
+
+            <HStack style={{gap:'8px'}}>
+              <Avatar src={message.authorUrl}  style={{marginLeft:'10px'}}/>
               <Heading as='h3' size='sm'>{message.author}</Heading>
+              <Spacer/>
               <Text>{message.createdOn}</Text>
+              {userData.handle === message.author && (
+                <>
+                  <Button onClick={handleEditClick} style={{ height: 'fit-content', width: 'fit-content' }}><img src="../../edit.png" style={{ width: '40px', height: '40px', padding: '4px' }}></img></Button>
+                  <Button onClick={handleDeleteClick} style={{ height: 'fit-content', width: 'fit-content', marginRight:'15px' }}><img src="../../delete.png" style={{ width: '40px', height: '40px' }}></img></Button>
+                </>
+              )}
             </HStack>
-          </CardHeader>
-          {message.editedOn && <p>Edited on: {message.editedOn}</p>}
+
+            {message.editedOn && <p>Edited on: {message.editedOn}</p>}
+
+            {userData.handle !== message.author && !isReplying && (
+              <Button onClick={handleReplyClick}>Reply</Button>
+            )}
+          </Box>
+
           {isEditing ? (
             <Box>
               <Textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} /> <br />
@@ -112,9 +130,9 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
                 <Text>{message.content}</Text>
                 {message.img && <FilePreview fileUrl={message.img} />}
 
-                {!isReply && currentUserHandle !== message.author && isHovered && (
+                {userData.handle !== message.author && (
                   <Box>
-                    <Reactions chatId={chatId} messageId={message.id} userHandle={currentUserHandle} isReply={false} />
+                    <Reactions messageId={message.id} />
                   </Box>
                 )}
 
@@ -122,7 +140,7 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
                   <span key={v4()}>{reaction}</span>
                 ))}
 
-                {isReplying && !isReply && (
+                {isReplying && (
                   <>
                     <Textarea value={replyContent} onChange={(e) => setReplyContent(e.target.value)} />
                     <Button onClick={handleSaveReplyClick}>Add Reply</Button>
@@ -131,17 +149,9 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
                 )}
               </CardBody>
 
-              <CardFooter>
-                {currentUserHandle === message.author && !isReply && (
-                  <HStack spacing={2}>
-                    <Button leftIcon={<EditIcon />} onClick={handleEditClick}>Edit</Button>
-                    <Button leftIcon={<DeleteIcon />} onClick={handleDeleteClick}>Delete</Button>
-                  </HStack>
-                )}
-                {currentUserHandle !== message.author && !isReplying && !isReply && (
-                  <Button onClick={handleReplyClick}>Reply</Button>
-                )}
-              </CardFooter>
+
+
+
 
               {repliesToMessage.map((reply) => (
                 <div key={reply.id}>
@@ -149,16 +159,11 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
                     reply={reply}
                     onEditReply={onEditReply}
                     onDeleteReply={onDeleteReply}
-                    currentUserHandle={currentUserHandle}
-                    chatId={chatId} userHandle={userHandle}
-                    reactions={reply.reactions}
-                    message = {message} />
-                 
-                  {!isReply && currentUserHandle !== reply.author && isHovered && (
+                    message={message} />
+
+                  {userData.handle !== reply.author && isHovered && (
                     <Reactions
-                      chatId={chatId}
                       messageId={message.id}
-                      userHandle={userHandle}
                       replyID={reply.id}
                     />
                   )}
@@ -173,24 +178,6 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
   );
 };
 
-// ChatMessageBox.propTypes = {
-//   message: PropTypes.object.isRequired,
-//   onEdit: PropTypes.func.isRequired,
-//   onDelete: PropTypes.func.isRequired,
-//   onReply: PropTypes.func.isRequired,
-//   onEditReply: PropTypes.func.isRequired,
-//   onDeleteReply: PropTypes.func.isRequired,
-//   currentUserHandle: PropTypes.string.isRequired,
-//   chatId: PropTypes.string.isRequired,
-//   reactions: PropTypes.object,
-//   replies: PropTypes.array.isRequired,
-//   repliesId: PropTypes.array.isRequired,
-//   isReply: PropTypes.bool,
-//   userHandle: PropTypes.string.isRequired,
-//   showReactions: PropTypes.bool.isRequired,
-//   reply: PropTypes.object,
-
-// };
 
 
 export default ChatMessageBox;

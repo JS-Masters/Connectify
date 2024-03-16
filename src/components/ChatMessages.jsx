@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState, useRef} from "react";
+import { useContext, useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useParams } from "react-router";
-import { editMessageInChat, getChatMessagesById, deleteMessageFromChat, replyToMessage, editReplyInChat, deleteReplyFromChat, leaveChat, addMessageToChat } from "../services/chat.services";
+import { editMessageInChat, getChatMessagesById as listenForChatMessages, deleteMessageFromChat, replyToMessage, editReplyInChat, deleteReplyFromChat, leaveChat, addMessageToChat } from "../services/chat.services";
 import ChatMessageBox from "./ChatMessageBox";
 import ChatInput from "./ChatInput";
 import AppContext from "../providers/AppContext";
@@ -8,29 +8,51 @@ import { Box, Button } from "@chakra-ui/react";
 import { SYSTEM_AVATAR } from "../common/constants";
 
 const ChatMessages = () => {
-  const [messages, setMessages] = useState([]);
-  const { chatId } = useParams();
+
   const { userData } = useContext(AppContext);
+  const { chatId } = useParams();
+  const [messages, setMessages] = useState([]);
+  const [emojiWasClicked, setEmojiWasClicked] = useState(false);
   const messagesEndRef = useRef(null);
 
 
 
   useEffect(() => {
-
-    const unsubscribe = getChatMessagesById((snapshot) => {
+    const unsubscribe = listenForChatMessages((snapshot) => {
       const msgData = snapshot.exists() ? snapshot.val() : {};
       const newMessages = Object.values(msgData);
-        setMessages(newMessages);
+      // filter дали е от емотикона => ако не е преди setMessages сменяме стейт
+
+      // console.log(messages);
+      // console.log(newMessages);
+      // const checkIfEmoji = newMessages.filter((m) => {
+      //   // console.log(messages.find((msg) => msg.id === m.id));
+      //   // console.log(m);
+      // //   if(!('reactions' in m)) {
+      // //     return false;
+      // //   } else if(('reactions' in m) && (!'reactions' in messages.find((msg) => msg.id === m.id))) {
+      // //     setEmojiWasClicked(true);
+      // //     setMessages(newMessages);
+      // //   }
+      // });
+      setMessages(newMessages);
 
     }, chatId);
-    return () =>  unsubscribe();
-
+    return () => unsubscribe();
   }, [chatId]);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }
-  , [messages]);
+  // useEffect(() => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }
+  // , [messages]);
+
+  useLayoutEffect(() => {
+    const timeout = setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+    }, 0);
+    return () => clearTimeout(timeout);
+  }, [messages]);
+
 
   const handleEditMessage = async (messageId, newContent) => {
     try {
@@ -47,9 +69,6 @@ const ChatMessages = () => {
     await deleteMessageFromChat(chatId, messageId, userData.handle);
   };
 
-  // if(error) {
-  //   return; 
-  // };
 
   const handleReplyToMessage = async (messageId, replyContent) => {
     await replyToMessage(chatId, messageId, replyContent, userData.handle);
@@ -65,7 +84,7 @@ const ChatMessages = () => {
   }
 
   return (
-    <Box overflowY='scroll' whiteSpace='nowrap' h='93%'>
+    <Box overflowY='scroll' whiteSpace='nowrap' h='88%'>
       {messages && (
         messages.map((message) => (
           <ChatMessageBox
@@ -76,9 +95,8 @@ const ChatMessages = () => {
             onReply={handleReplyToMessage}
             onEditReply={handleEditReply}
             onDeleteReply={handleDeleteReply}
-            currentUserHandle={userData.handle}
-            chatId={chatId}
-            reactions={message.reactions}
+          // chatId={chatId}
+          // reactions={message.reactions}
           />
         ))
       )}
@@ -91,3 +109,7 @@ const ChatMessages = () => {
 };
 
 export default ChatMessages;
+
+
+
+

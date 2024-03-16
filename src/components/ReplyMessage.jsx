@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Box, Textarea, Button, Avatar, Text } from '@chakra-ui/react';
 import { v4 } from 'uuid';
 import PropTypes from 'prop-types';
+import AppContext from '../providers/AppContext';
 
 
 const ReplyMessage = ({
 	reply,
-	currentUserHandle,
 	onEditReply,
 	onDeleteReply,
 	message
 }) => {
+	const { userData } = useContext(AppContext);
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedReplyContent, setEditedReplyContent] = useState(reply.content);
 	const [isDeletingReply, setIsDeletingReply] = useState(false);
@@ -44,7 +45,7 @@ const ReplyMessage = ({
 					</Box>
 				</Box>
 				<Box display="flex" alignItems="center">
-					{currentUserHandle === reply.author && (
+					{userData.handle === reply.author && (
 						<Box display="flex" alignItems="center">
 							<Button size="xs" onClick={handleEditClick} mr={2}>Edit</Button>
 							<Button size="xs" onClick={handleDeleteClick}>Delete</Button>
@@ -87,12 +88,5 @@ const ReplyMessage = ({
 	);
 };
 
-ReplyMessage.propTypes = {
-	reply: PropTypes.object.isRequired,
-	currentUserHandle: PropTypes.string.isRequired,
-	onEditReply: PropTypes.func.isRequired,
-	onDeleteReply: PropTypes.func.isRequired,
-	message: PropTypes.object.isRequired
-};
 
 export default ReplyMessage;

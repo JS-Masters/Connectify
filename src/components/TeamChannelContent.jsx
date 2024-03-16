@@ -54,7 +54,6 @@ const TeamChannelContent = () => {
             message={message}
             onEdit={handleEditMessage}
             onDelete={handleDeleteMessage}
-            currentUserHandle={userData.handle}
           />
         ))}
       <Form onSubmit={sendMessage}>

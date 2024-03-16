@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { REACTIONS } from "../common/constants";
 import {
   getReactionsByMessage,
@@ -15,8 +15,13 @@ import { AddIcon } from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/react";
 import PickerModal from "./PickerModal";
 import { v4 } from "uuid";
+import AppContext from "../providers/AppContext";
+import { useParams } from "react-router-dom";
 
-const Reactions = ({ chatId, messageId, userHandle, replyID }) => {
+const Reactions = ({  messageId, replyID = null }) => {
+
+  const { userData } = useContext(AppContext);
+  const {chatId} = useParams();
   const [messageReactions, setMessageReactions] = useState({});
   const [replyReactions, setReplyReactions] = useState({});
 
@@ -43,19 +48,18 @@ const Reactions = ({ chatId, messageId, userHandle, replyID }) => {
   }, [chatId, messageId, replyID]);
 
   const handleMessageReaction = async (reaction) => {
-    console.log(reaction);
-    if (messageReactions && messageReactions[userHandle] === reaction) {
-      await removeReactionFromMessage(chatId, messageId, userHandle);
+    if (messageReactions && messageReactions[userData.handle] === reaction) {
+      await removeReactionFromMessage(chatId, messageId, userData.handle);
     } else {
-      await addReactionToMessage(chatId, messageId, reaction, userHandle);
+      await addReactionToMessage(chatId, messageId, reaction, userData.handle);
     }
   };
 
   const handleReplyReaction = async (reaction) => {
-    if (replyReactions && replyReactions[userHandle] === reaction) {
-      await removeReactionFromReply(chatId, messageId, replyID, userHandle);
+    if (replyReactions && replyReactions[userData.handle] === reaction) {
+      await removeReactionFromReply(chatId, messageId, replyID, userData.handle);
     } else {
-      await addReactionToReply(chatId, messageId, replyID, reaction, userHandle);
+      await addReactionToReply(chatId, messageId, replyID, reaction, userData.handle);
     }
   };
   return (
@@ -64,7 +68,7 @@ const Reactions = ({ chatId, messageId, userHandle, replyID }) => {
         <div>
           {REACTIONS.map((reaction) => (
             <span key={v4()} onClick={() => handleReplyReaction(reaction)}>
-              {replyReactions && replyReactions[userHandle] === reaction ? (
+              {replyReactions && replyReactions[userData.handle] === reaction ? (
                 <span style={{ border: "1px solid blue" }}>
                   {reaction}{" "}
                 </span>
@@ -79,7 +83,7 @@ const Reactions = ({ chatId, messageId, userHandle, replyID }) => {
         <div>
           {REACTIONS.map((reaction) => (
             <span key={v4()} onClick={() => handleMessageReaction(reaction)}>
-              {messageReactions && messageReactions[userHandle] === reaction ? (
+              {messageReactions && messageReactions[userData.handle] === reaction ? (
                 <span style={{ border: "1px solid blue" }}>
                   {reaction}{" "}
                 </span>
@@ -99,7 +103,7 @@ const Reactions = ({ chatId, messageId, userHandle, replyID }) => {
 Reactions.propTypes = {
   chatId: PropTypes.string.isRequired,
   messageId: PropTypes.string.isRequired,
-  userHandle: PropTypes.string.isRequired,
+
   replyID: PropTypes.string,
 };
 

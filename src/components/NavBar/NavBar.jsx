@@ -60,6 +60,7 @@ const NavBar = () => {
             <Text>{notifications.length}</Text>
           </AvatarBadge>
           <Modal isOpen={isOpen} onClose={onClose} >
+            
           {/* <ModalOverlay /> */}
           <ModalContent w='fit-content' bg='gray' marginTop='90px'>
             <Box id="notifications-box">
