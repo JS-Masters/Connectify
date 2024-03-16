@@ -1,4 +1,4 @@
-import { Avatar, AvatarBadge, Box, Heading, Image, useDisclosure, Text, Modal, ModalContent, Spacer } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Box, Heading, Image, useDisclosure, Text, Modal, ModalContent, Spacer, HStack } from "@chakra-ui/react";
 // import PropTypes from "prop-types";
 import Dropdown from "../Dropdown";
 import { useContext, useState, useEffect } from "react";
@@ -49,10 +49,14 @@ const NavBar = () => {
     <>
       <Box id="nav-buttons-div"  >
         <Image id="logo-img" src="../../LOGO.png"></Image>
-        <NavLink to="/chats"><img src="../../chats.png"></img></NavLink>
-        <NavLink to="/calls"><img src="../../calls.png"></img></NavLink>
-        <NavLink to="/teams"><img src="../../teams.png"></img></NavLink>
-        <NavLink to="/calendar"><img src="../../calendar.png"></img></NavLink>
+        <Spacer />
+        <HStack spacing='80px'>
+          <NavLink to="/chats"><img src="../../chats.png"></img></NavLink>
+          <NavLink to="/calls"><img src="../../calls.png"></img></NavLink>
+          <NavLink to="/teams"><img src="../../teams.png"></img></NavLink>
+          <NavLink to="/calendar"><img src="../../calendar.png"></img></NavLink>
+        </HStack>
+
         <Spacer />
 
         <Avatar onClick={onOpen} src="../../bell.png" cursor='pointer'>
@@ -60,48 +64,46 @@ const NavBar = () => {
             <Text>{notifications.length}</Text>
           </AvatarBadge>
           <Modal isOpen={isOpen} onClose={onClose} >
-            
-          {/* <ModalOverlay /> */}
-          <ModalContent w='fit-content' bg='gray' marginTop='90px'>
-            <Box id="notifications-box">
-              <ul>
-                {notifications.length > 0 && (notifications.sort((a, b) => a.createdOn - b.createdOn).map((notification) => (
-                  <li id="single-notification" key={notification.id}>
-                    <span>{notification.title}</span>
-                    <button style={{ border: '1px solid black' }} onClick={() => {
-                      handleDelete(notification.id)
-                    }}>X</button>
-                    {notification.type === 'chats' &&
-                      <Link to={`/chats/${notification.eventId}`}
-                        onClick={() => {
-                          handleDelete(notification.id);
-                          onClose();
-                        }}> <p>{notification.body}</p>
+            {/* <ModalOverlay /> */}
+            <ModalContent w='fit-content' bg='gray' marginTop='90px'>
+              <Box id="notifications-box">
+                <ul>
+                  {notifications.length > 0 && (notifications.sort((a, b) => a.createdOn - b.createdOn).map((notification) => (
+                    <li id="single-notification" key={notification.id}>
+                      <span>{notification.title}</span>
+                      <button style={{ border: '1px solid black' }} onClick={() => {
+                        handleDelete(notification.id)
+                      }}>X</button>
+                      {notification.type === 'chats' &&
+                        <Link to={`/chats/${notification.eventId}`}
+                          onClick={() => {
+                            handleDelete(notification.id);
+                            onClose();
+                          }}> <p>{notification.body}</p>
+                        </Link>}
+                      {notification.type === 'teams' && <Link to={`/teams/${notification.eventId}`} onClick={() => {
+                        handleDelete(notification.id);
+                        onClose();
+                      }}><p>{notification.body}</p>
                       </Link>}
-                    {notification.type === 'teams' && <Link to={`/teams/${notification.eventId}`} onClick={() => {
-                      handleDelete(notification.id);
-                      onClose();
-                    }}><p>{notification.body}</p>
-                    </Link>}
-                    {notification.type === 'channels' && <Link to={`/teams/${notification.teamId}/channels/${notification.eventId}`} onClick={() => {
-                      handleDelete(notification.id);
-                      onClose();
-                    }}><p>{notification.body}</p>
-                    </Link>}
-                    <p>{notification.createdOn}</p>
-                  </li>
-                )))}
-              </ul>
-            </Box>
-          </ModalContent>
-        </Modal>
+                      {notification.type === 'channels' && <Link to={`/teams/${notification.teamId}/channels/${notification.eventId}`} onClick={() => {
+                        handleDelete(notification.id);
+                        onClose();
+                      }}><p>{notification.body}</p>
+                      </Link>}
+                      <p>{notification.createdOn}</p>
+                    </li>
+                  )))}
+                </ul>
+              </Box>
+            </ModalContent>
+          </Modal>
         </Avatar>
 
         {userData && (
           <Dropdown username={userData.handle} avatarUrl={userData.avatarUrl} />
         )}
 
-        
       </Box>
 
 

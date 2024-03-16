@@ -202,6 +202,7 @@ const App = () => {
     
       <AppContext.Provider value={{ ...context, setContext, setNotifications }}>
         <RouterProvider router={router} />
+        {/* component with switch case which takes {modal id, props} and returns modal */}
       </AppContext.Provider>
       {Boolean(incomingCall.length) && incomingCall.map((call) => { // ако има статус за in a meeting този мап също не е необходим !??
         return <div key={v4()}>
