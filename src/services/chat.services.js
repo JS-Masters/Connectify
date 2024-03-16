@@ -24,10 +24,11 @@ const updateUsersChats = async (chatMembers, newChatId) => {
 };
 
 
-const doesChatAlreadyExists = (loggedInUserChats, newChatMembers) => {
+const doesChatAlreadyExists = (loggedInUserChats, chatMembers, loggedInUsername) => {
   for (const chatId in loggedInUserChats) {
     const chatParticipants = Object.keys(loggedInUserChats[chatId].participants);
-    const hasMatchingParticipants = newChatMembers.every(member => chatParticipants.includes(member));
+    const hasMatchingParticipants = chatParticipants.filter((p) => p !== loggedInUsername).every(member => chatMembers.includes(member));
+
     if (hasMatchingParticipants) {
       return chatId;
     }
@@ -44,7 +45,7 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
     });
 
     if (loggedInUserChats) {
-      const existingChatId = doesChatAlreadyExists(loggedInUserChats, chatMembers);
+      const existingChatId = doesChatAlreadyExists(loggedInUserChats, chatMembers, loggedInUsername);
       if (existingChatId) {
         return existingChatId;
       }
@@ -110,7 +111,7 @@ export const getChatMessagesById = (listenFn, chatId) => {
 };
 
 
-export const addMessageToChat = async (chatId, message, author, picURL, authorUrl, repliedMessageContent = '', messageAuthor='', messageAuthorAvatar='') => {
+export const addMessageToChat = async (chatId, message, author, picURL, authorUrl, repliedMessageContent = '', messageAuthor = '', messageAuthorAvatar = '') => {
   try {
     const msgRef = await push(ref(db, `chats/${chatId}/messages`), {});
     const newMessageId = msgRef.key;

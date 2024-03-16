@@ -1,16 +1,13 @@
-import { useContext, useEffect, useState, useRef, useLayoutEffect } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useParams } from "react-router";
-import { editMessageInChat, getChatMessagesById as listenForChatMessages, deleteMessageFromChat, replyToMessage, editReplyInChat, deleteReplyFromChat, leaveChat, addMessageToChat } from "../services/chat.services";
+import {  getChatMessagesById as listenForChatMessages } from "../services/chat.services";
 import ChatMessageBox from "./ChatMessageBox";
 import ChatInput from "./ChatInput";
-import AppContext from "../providers/AppContext";
-import { Box, Button } from "@chakra-ui/react";
-import { SYSTEM_AVATAR } from "../common/constants";
+import { Box } from "@chakra-ui/react";
 import { v4 } from "uuid";
 
 const ChatMessages = () => {
 
-  const { userData } = useContext(AppContext);
   const { chatId } = useParams();
   const [messages, setMessages] = useState([]);
   const [dontScroll, setDontScroll] = useState(true);

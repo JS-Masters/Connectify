@@ -20,39 +20,39 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState('');
-  const [repliesToMessage, setRepliesToMessage] = useState([]);
+  // const [repliesToMessage, setRepliesToMessage] = useState([]);
 
 
 
-  useEffect(() => {
-    const unsubscribe = getRepliesByMessage(chatId, message.id, (snapshot) => {
-      const repliesData = snapshot.val();
-      if (repliesData) {
-        const repliesArray = Object.values(repliesData);
-        setRepliesToMessage(repliesArray);
-      } else {
-        setRepliesToMessage([]);
-      }
-    }); return () => unsubscribe();
-  }, [chatId, message.id]);
+  // useEffect(() => {
+  //   const unsubscribe = getRepliesByMessage(chatId, message.id, (snapshot) => {
+  //     const repliesData = snapshot.val();
+  //     if (repliesData) {
+  //       const repliesArray = Object.values(repliesData);
+  //       setRepliesToMessage(repliesArray);
+  //     } else {
+  //       setRepliesToMessage([]);
+  //     }
+  //   }); return () => unsubscribe();
+  // }, [chatId, message.id]);
 
 
 
-  const handleEditClick = () => {
+  const handleEditButtonClick = () => {
     setIsEditing(true);
   };
 
-  const handleSaveClick = () => {
+  const handleSaveEditClick = () => {
     editMessageInChat(chatId, message.id, editedContent)
       .then(() => setIsEditing(false))
   };
 
-  const handleCancelClick = () => {
+  const handleCancelEditClick = () => {
     setEditedContent(message.content);
     setIsEditing(false);
   };
 
-  const handleDeleteClick = () => {
+  const handleDeleteButtonClick = () => {
     deleteMessageFromChat(chatId, message.id, userData.handle);
   };
 
@@ -64,7 +64,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
     setIsHovered(false);
   };
 
-  const handleReplyClick = () => {
+  const handleReplyButtonClick = () => {
     setIsReplying(true);
     // setReplyContent(`@${message.author} `);
   };
@@ -89,7 +89,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
   };
 
 
-  const countMsgReactions = (reactions = []) => {
+  const countMessageReactions = (reactions = []) => {
     const reactionCount = reactions.reduce((acc, reaction) => {
       if (acc[reaction]) {
         acc[reaction]++;
@@ -98,7 +98,6 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
       }
       return acc;
     }, {});
-
     return Object.entries(reactionCount);
   };
 
@@ -122,8 +121,8 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                     <Spacer />
                     {userData.handle === message.author && isHovered && (
                       <>
-                        <Button onClick={handleEditClick} style={{ height: 'fit-content', width: 'fit-content' }}><img src="../../edit.png" style={{ width: '40px', height: '40px', padding: '4px' }}></img></Button>
-                        <Button onClick={handleDeleteClick} style={{ height: 'fit-content', width: 'fit-content', marginRight: '15px' }}><img src="../../delete.png" style={{ width: '40px', height: '40px' }}></img></Button>
+                        <Button onClick={handleEditButtonClick} style={{ height: 'fit-content', width: 'fit-content' }}><img src="../../edit.png" style={{ width: '40px', height: '40px', padding: '4px' }}></img></Button>
+                        <Button onClick={handleDeleteButtonClick} style={{ height: 'fit-content', width: 'fit-content', marginRight: '15px' }}><img src="../../delete.png" style={{ width: '40px', height: '40px' }}></img></Button>
                       </>
                     )}
                   </HStack>
@@ -134,8 +133,8 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
             {isEditing ? (
               <Box>
                 <Textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} /> <br />
-                <Button onClick={handleSaveClick}>Save</Button>
-                <Button onClick={handleCancelClick}>Cancel</Button>
+                <Button onClick={handleSaveEditClick}>Save</Button>
+                <Button onClick={handleCancelEditClick}>Cancel</Button>
               </Box>
             ) : (
               <>
@@ -156,7 +155,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                         </HStack>
 
                         <Text>{message.repliedMessageContent}</Text>
-                        <span><img style={{ width: '20px', height: '20px', display:'inline' }} src='../../public/down-arrow.png' />{message.content}</span>
+                        <span><img style={{ width: '20px', height: '20px', display: 'inline' }} src='../../public/down-arrow.png' />{message.content}</span>
                       </>
                     ) : (
                       <>
@@ -169,17 +168,17 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                   {userData.handle !== message.author && !isReplying && isHovered && (
                     <HStack pos='absolute' top='0' right='0'>
                       <Reactions messageId={message.id} />
-                      <Button onClick={handleReplyClick} style={{ height: 'fit-content', width: 'fit-content', marginRight: '15px' }}><img src="../../reply.png" style={{ width: '40px', height: '40px' }}></img></Button>
+                      <Button onClick={handleReplyButtonClick} style={{ height: 'fit-content', width: 'fit-content', marginRight: '15px' }}><img src="../../reply.png" style={{ width: '40px', height: '40px' }}></img></Button>
                     </HStack>
                   )}
                   {userData.handle === message.author && sameAuthor && isHovered && (
                     <HStack pos='absolute' top='0' right='0' spacing='7px' >
-                      <Button onClick={handleEditClick} style={{ height: 'fit-content', width: 'fit-content' }}><img src="../../edit.png" style={{ width: '25px', height: '25px', padding: '4px', float: 'right' }}></img></Button>
-                      <Button onClick={handleDeleteClick} style={{ height: 'fit-content', width: 'fit-content', marginRight: '15px' }}><img src="../../delete.png" style={{ width: '25px', height: '25px', float: 'right' }}></img></Button>
+                      <Button onClick={handleEditButtonClick} style={{ height: 'fit-content', width: 'fit-content' }}><img src="../../edit.png" style={{ width: '25px', height: '25px', padding: '4px', float: 'right' }}></img></Button>
+                      <Button onClick={handleDeleteButtonClick} style={{ height: 'fit-content', width: 'fit-content', marginRight: '15px' }}><img src="../../delete.png" style={{ width: '25px', height: '25px', float: 'right' }}></img></Button>
                     </HStack>
                   )}
                   {message.img && <FilePreview fileUrl={message.img} />}
-                  {'reactions' in message && countMsgReactions(Object.values(message.reactions)).map((entry) => (
+                  {'reactions' in message && countMessageReactions(Object.values(message.reactions)).map((entry) => (
                     message.reactions[userData.handle] === entry[0] ? (
                       < span style={{ border: '1px solid blue', cursor: 'pointer', borderRadius: '5px', width: 'fit-content' }} key={v4()} onClick={() => removeReactionFromMessage(chatId, message.id, userData.handle)} > {entry[0]} {entry[1]}</span>
                     ) : (
@@ -196,7 +195,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                   )}
                 </Box>
 
-                {repliesToMessage.map((reply) => (
+                {/* {repliesToMessage.map((reply) => (
                   <div key={v4()}>
                     <ReplyMessage
                       reply={reply}
@@ -208,7 +207,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                       />
                     )}
                   </div>
-                ))}
+                ))} */}
               </>
             )}
           </>
