@@ -148,14 +148,21 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                       display: 'inline-block'
                     }}
                   >
-                    {'repliedMessageContent' in message && message.repliedMessageContent.length > 0 &&
-                    <>
-                    <Avatar src={message.messageAuthorAvatar} style={{ marginLeft: '10px', width:'25px', height:'25px' }} />
-                    <Text>{message.messageAuthor}</Text>
-                     <Text>Original message:{message.repliedMessageContent}</Text>
-                    </>
-                   }
-                    {message.content}
+                    {('repliedMessageContent' in message && message.repliedMessageContent.length > 0) ? (
+                      <>
+                        <HStack>
+                          <Avatar src={message.messageAuthorAvatar} style={{ marginLeft: '10px', width: '25px', height: '25px' }} />
+                          <Text>{message.messageAuthor}</Text>
+                        </HStack>
+
+                        <Text>{message.repliedMessageContent}</Text>
+                        <span><img style={{ width: '20px', height: '20px', display:'inline' }} src='../../public/down-arrow.png' />{message.content}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Text> {message.content}</Text>
+                      </>
+                    )}
                     <Text fontSize='10px'>{message.createdOn}</Text>
                     {message.editedOn && <span style={{ fontSize: '10px' }}> (edited) {message.editedOn}</span>}
                   </Text>
