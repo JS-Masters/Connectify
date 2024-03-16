@@ -184,7 +184,6 @@ const App = () => {
     endCall(userData, joinedCallDyteId)
       .then(() => getUserLastStatusByHandle(userData.handle))
       .then((previousStatus) => {
-        console.log(previousStatus);
         changeUserCurrentStatusInDb(userData.handle, previousStatus)
       })
       .then(() => {

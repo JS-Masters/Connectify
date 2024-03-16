@@ -12,43 +12,30 @@ const ChatMessages = () => {
   const { userData } = useContext(AppContext);
   const { chatId } = useParams();
   const [messages, setMessages] = useState([]);
-  const [emojiWasClicked, setEmojiWasClicked] = useState(false);
+  const [dontScroll, setDontScroll] = useState(true);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = listenForChatMessages((snapshot) => {
       const msgData = snapshot.exists() ? snapshot.val() : {};
       const newMessages = Object.values(msgData);
-      // filter дали е от емотикона => ако не е преди setMessages сменяме стейт
-
-      // console.log(messages);
-      // console.log(newMessages);
-      // const checkIfEmoji = newMessages.filter((m) => {
-      //   // console.log(messages.find((msg) => msg.id === m.id));
-      //   // console.log(m);
-      // //   if(!('reactions' in m)) {
-      // //     return false;
-      // //   } else if(('reactions' in m) && (!'reactions' in messages.find((msg) => msg.id === m.id))) {
-      // //     setEmojiWasClicked(true);
-      // //     setMessages(newMessages);
-      // //   }
-      // });
-      setMessages(newMessages);
-
+  
+      setMessages(prevMessages => {
+        const wasMessagesLengthSame = prevMessages.length === Object.keys(newMessages).length;
+        setDontScroll(wasMessagesLengthSame);
+        return newMessages;
+      });
     }, chatId);
     return () => unsubscribe();
   }, [chatId]);
 
-  // useEffect(() => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }
-  // , [messages]);
-
   useLayoutEffect(() => {
-    const timeout = setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
-    }, 0);
-    return () => clearTimeout(timeout);
+    if (!dontScroll) {
+      const timeout = setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+      }, 0);
+      return () => clearTimeout(timeout);
+    }
   }, [messages]);
 
   const isMessageFromSameAuthor = (message) => {
@@ -57,11 +44,8 @@ const ChatMessages = () => {
       const oldMessage = messages[messageIndex - 1];
       return oldMessage.author === message.author;
     }
-
     return false;
   };
-
-
 
   return (
     <Box overflowY='scroll' whiteSpace='nowrap' h='88%'>
@@ -71,13 +55,13 @@ const ChatMessages = () => {
             <ChatMessageBox
               key={message.id}
               message={message}
-              sameAuthor = {true}
+              sameAuthor={true}
             />
           ) : (
             <ChatMessageBox
               key={message.id}
               message={message}
-              sameAuthor = {false}
+              sameAuthor={false}
             />
           )
         ))
