@@ -3,15 +3,16 @@ import { Box, Textarea, Button, Avatar, Text } from '@chakra-ui/react';
 import { v4 } from 'uuid';
 import PropTypes from 'prop-types';
 import AppContext from '../providers/AppContext';
+import { useParams } from 'react-router-dom';
+import { deleteReplyFromChat, editReplyInChat } from '../services/chat.services';
 
 
 const ReplyMessage = ({
 	reply,
-	onEditReply,
-	onDeleteReply,
 	message
 }) => {
 	const { userData } = useContext(AppContext);
+	const {chatId} = useParams();
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedReplyContent, setEditedReplyContent] = useState(reply.content);
 	const [isDeletingReply, setIsDeletingReply] = useState(false);
@@ -21,8 +22,8 @@ const ReplyMessage = ({
 	};
 
 	const handleSaveClick = () => {
-		onEditReply(message.id, reply.id, editedReplyContent);
-		setIsEditing(false);
+		editReplyInChat(chatId, message.id, reply.id, editedReplyContent)
+		.then(() => setIsEditing(false))
 	};
 
 	const handleCancelClick = () => {
@@ -30,8 +31,8 @@ const ReplyMessage = ({
 	};
 
 	const handleDeleteClick = () => {
-		setIsDeletingReply(true);
-		onDeleteReply(message.id, reply.id);
+		deleteReplyFromChat(chatId, message.id, reply.id, userData.handle)
+		.then(() => setIsDeletingReply(true))
 	};
 
 	return (

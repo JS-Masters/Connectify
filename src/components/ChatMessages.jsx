@@ -15,8 +15,6 @@ const ChatMessages = () => {
   const [emojiWasClicked, setEmojiWasClicked] = useState(false);
   const messagesEndRef = useRef(null);
 
-
-
   useEffect(() => {
     const unsubscribe = listenForChatMessages((snapshot) => {
       const msgData = snapshot.exists() ? snapshot.val() : {};
@@ -53,53 +51,38 @@ const ChatMessages = () => {
     return () => clearTimeout(timeout);
   }, [messages]);
 
-
-  const handleEditMessage = async (messageId, newContent) => {
-    try {
-
-      // throw new Error ('FATAL ERROR :)')
-      await editMessageInChat(chatId, messageId, newContent);
-    } catch (error) {
-      // showToast(error);
-      // setError(error.message);
+  const isMessageFromSameAuthor = (message) => {
+    const messageIndex = messages.indexOf(message);
+    if (messageIndex !== 0) {
+      const oldMessage = messages[messageIndex - 1];
+      return oldMessage.author === message.author;
     }
+
+    return false;
   };
 
-  const handleDeleteMessage = async (messageId) => {
-    await deleteMessageFromChat(chatId, messageId, userData.handle);
-  };
 
-
-  const handleReplyToMessage = async (messageId, replyContent) => {
-    await replyToMessage(chatId, messageId, replyContent, userData.handle);
-  };
-
-  const handleEditReply = async (messageId, replyId, newContent) => {
-    await editReplyInChat(chatId, messageId, replyId, newContent
-    );
-  };
-
-  const handleDeleteReply = async (messageId, replyId) => {
-    await deleteReplyFromChat(chatId, messageId, replyId, userData.handle);
-  }
 
   return (
     <Box overflowY='scroll' whiteSpace='nowrap' h='88%'>
       {messages && (
         messages.map((message) => (
-          <ChatMessageBox
-            key={message.id}
-            message={message}
-            onEdit={handleEditMessage}
-            onDelete={handleDeleteMessage}
-            onReply={handleReplyToMessage}
-            onEditReply={handleEditReply}
-            onDeleteReply={handleDeleteReply}
-          // chatId={chatId}
-          // reactions={message.reactions}
-          />
+          isMessageFromSameAuthor(message) ? (
+            <ChatMessageBox
+              key={message.id}
+              message={message}
+              sameAuthor = {true}
+            />
+          ) : (
+            <ChatMessageBox
+              key={message.id}
+              message={message}
+              sameAuthor = {false}
+            />
+          )
         ))
       )}
+
       <ChatInput />
       <div ref={messagesEndRef} />
     </Box>

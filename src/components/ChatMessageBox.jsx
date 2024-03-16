@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Button, Card, CardBody, CardFooter, CardHeader, HStack, Heading, Image, Spacer, Text, Textarea } from '@chakra-ui/react';
 import Reactions from './Reactions';
-import { getRepliesByMessage } from '../services/chat.services';
+import { deleteMessageFromChat, editMessageInChat, editReplyInChat, getRepliesByMessage, replyToMessage } from '../services/chat.services';
 import { v4 } from 'uuid';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import AppContext from '../providers/AppContext';
@@ -11,7 +11,7 @@ import ReplyMessage from "./ReplyMessage";
 import { useParams } from 'react-router-dom';
 
 
-const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDeleteReply }) => {
+const ChatMessageBox = ({ message, sameAuthor, oldMessage = null }) => {
 
   const { userData } = useContext(AppContext);
   const { chatId } = useParams();
@@ -43,8 +43,8 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
   };
 
   const handleSaveClick = () => {
-    onEdit(message.id, editedContent);
-    setIsEditing(false);
+    editMessageInChat(chatId, message.id, editedContent)
+      .then(() => setIsEditing(false))
   };
 
   const handleCancelClick = () => {
@@ -53,7 +53,7 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
   };
 
   const handleDeleteClick = () => {
-    onDelete(message.id);
+    deleteMessageFromChat(chatId, message.id, userData.handle);
   };
 
   const handleHoverEnter = () => {
@@ -70,7 +70,7 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
   };
 
   const handleSaveReplyClick = () => {
-    onReply(message.id, replyContent);
+    replyToMessage(chatId, message.id, replyContent, userData.handle);
     setIsReplying(false);
     setReplyContent('');
   };
@@ -86,98 +86,110 @@ const ChatMessageBox = ({ message, onEdit, onDelete, onReply, onEditReply, onDel
     }
   };
 
-
   return (
-    <Card onMouseEnter={handleHoverEnter} onMouseLeave={handleHoverLeave} borderTop="8px" borderColor="purple.400" bg="white" >
+    <>
+      <Card onMouseEnter={handleHoverEnter} onMouseLeave={handleHoverLeave} borderTop="4px" borderColor="gray" bg="white" >
+        {'deleteMessage' in message ? (
+          <Text>
+            {message.deleteMessage} by {message.deletedBy} on {message.deletedOn}
+          </Text>
+        ) : (
+          <>
 
-      {'deleteMessage' in message ? (
-        <Text>
-          {message.deleteMessage} by {message.deletedBy} on {message.deletedOn}
-        </Text>
-      ) : (
-        <>
-          <Box style={{ border: '1px solid black' }}>
 
-            <HStack style={{gap:'8px'}}>
-              <Avatar src={message.authorUrl}  style={{marginLeft:'10px'}}/>
-              <Heading as='h3' size='sm'>{message.author}</Heading>
-              <Spacer/>
-              <Text>{message.createdOn}</Text>
-              {userData.handle === message.author && (
-                <>
-                  <Button onClick={handleEditClick} style={{ height: 'fit-content', width: 'fit-content' }}><img src="../../edit.png" style={{ width: '40px', height: '40px', padding: '4px' }}></img></Button>
-                  <Button onClick={handleDeleteClick} style={{ height: 'fit-content', width: 'fit-content', marginRight:'15px' }}><img src="../../delete.png" style={{ width: '40px', height: '40px' }}></img></Button>
-                </>
-              )}
-            </HStack>
-
-            {message.editedOn && <p>Edited on: {message.editedOn}</p>}
-
-            {userData.handle !== message.author && !isReplying && (
-              <Button onClick={handleReplyClick}>Reply</Button>
+            {!sameAuthor && (
+              <>
+                <Box style={{ border: '1px solid black' }}>
+                  <HStack style={{ gap: '8px' }}>
+                    <Avatar src={message.authorUrl} style={{ marginLeft: '10px' }} />
+                    <Heading as='h3' size='sm'>{message.author}</Heading>
+                    <Text fontSize='10px'>{message.createdOn}</Text>
+                    <Spacer />
+                    {userData.handle === message.author && isHovered && (
+                      <>
+                        <Button onClick={handleEditClick} style={{ height: 'fit-content', width: 'fit-content' }}><img src="../../edit.png" style={{ width: '40px', height: '40px', padding: '4px' }}></img></Button>
+                        <Button onClick={handleDeleteClick} style={{ height: 'fit-content', width: 'fit-content', marginRight: '15px' }}><img src="../../delete.png" style={{ width: '40px', height: '40px' }}></img></Button>
+                      </>
+                    )}
+                    {userData.handle !== message.author && !isReplying && isHovered && (
+                      <Button onClick={handleReplyClick} style={{ height: 'fit-content', width: 'fit-content', marginRight: '15px' }}><img src="../../reply.png" style={{ width: '40px', height: '40px' }}></img></Button>
+                    )}
+                  </HStack>
+                </Box>
+              </>
             )}
-          </Box>
-
-          {isEditing ? (
-            <Box>
-              <Textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} /> <br />
-              <Button onClick={handleSaveClick}>Save</Button>
-              <Button onClick={handleCancelClick}>Cancel</Button>
-            </Box>
-          ) : (
-            <>
-              <CardBody>
-                <Text>{message.content}</Text>
-                {message.img && <FilePreview fileUrl={message.img} />}
-
-                {userData.handle !== message.author && (
-                  <Box>
-                    <Reactions messageId={message.id} />
-                  </Box>
-                )}
-
-                {'reactions' in message && Object.values(message.reactions).map((reaction) => (
-                  <span key={v4()}>{reaction}</span>
-                ))}
-
-                {isReplying && (
-                  <>
-                    <Textarea value={replyContent} onChange={(e) => setReplyContent(e.target.value)} />
-                    <Button onClick={handleSaveReplyClick}>Add Reply</Button>
-                    <Button onClick={handleCancelReplyClick}>Cancel Reply</Button>
-                  </>
-                )}
-              </CardBody>
 
 
-
-
-
-              {repliesToMessage.map((reply) => (
-                <div key={reply.id}>
-                  <ReplyMessage
-                    reply={reply}
-                    onEditReply={onEditReply}
-                    onDeleteReply={onDeleteReply}
-                    message={message} />
-
-                  {userData.handle !== reply.author && isHovered && (
-                    <Reactions
-                      messageId={message.id}
-                      replyID={reply.id}
-                    />
+            {isEditing ? (
+              <Box>
+                <Textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} /> <br />
+                <Button onClick={handleSaveClick}>Save</Button>
+                <Button onClick={handleCancelClick}>Cancel</Button>
+              </Box>
+            ) : (
+              <>
+                <Box padding='0' style={{ overflow: 'hidden' }}>
+                  <Text
+                    width='80%'
+                    height='auto'
+                    style={{
+                      whiteSpace: 'pre-wrap',
+                      wordWrap: 'break-word',
+            display: 'inline-block'
+                    }}
+                  >
+                    {message.content}
+                    {message.editedOn && <span style={{ fontSize: '10px' }}> (edited) {message.editedOn}</span>}
+                   
+                  </Text>
+                  {sameAuthor && isHovered && (
+                    <>
+                      <Button onClick={handleEditClick} style={{ height: 'fit-content', width: 'fit-content' }}><img src="../../edit.png" style={{ width: '25px', height: '25px', padding: '4px', float:'right' }}></img></Button>
+                      <Button onClick={handleDeleteClick} style={{ height: 'fit-content', width: 'fit-content', marginRight: '15px' }}><img src="../../delete.png" style={{ width: '25px', height: '25px', float:'right' }}></img></Button>
+                    </>
                   )}
-                </div>
-              ))}
-            </>
-          )}
-        </>
-      )}
+                  {message.img && <FilePreview fileUrl={message.img} />}
+                  {userData.handle !== message.author && (
+                    <Box>
+                      <Reactions messageId={message.id} />
+                    </Box>
+                  )}
+                  {'reactions' in message && Object.values(message.reactions).map((reaction) => (
+                    <span key={v4()}>{reaction}</span>
+                  ))}
 
-    </Card>
+                  {isReplying && (
+                    <>
+                      <Textarea value={replyContent} onChange={(e) => setReplyContent(e.target.value)} />
+                      <Button onClick={handleSaveReplyClick}>Add Reply</Button>
+                      <Button onClick={handleCancelReplyClick}>Cancel Reply</Button>
+                    </>
+                  )}
+                </Box>
+
+                {repliesToMessage.map((reply) => (
+                  <div key={reply.id}>
+                    <ReplyMessage
+                      reply={reply}
+                      message={message} />
+                    {userData.handle !== reply.author && isHovered && (
+                      <Reactions
+                        messageId={message.id}
+                        replyID={reply.id}
+                      />
+                    )}
+                  </div>
+                ))}
+              </>
+            )}
+          </>
+        )}
+      </Card >
+
+    </>
+
+
   );
 };
-
-
 
 export default ChatMessageBox;
