@@ -58,16 +58,18 @@ const ChatInput = () => {
 
   return (
     <Form onSubmit={sendMessage} style={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'space-around', bottom: 30, width: '70%', backgroundColor: '#242424', color: 'white', padding: '10px', borderRadius: '5px' }}>
-      {isPickerVisible && <Box position='absolute' top='-430px' right='0'>
-        <Picker data={data} previewPosition='none' onEmojiSelect={(e) => {
-          setPickerVisible(!isPickerVisible);
-          setMsg(msg + e.native);
-        }} />
-      </Box>}
-      {fileUrl && <Box position='absolute' width='fit-content' h='200px' borderRadius='3px' p='20px' top='-189px' left='0' bg='gray.800'>
-        <FilePreview fileUrl={fileUrl} />
-        <DeleteIcon position="absolute" cursor='pointer' top="5px" right="5px" color="red.500" onClick={() => { setFileUrl('') }} />
-      </Box>}
+      {isPickerVisible &&
+        <Box position='absolute' top='-430px' right='0'>
+          <Picker data={data} previewPosition='none' onEmojiSelect={(e) => {
+            setPickerVisible(!isPickerVisible);
+            setMsg(msg + e.native);
+          }} />
+        </Box>}
+      {fileUrl &&
+        <Box position='absolute' width='fit-content' h='200px' borderRadius='3px' p='20px' top='-189px' left='0' bg='gray.800'>
+          <FilePreview fileUrl={fileUrl} />
+          <DeleteIcon position="absolute" cursor='pointer' top="5px" right="5px" color="red.500" onClick={() => { setFileUrl('') }} />
+        </Box>}
       {giphy && <Giphy handleGif={handleGif} />}
       <Input value={msg} onChange={(event) => setMsg(event.target.value)} placeholder="type here..." w='80%' />
       <FaRegSmile onClick={() => { setGiphy(false); setPickerVisible(!isPickerVisible) }} style={{ fontSize: '30px', cursor: 'pointer' }} />

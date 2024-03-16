@@ -6,6 +6,7 @@ import ChatInput from "./ChatInput";
 import AppContext from "../providers/AppContext";
 import { Box, Button } from "@chakra-ui/react";
 import { SYSTEM_AVATAR } from "../common/constants";
+import { v4 } from "uuid";
 
 const ChatMessages = () => {
 
@@ -53,13 +54,13 @@ const ChatMessages = () => {
         messages.map((message) => (
           isMessageFromSameAuthor(message) ? (
             <ChatMessageBox
-              key={message.id}
+              key={v4()}
               message={message}
               sameAuthor={true}
             />
           ) : (
             <ChatMessageBox
-              key={message.id}
+              key={v4()}
               message={message}
               sameAuthor={false}
             />

@@ -1,6 +1,6 @@
 import { get, limitToFirst, onValue, orderByChild, push, query, ref, set, getDatabase, remove, update } from "@firebase/database"
 import { db } from "../config/firebase-config"
-import { getUsersByChatId, updateUserByHandle } from "./user.services";
+import { getUserAvatarByHandle, getUsersByChatId, updateUserByHandle } from "./user.services";
 import { DATABASE_ERROR_MSG, DELETE_MESSAGE, DELETE_REPLY, SYSTEM_AVATAR } from "../common/constants";
 
 
@@ -110,7 +110,7 @@ export const getChatMessagesById = (listenFn, chatId) => {
 };
 
 
-export const addMessageToChat = async (chatId, message, author, picURL, authorUrl) => {
+export const addMessageToChat = async (chatId, message, author, picURL, authorUrl, repliedMessageContent = '', messageAuthor='', messageAuthorAvatar='') => {
   try {
     const msgRef = await push(ref(db, `chats/${chatId}/messages`), {});
     const newMessageId = msgRef.key;
@@ -121,7 +121,10 @@ export const addMessageToChat = async (chatId, message, author, picURL, authorUr
       content: message,
       img: picURL,
       createdOn: new Date().toLocaleString(),
-      authorUrl
+      authorUrl,
+      repliedMessageContent,
+      messageAuthor,
+      messageAuthorAvatar
     });
 
     const chatSnapshot = await get(ref(db, `chats/${chatId}`));
@@ -257,17 +260,22 @@ export const getReactionsByReply = (chatId, messageId, replyId, listenFn) => {
   return onValue(q, listenFn);
 };
 
-export const replyToMessage = async (chatId, messageId, reply, userHandle) => {
+export const replyToMessage = async (chatId, messageId, replyContent, messageContent, userHandle, messageAuthor, messageAuthorAvatar) => {
   const replyRef = await push(ref(db, `chats/${chatId}/messages/${messageId}/replies`), {});
   const replyId = replyRef.key;
+  const avatarUrl = await getUserAvatarByHandle(userHandle);
   await set(ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}`), {
     id: replyId,
     author: userHandle,
-    content: reply,
+    content: replyContent,
     createdOn: new Date().toLocaleString(),
     reactions: {},
+    avatarUrl
   });
+
+  await addMessageToChat(chatId, replyContent, userHandle, '', avatarUrl, messageContent, messageAuthor, messageAuthorAvatar)
 };
+
 
 export const getRepliesByMessage = (chatId, messageId, listenFn) => {
   const q = query(ref(db, `chats/${chatId}/messages/${messageId}/replies`));
@@ -293,12 +301,13 @@ export const editReplyInChat = async (chatId, messageId, replyId, newContent) =>
   }
 }
 
-export const deleteReplyFromChat = async (chatId, messageId, replyId, deletedBy) => {
+export const deleteReplyFromChat = async (chatId, messageId, replyId, deletedBy, avatarUrl) => {
   try {
     await set(ref(db, `chats/${chatId}/messages/${messageId}/replies/${replyId}`), {
       deleteMessage: DELETE_REPLY,
       deletedOn: new Date().toLocaleDateString(),
-      deletedBy
+      deletedBy,
+      avatarUrl
     });
   } catch (error) {
     console.log(error.message);

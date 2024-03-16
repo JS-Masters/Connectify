@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Avatar, Box, Button, Card,  HStack, Heading,  Spacer, Text, Textarea, } from '@chakra-ui/react';
+import { Avatar, Box, Button, Card, HStack, Heading, Spacer, Text, Textarea, } from '@chakra-ui/react';
 import Reactions from './Reactions';
-import { deleteMessageFromChat, editMessageInChat,  getRepliesByMessage, removeReactionFromMessage, replyToMessage } from '../services/chat.services';
+import { deleteMessageFromChat, editMessageInChat, getRepliesByMessage, removeReactionFromMessage, replyToMessage } from '../services/chat.services';
 import { v4 } from 'uuid';
 // import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import AppContext from '../providers/AppContext';
@@ -20,7 +20,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState('');
-  const [repliesToMessage, setReplies] = useState([]);
+  const [repliesToMessage, setRepliesToMessage] = useState([]);
 
 
 
@@ -29,9 +29,9 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
       const repliesData = snapshot.val();
       if (repliesData) {
         const repliesArray = Object.values(repliesData);
-        setReplies(repliesArray);
+        setRepliesToMessage(repliesArray);
       } else {
-        setReplies([]);
+        setRepliesToMessage([]);
       }
     }); return () => unsubscribe();
   }, [chatId, message.id]);
@@ -66,13 +66,15 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
 
   const handleReplyClick = () => {
     setIsReplying(true);
-    setReplyContent(`@${message.author} `);
+    // setReplyContent(`@${message.author} `);
   };
 
   const handleSaveReplyClick = () => {
-    replyToMessage(chatId, message.id, replyContent, userData.handle);
-    setIsReplying(false);
-    setReplyContent('');
+    replyToMessage(chatId, message.id, replyContent, message.content, userData.handle, message.author, message.authorUrl)
+      .then(() => {
+        setIsReplying(false);
+        setReplyContent('');
+      })
   };
 
 
@@ -146,6 +148,13 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                       display: 'inline-block'
                     }}
                   >
+                    {'repliedMessageContent' in message && message.repliedMessageContent.length > 0 &&
+                    <>
+                    <Avatar src={message.messageAuthorAvatar} style={{ marginLeft: '10px', width:'25px', height:'25px' }} />
+                    <Text>{message.messageAuthor}</Text>
+                     <Text>Original message:{message.repliedMessageContent}</Text>
+                    </>
+                   }
                     {message.content}
                     <Text fontSize='10px'>{message.createdOn}</Text>
                     {message.editedOn && <span style={{ fontSize: '10px' }}> (edited) {message.editedOn}</span>}
@@ -181,7 +190,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                 </Box>
 
                 {repliesToMessage.map((reply) => (
-                  <div key={reply.id}>
+                  <div key={v4()}>
                     <ReplyMessage
                       reply={reply}
                       message={message} />
