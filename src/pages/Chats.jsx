@@ -8,12 +8,12 @@ const Chats = () => {
   const { chatId } = useParams();
 
   return (
-    <Grid templateColumns="repeat(6, 1fr)">
-      <GridItem h='87vh' as='aside' border='2px solid orange' colSpan={1}>
+    <Grid templateColumns="repeat(4, 1fr)">
+      <GridItem h='87vh'w='25vh' as='aside' border='2px solid orange' colSpan={1}>
         <ChatList />
       </GridItem>
       {chatId &&
-        <GridItem h='87vh' colSpan={5} border='2px solid green'>
+        <GridItem h='87vh' colSpan={3} border='2px solid green'>
           <ChatMessages />
         </GridItem>
       }

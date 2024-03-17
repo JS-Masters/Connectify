@@ -1,0 +1,21 @@
+#chat-message-box {
+    background-color: #2b2b2b;
+    border-left: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid rgba(255, 255, 255, 0.3);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    /* box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3); */
+    border-radius: 10px;
+    color: white !important;
+}
+
+
+
+#chat-message-box:hover {
+    background-color: #353535;
+
+}
+
+#chat-message-box  span {
+    color: white !important;
+}

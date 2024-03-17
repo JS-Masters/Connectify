@@ -9,6 +9,7 @@ import {
   List,
   ListItem,
   Button,
+  Box,
 } from "@chakra-ui/react";
 // import PropTypes from "prop-types";
 import Dropdown from "./Dropdown";
@@ -22,7 +23,7 @@ import {
 } from "../services/chat.services";
 
 import useOnclickOutside from "react-cool-onclickoutside";
-
+import "./NavBar.css"
 const NavBar = () => {
   const { userData } = useContext(AppContext);
   const [notifications, setNotifications] = useState([]);
@@ -63,7 +64,8 @@ const NavBar = () => {
     }
   }, [userData, chatId]);
 
-  const handleDelete = (notificationId) => {
+  const handleDeleteNotification = (notificationId) => {
+
     deleteNotification(userData.handle, notificationId).then(() => {
       setNotifications((prevNotifications) =>
         prevNotifications.filter((n) => n.id !== notificationId)
@@ -74,116 +76,116 @@ const NavBar = () => {
 
   return (
     <>
-      <Flex alignItems="center" bg='gray'>
-        <Image src="/LOGO.png" w="200px" cursor="pointer" />
-        <Spacer />
-        <HStack spacing="10%">
-          <NavLink to="/chats" style={{ minWidth: "100px" }}>
-            <Image src="/chats.png" />
-          </NavLink>
-          <NavLink to="/calls" style={{ minWidth: "100px" }}>
-            <Image src="/calls.png" />
-          </NavLink>
-          <NavLink to="/teams" style={{ minWidth: "100px" }}>
-            <Image src="/teams.png" />
-          </NavLink>
-          <NavLink to="/calendar" style={{ minWidth: "100px" }}>
-            <Image src="/calendar.png" />
-          </NavLink>
-        </HStack>
-
-        <Spacer />
-
-        <Avatar
-          onClick={() => setShowNotifications(!showNotifications)}
-          src="/bell.png"
-          cursor="pointer"
-          pos="relative"
-        >
-          <AvatarBadge w="16px" border="none">
-            <Text>{notifications.length}</Text>
-          </AvatarBadge>
-          <List
-            ref={ref}
-            display={showNotifications ? "block" : "none"}
-            color="white"
-            position="absolute"
-            top="50px"
-            left="auto"
-            overflow="scroll"
-            height="250px"
-            width="300px"
+      <Box w='100vw' bg='#2b2b2b'>
+        <Flex alignItems="center" maxW='1500px' m='auto'>
+          <Image id="logo" src="/LOGO3.png" w="200px" cursor="pointer" margin='15px' />
+          <Spacer />
+          <HStack spacing="5%">
+            <NavLink to="/chats" style={{ minWidth: "100px" }}>
+              <Image src="/chats-y.png" />
+            </NavLink>
+            <NavLink to="/calls" style={{ minWidth: "100px" }}>
+              <Image src="/calls-y.png" />
+            </NavLink>
+            <NavLink to="/teams" style={{ minWidth: "100px" }}>
+              <Image src="/teams-y.png" />
+            </NavLink>
+            <NavLink to="/calendar" style={{ minWidth: "100px" }}>
+              <Image src="/calendar-y.png" />
+            </NavLink>
+          </HStack>
+          <Spacer />
+          <Avatar
+            onClick={() => setShowNotifications(!showNotifications)}
+            src="/bell.png"
+            cursor="pointer"
+            pos="relative"
           >
-            {notifications.length > 0 &&
-              notifications
-                .sort((a, b) => a.createdOn - b.createdOn)
-                .map((notification) => (
-                  <ListItem
-                    pos="relative"
-                    border="1px solid gray"
-                    borderRadius="10px"
-                    m="10px"
-                    key={notification.id}
-                    fontSize="sm"
-                  >
-                    <Button
-                      cursor="pointer"
-                      pos="absolute"
-                      right="0px"
-                      top="0px"
-                      colorScheme="red"
-                      size="xs"
-                      onClick={() => {
-                        handleDelete(notification.id);
-                      }}
+            <AvatarBadge w="16px" border="none">
+              <Text>{notifications.length}</Text>
+            </AvatarBadge>
+            <List
+              ref={ref}
+              display={showNotifications ? "block" : "none"}
+              color="white"
+              position="absolute"
+              top="50px"
+              left="auto"
+              overflow="scroll"
+              height="250px"
+              width="300px"
+            >
+              {notifications.length > 0 &&
+                notifications
+                  .sort((a, b) => a.createdOn - b.createdOn)
+                  .map((notification) => (
+                    <ListItem
+                      pos="relative"
+                      border="1px solid gray"
+                      borderRadius="10px"
+                      m="10px"
+                      key={notification.id}
+                      fontSize="sm"
                     >
-                      X
-                    </Button>
-                    {notification.type === "chats" && (
-                      <Link
-                        to={`/chats/${notification.eventId}`}
+                      <Button
+                        cursor="pointer"
+                        pos="absolute"
+                        right="0px"
+                        top="0px"
+                        colorScheme="red"
+                        size="xs"
                         onClick={() => {
-                          handleDelete(notification.id);
-                          setShowNotifications(false);
+                          handleDeleteNotification(notification.id);
                         }}
                       >
-                        {" "}
-                        <Text as="span">{notification.title}</Text>
-                        <Text>{notification.body}</Text>
-                      </Link>
-                    )}
-                    {notification.type === "teams" && (
-                      <Link
-                        to={`/teams/${notification.eventId}`}
-                        onClick={() => {
-                          handleDelete(notification.id);
-                          setShowNotifications(false);
-                        }}
-                      >
-                        <p>{notification.body}</p>
-                      </Link>
-                    )}
-                    {notification.type === "channels" && (
-                      <Link
-                        to={`/teams/${notification.teamId}/channels/${notification.eventId}`}
-                        onClick={() => {
-                          handleDelete(notification.id);
-                          setShowNotifications(false);
-                        }}
-                      >
-                        <Text>{notification.body}</Text>
-                      </Link>
-                    )}
-                    <Text>{notification.createdOn}</Text>
-                  </ListItem>
-                ))}
-          </List>
-        </Avatar>
+                        X
+                      </Button>
+                      {notification.type === "chats" && (
+                        <Link
+                          to={`/chats/${notification.eventId}`}
+                          onClick={() => {
+                            handleDeleteNotification(notification.id);
+                            setShowNotifications(false);
+                          }}
+                        >
+                          {" "}
+                          <Text as="span">{notification.title}</Text>
+                          <Text>{notification.body}</Text>
+                        </Link>
+                      )}
+                      {notification.type === "teams" && (
+                        <Link
+                          to={`/teams/${notification.eventId}`}
+                          onClick={() => {
+                            handleDeleteNotification(notification.id);
+                            setShowNotifications(false);
+                          }}
+                        >
+                          <p>{notification.body}</p>
+                        </Link>
+                      )}
+                      {notification.type === "channels" && (
+                        <Link
+                          to={`/teams/${notification.teamId}/channels/${notification.eventId}`}
+                          onClick={() => {
+                            handleDeleteNotification(notification.id);
+                            setShowNotifications(false);
+                          }}
+                        >
+                          <Text>{notification.body}</Text>
+                        </Link>
+                      )}
+                      <Text>{notification.createdOn}</Text>
+                    </ListItem>
+                  ))}
+            </List>
+          </Avatar>
+          {userData && (
+            <Dropdown username={userData.handle} avatarUrl={userData.avatarUrl} />
+          )}
+        </Flex>
+      </Box>
 
-        {userData && (
-          <Dropdown username={userData.handle} avatarUrl={userData.avatarUrl} />
-        )}
-      </Flex>
     </>
   );
 };

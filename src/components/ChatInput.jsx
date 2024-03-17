@@ -57,7 +57,7 @@ const ChatInput = () => {
   };
 
   return (
-    <Form onSubmit={sendMessage} style={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'space-around', bottom: 30, width: '70%', backgroundColor: '#242424', color: 'white', padding: '10px', borderRadius: '5px' }}>
+    <Form onSubmit={sendMessage} style={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'space-around', marginTop: '5px', width: '40%', backgroundColor: 'transparent', color: 'white', padding: '10px', borderRadius: '5px' }}>
       {isPickerVisible &&
         <Box position='absolute' top='-430px' right='0'>
           <Picker data={data} previewPosition='none' onEmojiSelect={(e) => {
@@ -72,7 +72,7 @@ const ChatInput = () => {
         </Box>}
       {giphy && <Giphy handleGif={handleGif} />}
       <Input value={msg} onChange={(event) => setMsg(event.target.value)} placeholder="type here..." w='80%' />
-      <FaRegSmile onClick={() => { setGiphy(false); setPickerVisible(!isPickerVisible) }} style={{ fontSize: '30px', cursor: 'pointer' }} />
+      <FaRegSmile onClick={() => { setGiphy(false); setPickerVisible(!isPickerVisible) }} style={{ fontSize: '30px', cursor: 'pointer', color:'#FFBD0A' }} />
       <label htmlFor="file" onClick={() => { setGiphy(false); setPickerVisible(false) }} style={{ fontSize: '30px', cursor: 'pointer' }}><SlPicture /></label>
       <Input type="file" id="file" style={{ display: 'none' }} onChange={handleFile} />
       <label style={{

@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useParams } from "react-router";
-import {  getChatMessagesById as listenForChatMessages } from "../services/chat.services";
+import { getChatMessagesById as listenForChatMessages } from "../services/chat.services";
 import ChatMessageBox from "./ChatMessageBox";
 import ChatInput from "./ChatInput";
 import { Box } from "@chakra-ui/react";
@@ -17,7 +17,7 @@ const ChatMessages = () => {
     const unsubscribe = listenForChatMessages((snapshot) => {
       const msgData = snapshot.exists() ? snapshot.val() : {};
       const newMessages = Object.values(msgData);
-  
+
       setMessages(prevMessages => {
         const wasMessagesLengthSame = prevMessages.length === Object.keys(newMessages).length;
         setDontScroll(wasMessagesLengthSame);
@@ -46,28 +46,31 @@ const ChatMessages = () => {
   };
 
   return (
-    <Box overflowY='scroll' whiteSpace='nowrap' h='88%' w='70%'>
-      {messages && (
-        messages.map((message) => (
-          isMessageFromSameAuthor(message) ? (
-            <ChatMessageBox
-              key={v4()}
-              message={message}
-              sameAuthor={true}
-            />
-          ) : (
-            <ChatMessageBox
-              key={v4()}
-              message={message}
-              sameAuthor={false}
-            />
-          )
-        ))
-      )}
+    <>
+      <Box position='relative' overflowY='scroll' whiteSpace='nowrap' h='88%' w='70%'>
+        {messages && (
+          messages.map((message) => (
+            isMessageFromSameAuthor(message) ? (
+              <ChatMessageBox
+                key={v4()}
+                message={message}
+                sameAuthor={true}
+              />
+            ) : (
+              <ChatMessageBox
+                key={v4()}
+                message={message}
+                sameAuthor={false}
+              />
+            )
+          ))
+        )}
 
+
+        <div ref={messagesEndRef} />
+      </Box>
       <ChatInput />
-      <div ref={messagesEndRef} />
-    </Box>
+    </>
 
   );
 

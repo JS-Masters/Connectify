@@ -126,7 +126,7 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
 
   return (
     <HStack pos="relative" m="0 20px">
-      <Text color="white" cursor="pointer">
+      <Text color="white" cursor='default'>
         {username}
       </Text>
 

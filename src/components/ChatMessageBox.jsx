@@ -7,9 +7,9 @@ import { v4 } from 'uuid';
 // import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import AppContext from '../providers/AppContext';
 import FilePreview from './FIlePreview';
-import ReplyMessage from "./ReplyMessage";
+// import ReplyMessage from "./ReplyMessage";
 import { useParams } from 'react-router-dom';
-
+import "./ChatMessageBox.css"
 
 const ChatMessageBox = ({ message, sameAuthor }) => {
 
@@ -104,7 +104,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
 
   return (
     <>
-      <Card onMouseEnter={handleHoverEnter} onMouseLeave={handleHoverLeave} mt={sameAuthor ? '0px' : '5px'} borderTop="4px" borderColor="gray" bg="white" >
+      <Box id='chat-message-box' onMouseEnter={handleHoverEnter} onMouseLeave={handleHoverLeave} mt={sameAuthor ? '0px' : '5px'}  >
         {'deleteMessage' in message ? (
           <Text>
             {message.deleteMessage} by {message.deletedBy} on {message.deletedOn}
@@ -212,7 +212,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
             )}
           </>
         )}
-      </Card >
+      </Box >
     </>
 
   );
