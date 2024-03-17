@@ -25,9 +25,8 @@ import BlockedUsersPopUp from "../pages/BlockedUsersPopUp";
 import UserStatusIcon from "./UserStatusIconChats";
 
 const Dropdown = ({ username = null, avatarUrl = null }) => {
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  const [showMenu, setShowMenu] = useState(false);
-  const [showStatusMenu, setShowStatusMenu] = useState(false);
   const { userData, setContext } = useContext(AppContext);
   const navigate = useNavigate();
   const toast = useToast();
@@ -48,25 +47,20 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
   useEffect(() => {
     if (userData) {
       const unsubscribe = listenForStatusChange((snapshot) => {
-        const userStatus = snapshot.exists() ? snapshot.val().currentStatus : userData.currentStatus;
-        (userStatus === statuses.inMeeting) ? setUserIsInMeeting(true) : setUserIsInMeeting(false);
+        const userStatus = snapshot.exists()
+          ? snapshot.val().currentStatus
+          : userData.currentStatus;
+        userStatus === statuses.inMeeting
+          ? setUserIsInMeeting(true)
+          : setUserIsInMeeting(false);
       }, userData.handle);
       return () => unsubscribe();
     }
   }, []);
 
-  const toggleMenu = () => {
-    setShowStatusMenu(false);
-    setShowMenu(!showMenu);
-  };
-  const toggleStatusMenu = () => {
-    setShowMenu(false);
-    setShowStatusMenu(!showStatusMenu);
-  };
-
   const signOut = async () => {
     await logoutUser();
-   await changeUserCurrentStatusInDb(userData.handle, statuses.offline);
+    await changeUserCurrentStatusInDb(userData.handle, statuses.offline);
     setContext({ user: null, userData: null });
     showToast();
     navigate("/");
@@ -74,17 +68,7 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
 
   const renderStatusMenu = () => {
     return (
-      <List
-        position="absolute"
-        color="purple.400"
-        p="5px 0"
-        fontSize="large"
-        width="120px"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        top="70px"
-      >
+      <>
         <ListItem
           cursor="pointer"
           onClick={() => {
@@ -94,7 +78,7 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
               ...prevContext,
               userData: { ...userData, currentStatus: statuses.online },
             }));
-            setShowStatusMenu(false);
+            setShowDropdown(false);
           }}
         >
           <Box
@@ -115,7 +99,7 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
               ...prevContext,
               userData: { ...userData, currentStatus: statuses.doNotDisturb },
             }));
-            setShowStatusMenu(false);
+            setShowDropdown(false);
           }}
         >
           <Box
@@ -127,46 +111,53 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
           />{" "}
           DND
         </ListItem>
-      </List>
+      </>
     );
   };
 
-
   return (
-    <Box pos="relative" float='right' marginRight='50px'>
-      <HStack>
-        <Text style={{ cursor: "pointer" }} onClick={toggleMenu}>
-          {username}
-        </Text>
-        <Avatar style={{ cursor: "pointer" }} name={username} src={avatarUrl}>
-          <AvatarBadge w="1em" bg="teal.500">
-            {<UserStatusIcon userHandle={username} iconSize={'12px'} toggleStatusMenu={toggleStatusMenu} />}
-          </AvatarBadge>
-        </Avatar>
-      </HStack>
-      {showStatusMenu && !userIsInMeeting && renderStatusMenu()}
-      {showMenu && (
-        <List
-          position="absolute"
-          zIndex='5'
-          color="purple.400"
-          p="5px 0"
-          fontSize="large"
-          width="120px"
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          top="70px"
-        // onClick={setShowMenu(!showMenu)}
+    <HStack pos="relative">
+      <Text style={{ cursor: "pointer" }}>{username}</Text>
+
+      <Avatar
+        cursor="pointer"
+        onClick={() => setShowDropdown(!showDropdown)}
+        name={username}
+        src={avatarUrl}
+      >
+        <AvatarBadge w="1em" bg="teal.500">
+          {<UserStatusIcon userHandle={username} iconSize={"12px"} />}
+        </AvatarBadge>
+      </Avatar>
+
+      <List
+        bg="black"
+        zIndex="5"
+        color="purple.400"
+        p="5px 0"
+        fontSize="md"
+        width="120px"
+        pos="absolute"
+        display={showDropdown ? "flex" : "none"}
+        flexDirection="column"
+        alignItems="center"
+        top="100px"
+        left="-6px"
+      >
+        {!userIsInMeeting && renderStatusMenu()}
+        <BlockedUsersPopUp />
+        <UploadForm />
+        <ListItem
+          cursor="pointer"
+          onClick={() => {
+            signOut();
+            setShowDropdown(false);
+          }}
         >
-          <BlockedUsersPopUp />
-          <UploadForm />
-          <ListItem cursor="pointer" onClick={signOut}>
-            Sign out
-          </ListItem>
-        </List>
-      )}
-    </Box>
+          Sign out
+        </ListItem>
+      </List>
+    </HStack>
   );
 };
 

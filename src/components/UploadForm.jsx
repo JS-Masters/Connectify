@@ -1,9 +1,18 @@
 // import PropTypes from "prop-types";
-import Popup from "reactjs-popup";
 import { useContext, useState } from "react";
 import AppContext from "../providers/AppContext";
 import { Form } from "react-router-dom";
-import { Button, Heading, Img, Input, Text, useToast } from "@chakra-ui/react";
+import {
+  Button,
+  Heading,
+  Img,
+  Input,
+  ListItem,
+  Modal,
+  ModalContent,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { storage } from "../config/firebase-config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateUserByHandle } from "../services/user.services";
@@ -14,6 +23,8 @@ const UploadForm = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileUrl, setSelectedFileUrl] = useState(null);
   const { userData } = useContext(AppContext);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toast = useToast();
 
@@ -68,41 +79,46 @@ const UploadForm = () => {
   };
 
   return (
-    <Popup trigger={<Text cursor="pointer">Change avatar</Text>} modal nested>
-      {(close) => (
-        <Form
-          style={{
-            border: "2px dashed green",
-            padding: "15px",
-            textAlign: "center",
-          }}
-          onSubmit={handleSubmit}
-        >
-          <CloseIcon
-            cursor="pointer"
-            float="right"
-            m="10px"
-            onClick={() => handleCloseClick(close)}
-          />
-          {selectedFileUrl ? (
-            <>
-              <Img h="300px" w="300px" src={selectedFileUrl} alt="Selected" />
-              <Button type="submit">Upload</Button>
-            </>
-          ) : (
-            <>
-              <Heading>You haven&apos;t uploaded anything yet!</Heading>
-              <Input
-                type="file"
-                onChange={handleFileChange}
-                style={{ display: "none" }}
-              />
-              <Button onClick={handleUploadClick}>Upload Now</Button>
-            </>
-          )}
-        </Form>
-      )}
-    </Popup>
+    <>
+      <ListItem onClick={onOpen} cursor="pointer">
+        Upload Avatar
+      </ListItem>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent w="fit-content" bg="gray" marginTop="90px">
+          <Form
+            style={{
+              border: "2px dashed green",
+              padding: "15px",
+              textAlign: "center",
+            }}
+            onSubmit={handleSubmit}
+          >
+            <CloseIcon
+              cursor="pointer"
+              float="right"
+              m="10px"
+              onClick={() => handleCloseClick(close)}
+            />
+            {selectedFileUrl ? (
+              <>
+                <Img h="300px" w="300px" src={selectedFileUrl} alt="Selected" />
+                <Button type="submit">Upload</Button>
+              </>
+            ) : (
+              <>
+                <Heading>You haven&apos;t uploaded anything yet!</Heading>
+                <Input
+                  type="file"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+                <Button onClick={handleUploadClick}>Upload Now</Button>
+              </>
+            )}
+          </Form>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

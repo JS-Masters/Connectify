@@ -1,5 +1,7 @@
-import { useContext, useEffect, useState } from "react";
-// import { REACTIONS } from "../common/constants";
+import PropTypes from "prop-types";
+import { useContext, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import AppContext from "../providers/AppContext";
 import {
   getReactionsByMessage,
   addReactionToMessage,
@@ -8,24 +10,61 @@ import {
   addReactionToReply,
   removeReactionFromReply,
 } from "../services/chat.services";
-import PropTypes from "prop-types";
+
+import { Box } from "@chakra-ui/react";
 import { FaRegSmile } from "react-icons/fa";
-
-
-import { useDisclosure } from "@chakra-ui/react";
-import PickerModal from "./PickerModal";
-
-import AppContext from "../providers/AppContext";
-import { useParams } from "react-router-dom";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 const Reactions = ({ messageId, replyID = null }) => {
-
   const { userData } = useContext(AppContext);
   const { chatId } = useParams();
   const [messageReactions, setMessageReactions] = useState({});
   const [replyReactions, setReplyReactions] = useState({});
+  const [pickerIsVisible, setPickerIsVisible] = useState(false);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [pickerPositon, setPickerPosition] = useState({});
+  // const pickerRef = useRef(null);
+  const parentRef = useRef(null);
+
+  useEffect(() => {
+    // const pickerElement = pickerRef.current;
+    const parentElement = parentRef.current;
+
+    if (parentElement) {
+      const parentRect = parentElement.getBoundingClientRect();
+      // const pickerRect = pickerElement.getBoundingClientRect();
+      const pickerWidth = 230;
+      const pickerHeight = 440;
+
+      // Calculate available space around the parent element
+      const spaceLeft = parentRect.left;
+      const spaceRight = window.innerWidth - parentRect.right;
+      const spaceTop = parentRect.top;
+      const spaceBottom = window.innerHeight - parentRect.bottom;
+
+      // Decide the best position for the dropdown menu based on available space
+      let left, top;
+      if (spaceRight >= pickerWidth) {
+        left = pickerWidth;
+      } else if (spaceLeft >= pickerWidth) {
+        left = -pickerWidth;
+      } else {
+        left = 0;
+      }
+
+      if (spaceBottom >= pickerHeight) {
+        top = 35;
+      } else if (spaceTop >= pickerHeight) {
+        top = -pickerHeight;
+      } else {
+        top = pickerHeight / -2;
+        left = -pickerWidth - 125;
+      }
+
+      setPickerPosition({ left, top });
+    }
+  }, []);
 
   useEffect(() => {
     const unsubscribeMessageReactions = getReactionsByMessage(
@@ -36,7 +75,8 @@ const Reactions = ({ messageId, replyID = null }) => {
       }
     );
 
-    const unsubscribeReplyReactions = replyID &&
+    const unsubscribeReplyReactions =
+      replyID &&
       getReactionsByReply(chatId, messageId, replyID, (snapshot) => {
         setReplyReactions(snapshot.val());
       });
@@ -57,25 +97,54 @@ const Reactions = ({ messageId, replyID = null }) => {
 
   const handleReplyReaction = async (reaction) => {
     if (replyReactions && replyReactions[userData.handle] === reaction) {
-      await removeReactionFromReply(chatId, messageId, replyID, userData.handle);
+      await removeReactionFromReply(
+        chatId,
+        messageId,
+        replyID,
+        userData.handle
+      );
     } else {
-      await addReactionToReply(chatId, messageId, replyID, reaction, userData.handle);
+      await addReactionToReply(
+        chatId,
+        messageId,
+        replyID,
+        reaction,
+        userData.handle
+      );
     }
   };
 
-
   return (
-    <>
-      <FaRegSmile onClick={onOpen} style={{ fontSize: '30px', cursor: 'pointer' }} />
-      <PickerModal isOpen={isOpen} handleReaction={replyID ? handleReplyReaction : handleMessageReaction} onClose={onClose} />
-    </>
+    <Box ref={parentRef} position="relative">
+      <FaRegSmile
+        onClick={() => setPickerIsVisible(!pickerIsVisible)}
+        style={{ fontSize: "30px", cursor: "pointer" }}
+      />
+
+      <Box
+        pos="absolute"
+        left={pickerPositon.left}
+        top={pickerPositon.top}
+        zIndex="10"
+        display={pickerIsVisible ? "block" : "none"}
+      >
+        <Picker
+          data={data}
+          previewPosition="none"
+          onEmojiSelect={(e) => {
+            replyID
+              ? handleReplyReaction(e.native)
+              : handleMessageReaction(e.native);
+            setPickerIsVisible(false);
+          }}
+        />
+      </Box>
+    </Box>
   );
 };
 
 Reactions.propTypes = {
-  chatId: PropTypes.string.isRequired,
   messageId: PropTypes.string.isRequired,
-
   replyID: PropTypes.string,
 };
 
