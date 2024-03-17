@@ -15,7 +15,7 @@ import {
 import Dropdown from "../Dropdown";
 import { useContext, useState, useEffect } from "react";
 import AppContext from "../../providers/AppContext";
-import { Link, NavLink, useParams } from "react-router-dom";
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import {
   deleteNotification,
   deleteNotificationsForOpenChat,
@@ -23,12 +23,13 @@ import {
 } from "../../services/chat.services";
 
 import useOnclickOutside from "react-cool-onclickoutside";
-import "./NavBar.css"
+import "./NavBar.css";
 const NavBar = () => {
   const { userData } = useContext(AppContext);
   const [notifications, setNotifications] = useState([]);
   const { chatId, channelId } = useParams();
   const [showNotifications, setShowNotifications] = useState(false);
+  const navigate = useNavigate();
 
   const ref = useOnclickOutside(() => setShowNotifications(false));
 
@@ -65,7 +66,6 @@ const NavBar = () => {
   }, [userData, chatId]);
 
   const handleDeleteNotification = (notificationId) => {
-
     deleteNotification(userData.handle, notificationId).then(() => {
       setNotifications((prevNotifications) =>
         prevNotifications.filter((n) => n.id !== notificationId)
@@ -76,11 +76,18 @@ const NavBar = () => {
 
   return (
     <>
-      <Box w='100vw' bg='#2b2b2b'>
-        <Flex alignItems="center" maxW='1500px' m='auto'>
-          <Image id="logo" src="/LOGO3.png" w="200px" cursor="pointer" margin='15px' />
+      <Box w="100vw" bg="#2b2b2b">
+        <Flex alignItems="center" maxW="1500px" m="auto">
+          <Image
+            id="logo"
+            src="/LOGO3.png"
+            onClick={() => navigate("/")}
+            w="200px"
+            cursor="pointer"
+            margin="15px"
+          />
           {/* <Spacer /> */}
-          <HStack spacing="12%" marginRight='23%' marginLeft='19%'>
+          <HStack spacing="12%" marginRight="23%" marginLeft="19%">
             <NavLink to="/chats" style={{ minWidth: "100px" }}>
               <Image src="/chats-y.png" />
             </NavLink>
@@ -96,7 +103,10 @@ const NavBar = () => {
           </HStack>
           {/* <Spacer /> */}
           <Avatar
-            onClick={() => Boolean(notifications.length) && setShowNotifications(!showNotifications)}
+            onClick={() =>
+              Boolean(notifications.length) &&
+              setShowNotifications(!showNotifications)
+            }
             src="/bell.png"
             cursor="pointer"
             pos="relative"
@@ -110,7 +120,7 @@ const NavBar = () => {
               id="notifications-list"
               color="white"
               position="absolute"
-              zIndex='5'
+              zIndex="5"
               top="50px"
               left="auto"
               overflow="hidden"
@@ -129,7 +139,7 @@ const NavBar = () => {
                       border="1px solid gray"
                       borderRadius="10px"
                       m="10px"
-                      ml='-3'
+                      ml="-3"
                       key={notification.id}
                       fontSize="sm"
                     >
@@ -188,11 +198,13 @@ const NavBar = () => {
             </List>
           </Avatar>
           {userData && (
-            <Dropdown username={userData.handle} avatarUrl={userData.avatarUrl} />
+            <Dropdown
+              username={userData.handle}
+              avatarUrl={userData.avatarUrl}
+            />
           )}
         </Flex>
       </Box>
-
     </>
   );
 };

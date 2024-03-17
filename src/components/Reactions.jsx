@@ -34,7 +34,7 @@ const Reactions = ({ messageId, replyID = null }) => {
     if (parentElement) {
       const parentRect = parentElement.getBoundingClientRect();
       // const pickerRect = pickerElement.getBoundingClientRect();
-      const pickerWidth = 230;
+      // const pickerWidth = 230;
       const pickerHeight = 440;
 
       // Calculate available space around the parent element
@@ -44,14 +44,16 @@ const Reactions = ({ messageId, replyID = null }) => {
       const spaceBottom = window.innerHeight - parentRect.bottom;
 
       // Decide the best position for the dropdown menu based on available space
-      let left, top;
-      if (spaceRight >= pickerWidth) {
-        left = pickerWidth;
-      } else if (spaceLeft >= pickerWidth) {
-        left = -pickerWidth;
-      } else {
-        left = 0;
-      }
+      let left = -250;
+      let top;
+      // if (spaceRight >= pickerWidth) {
+      //   left = pickerWidth - 300;
+      // } else if (spaceLeft >= pickerWidth) {
+      //   left = -pickerWidth - 300;
+      // } else {
+      //   left = 0;
+      // }
+
 
       if (spaceBottom >= pickerHeight) {
         top = 35;
@@ -59,7 +61,7 @@ const Reactions = ({ messageId, replyID = null }) => {
         top = -pickerHeight;
       } else {
         top = pickerHeight / -2;
-        left = -pickerWidth - 125;
+        left = -355;
       }
 
       setPickerPosition({ left, top });
