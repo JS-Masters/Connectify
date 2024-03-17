@@ -116,7 +116,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
             )}
 
             {isEditing ? (
-              <Box>
+              <Box position='relative'>
                 <Textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} style={{ marginTop: '30px' }} /> <br />
                 <Button onClick={handleSaveEditClick}
                   cursor="pointer"
@@ -126,7 +126,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                   colorScheme="transperent"
                   color="green"
                   size="xs"
-                  marginTop='58px'
+                  marginTop='2px'
                   padding='0px'
                   fontSize='25px'
 
@@ -140,7 +140,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                   color="red"
                   size="sm"
                   fontSize='22px'
-                  marginTop='56px'
+                  // marginTop='2px'
                 >X</Button>
               </Box>
             ) : (
@@ -166,7 +166,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                       </>
                     ) : (
                       <>
-                        <span style={{ display: 'block', marginTop:'15px', marginBottom:'17px', fontSize:'18px' }}> {message.content}</span>
+                        <span style={{ display: 'block', marginTop: '15px', marginBottom: '17px', fontSize: '18px' }}> {message.content}</span>
                       </>
                     )}
                     <span style={{ display: 'block', fontSize: '10px' }}>{message.createdOn}</span>
@@ -195,33 +195,33 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                   ))}
 
                   {isReplying && (
-                     <Box>
-                     <Textarea value={replyContent} onChange={(e) => setReplyContent(e.target.value)} style={{ marginTop: '30px' }} /> <br />
-                     <Button onClick={handleSaveReplyClick}
-                       cursor="pointer"
-                       pos="absolute"
-                       right="45px"
-                       top="0px"
-                       colorScheme="transperent"
-                       color="green"
-                       size="xs"
-                       marginTop='38px'
-                       padding='0px'
-                       fontSize='25px'
-     
-                     >{TICK}</Button>
-                     <Button onClick={handleCancelReplyClick}
-                       cursor="pointer"
-                       pos="absolute"
-                       right="0px"
-                       top="0px"
-                       colorScheme="transperent"
-                       color="red"
-                       size="sm"
-                       fontSize='22px'
-                       marginTop='35px'
-                     >X</Button>
-                   </Box>
+                    <Box>
+                      <Textarea value={replyContent} onChange={(e) => setReplyContent(e.target.value)} style={{ marginTop: '30px' }} /> <br />
+                      <Button onClick={handleSaveReplyClick}
+                        cursor="pointer"
+                        pos="absolute"
+                        right="45px"
+                        top="0px"
+                        colorScheme="transperent"
+                        color="green"
+                        size="xs"
+                        marginTop='68px'
+                        padding='0px'
+                        fontSize='25px'
+
+                      >{TICK}</Button>
+                      <Button onClick={handleCancelReplyClick}
+                        cursor="pointer"
+                        pos="absolute"
+                        right="0px"
+                        top="0px"
+                        colorScheme="transperent"
+                        color="red"
+                        size="sm"
+                        fontSize='22px'
+                        marginTop='65px'
+                      >X</Button>
+                    </Box>
                   )}
                 </Box>
               </>
