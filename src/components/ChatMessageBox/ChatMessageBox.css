@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Aladin&family=Amarante&family=Angkor&family=Dancing+Script&family=Madimi+One&family=Oswald:wght@200..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Protest+Revolution&display=swap');
+
+
 #chat-message-box {
     background-color: #2b2b2b;
     border-left: 2px solid rgba(255, 255, 255, 0.3);
@@ -9,13 +12,40 @@
     color: white !important;
 }
 
-
-
 #chat-message-box:hover {
     background-color: #353535;
 
 }
 
-#chat-message-box  span {
+#chat-message-box span {
     color: white !important;
 }
+
+.user-handle-chat-box {
+    font-family: "Angkor", serif !important;
+    font-weight: 200 !important;
+    font-style: normal;
+    color: bisque;
+}
+
+#user-handle-chat-box-reply {
+    font-size: 12px;
+}
+
+#edited-span {
+    color: bisque;
+}
+
+.deleted-by {
+    font-family: "Angkor", serif !important;
+    font-weight: 200 !important;
+    display: inline;
+}
+
+#edit-message-img:hover {
+cursor: pointer;
+}
+
+#delete-message-img:hover {
+    cursor: pointer;
+    }

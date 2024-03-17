@@ -120,7 +120,7 @@ const Reactions = ({ messageId, replyID = null }) => {
     <Box ref={parentRef} position="relative">
       <FaRegSmile
         onClick={() => setPickerIsVisible(!pickerIsVisible)}
-        style={{ fontSize: "30px", cursor: "pointer" }}
+        style={{ fontSize: "30px", cursor: "pointer", color:'bisque' }}
       />
 
       <Box

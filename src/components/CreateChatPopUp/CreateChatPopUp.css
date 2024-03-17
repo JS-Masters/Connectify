@@ -12,7 +12,7 @@
     padding-right: 23px;
     font-size: 30px;
     font-family: "Oswald", sans-serif;
-    color: bisque;
+    color: #ffe4c4;
     background-color: #6b6767;
 }
 
@@ -74,5 +74,11 @@
 
 #create-chat-button:hover {
     opacity: 0.6;
+}
+
+.user-handle-span {
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
