@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { getTeamById, listenForNewTeamMember } from "../services/team.services";
 import { changeUserCurrentStatusInDb, getUserLastStatusByHandle, getUserStatusByHandle, getUsersAvatarsByHandles } from "../services/user.services";
-import { Avatar, AvatarBadge, GridItem, Heading, useToast } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, GridItem, Heading, VStack, useToast } from "@chakra-ui/react";
 import UserStatusIcon from "./UserStatusIconChats";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
@@ -90,7 +90,7 @@ const TeamMembers = ({selectedTeam}) => {
 
   return (
     <> 
-    <GridItem h='50vh' as='aside' border='2px solid orange' colSpan={1}>
+    <VStack>
       {teamMembers.map((member) =>
         <span key={member.handle}>
           <Avatar size='sm' src={member.avatarUrl}>
@@ -105,7 +105,7 @@ const TeamMembers = ({selectedTeam}) => {
         </span>
       )}
       {selectedTeam.owner === userData.handle && <AddMemberToTeamPopUp />}
-    </GridItem>
+    </VStack>
     {token && <div style={{ height: '50vh', width: 'auto' }}><SingleCallRoom token={token} leaveCall={leaveCall} /></div>}
     </>
   )

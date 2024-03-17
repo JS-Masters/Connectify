@@ -40,10 +40,10 @@ const router = createBrowserRouter(
       <Route path="chats" element={<Authenticated><Chats /></Authenticated>} />
       <Route path="chats/:chatId" element={<Authenticated><Chats /></Authenticated>} />
       <Route path="calls" element={<Authenticated><Calls /></Authenticated>} />
-      <Route path="calls/:id" element={<Authenticated><Calls /></Authenticated>} />
+      {/* <Route path="calls/:id" element={<Authenticated><Calls /></Authenticated>} /> */}
       <Route path="teams" element={<Authenticated><Teams /></Authenticated>} />
       <Route path="teams/:teamId" element={<Authenticated><Teams /></Authenticated>} />
-      <Route path="teams/:teamId/channels/:channelId" element={<Authenticated><Teams /></Authenticated>} />
+      <Route path="teams/:teamId/channels/:chatId" element={<Authenticated><Teams /></Authenticated>} />
       <Route path="calendar" element={<Authenticated><Calendar /></Authenticated>} />
     </Route>
   )

@@ -5,14 +5,14 @@ import { getTeamById, leaveTeam, listenForTeamsByUserHandle } from "../services/
 import { Button } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import TeamChannels from "../components/TeamChannels";
-import TeamChannelContent from "../components/TeamChannelContent";
+// import TeamChannelContent from "../components/TeamChannelContent";
 import { v4 } from "uuid";
 import CreateMeetingPopUp from "../components/CreateMeetingPopUp";
 
 const Teams = () => {
 
   const { userData } = useContext(AppContext);
-  const { teamId, channelId } = useParams();
+  const { teamId, chatId } = useParams();
   const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState({});
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const Teams = () => {
 
       return () => unsubscribe();
     }
-  }, [teamId, channelId]);
+  }, [teamId, chatId]);
 
   useEffect(() => {
     if (teamId) {
@@ -46,7 +46,6 @@ const Teams = () => {
       {teamId && <TeamChannels selectedTeam={selectedTeam} />}
       {teamId && selectedTeam.owner === userData.handle && <CreateMeetingPopUp teamName={selectedTeam.teamName} />}
       {teamId && selectedTeam.owner !== userData.handle && <Button onClick={handleLeaveTeamClick} style={{ color: 'red' }}>Leave Team</Button>}
-      {channelId && <TeamChannelContent />}
     </>
   );
 };

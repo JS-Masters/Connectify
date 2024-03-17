@@ -1,4 +1,4 @@
-import { Button, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Button, Flex, Grid, GridItem, VStack } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { listenForNewTeamChannels } from "../services/channel.servicies";
@@ -6,11 +6,13 @@ import { v4 } from "uuid";
 import CreateChannelPopUp from "./CreateChannelPopUp";
 import AppContext from "../providers/AppContext";
 import TeamMembers from "./TeamMembers";
+// import TeamChannelContent from "./TeamChannelContent";
+import ChatMessages from "./ChatMessages";
 
 const TeamChannels = ({ selectedTeam }) => {
 
   const { userData } = useContext(AppContext);
-  const { teamId, channelId } = useParams();
+  const { teamId, chatId } = useParams();
   const navigate = useNavigate();
   const [channels, setChannels] = useState([]);
 
@@ -21,27 +23,27 @@ const TeamChannels = ({ selectedTeam }) => {
     }, teamId);
     return () => unsubscribe();
 
-
-
-    // getTeamChannels(teamId)
-    //   .then((teamChannels) => setChannels(teamChannels))
-  }, [teamId, channelId]);
+  }, [teamId, chatId]);
 
   return (
     <>
-      <Grid templateColumns="repeat(10, 1fr)">
-        <GridItem h='50vh' as='aside' border='2px solid orange' colSpan={1}>
+      <Flex>
+        <VStack w='15%'>
           {channels &&
             <>
-              {channels.map((channel) => channel.id === channelId ?
-                <Button key={v4()} onClick={() => navigate(`/teams/${teamId}/channels/${channel.id}`)} style={{ backgroundColor: 'yellow' }}>{channel.title}</Button>
-                : <Button key={v4()} onClick={() => navigate(`/teams/${teamId}/channels/${channel.id}`)} >{channel.title}</Button>
-              )}
+              {channels.map((channel) => 
+              // CONDITION chatId && chatId === 
+                <Button key={v4()} onClick={() => navigate(`/teams/${teamId}/channels/${channel.chatId}`)} style={{ backgroundColor: 'yellow' }}>{channel.title}</Button>
+        
+              )
+              }
               {selectedTeam.owner === userData.handle && <CreateChannelPopUp />}
             </>}
-        </GridItem>
-        <TeamMembers selectedTeam={selectedTeam}/>
-      </Grid>
+        </VStack>
+        {/* {channelId && <TeamChannelContent />} */}
+        {chatId && <ChatMessages />}
+        <TeamMembers selectedTeam={selectedTeam} />
+      </Flex>
     </>
   );
 };

@@ -24,32 +24,32 @@ const updateUsersChats = async (chatMembers, newChatId) => {
 };
 
 
-const doesChatAlreadyExists = (loggedInUserChats, chatMembers, loggedInUsername) => {
-  for (const chatId in loggedInUserChats) {
-    const chatParticipants = Object.keys(loggedInUserChats[chatId].participants);
-    const hasMatchingParticipants = chatParticipants.filter((p) => p !== loggedInUsername).every(member => chatMembers.includes(member));
+// const doesChatAlreadyExists = (loggedInUserChats, chatMembers, loggedInUsername) => {
+//   for (const chatId in loggedInUserChats) {
+//     const chatParticipants = Object.keys(loggedInUserChats[chatId].participants);
+//     const hasMatchingParticipants = chatParticipants.filter((p) => p !== loggedInUsername).every(member => chatMembers.includes(member));
 
-    if (hasMatchingParticipants) {
-      return chatId;
-    }
-  }
-  return null;
-};
+//     if (hasMatchingParticipants) {
+//       return chatId;
+//     }
+//   }
+//   return null;
+// };
 
-export const createNewChat = async (loggedInUsername, chatMembers) => {
+export const createNewChat = async (loggedInUsername, chatMembers, createdAsChannel = false) => {
   try {
-    const loggedInUserChats = await getChatsByUserHandle(loggedInUsername);
+    // const loggedInUserChats = await getChatsByUserHandle(loggedInUsername);
     let allParticipants = { [loggedInUsername]: true };
     chatMembers.map((member) => {
       allParticipants = { ...allParticipants, [member]: true };
     });
 
-    if (loggedInUserChats) {
-      const existingChatId = doesChatAlreadyExists(loggedInUserChats, chatMembers, loggedInUsername);
-      if (existingChatId) {
-        return existingChatId;
-      }
-    }
+    // if (loggedInUserChats) {
+    //   const existingChatId = doesChatAlreadyExists(loggedInUserChats, chatMembers, loggedInUsername);
+    //   if (existingChatId) {
+    //     return existingChatId;
+    //   }
+    // }
 
     const chatRef = await push(ref(db, 'chats'), {});
     const newChatId = chatRef.key;
@@ -62,14 +62,18 @@ export const createNewChat = async (loggedInUsername, chatMembers) => {
       messages: {},
     });
 
-    await updateUsersChats(allParticipants, newChatId);
-    const notificationPromises = chatMembers.map(async (member) => {
-      if (member !== loggedInUsername) {
-        await sendNotification(member, 'New chat!', 'You have been added to a new chat.', newChatId, 'chats');
-      }
-    });
+    // DO NOT CALL IF CHAT IS CREATED FROM TEAM AS A CHANNEL
+    if(!createdAsChannel) {
+      await updateUsersChats(allParticipants, newChatId);
+      const notificationPromises = chatMembers.map(async (member) => {
+        if (member !== loggedInUsername) {
+          await sendNotification(member, 'New chat!', 'You have been added to a new chat.', newChatId, 'chats');
+        }
+      });
+  
+      await Promise.all(notificationPromises);
+    }
 
-    await Promise.all(notificationPromises);
 
     return newChatId;
   } catch (error) {

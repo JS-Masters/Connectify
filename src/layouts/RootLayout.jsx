@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
   return (
-    <div style={{backgroundColor:'black'}}>
+    <div style={{backgroundColor:'gray'}}>
 
         <NavBar />
 

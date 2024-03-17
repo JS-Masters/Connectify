@@ -46,7 +46,7 @@ const ChatMessages = () => {
   };
 
   return (
-    <Box overflowY='scroll' whiteSpace='nowrap' h='88%'>
+    <Box overflowY='scroll' whiteSpace='nowrap' h='88%' w='70%'>
       {messages && (
         messages.map((message) => (
           isMessageFromSameAuthor(message) ? (

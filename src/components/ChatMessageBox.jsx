@@ -154,15 +154,15 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                           <Text>{message.messageAuthor}</Text>
                         </HStack>
 
-                        <Text>{message.repliedMessageContent}</Text>
-                        <span><img style={{ width: '20px', height: '20px', display: 'inline' }} src='../../public/down-arrow.png' />{message.content}</span>
+                        <span style={{display:'block'}}>{message.repliedMessageContent}</span>
+                        <span style={{display:'block'}}><img style={{ width: '20px', height: '20px', display: 'inline' }} src='../../public/down-arrow.png' />{message.content}</span>
                       </>
                     ) : (
                       <>
-                        <Text> {message.content}</Text>
+                        <span style={{display:'block'}}> {message.content}</span>
                       </>
                     )}
-                    <Text fontSize='10px'>{message.createdOn}</Text>
+                    <span style={{display:'block', fontSize: '10px'}}>{message.createdOn}</span>
                     {message.editedOn && <span style={{ fontSize: '10px' }}> (edited) {message.editedOn}</span>}
                   </Text>
                   {userData.handle !== message.author && !isReplying && isHovered && (
@@ -218,9 +218,9 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
   );
 };
 
-ChatMessageBox.propTypes = {
-  message: PropTypes.object.isRequired,
-  sameAuthor: PropTypes.bool.isRequired,
-};
+// ChatMessageBox.propTypes = {
+//   message: PropTypes.object.isRequired,
+//   sameAuthor: PropTypes.bool.isRequired,
+// };
 
 export default ChatMessageBox;
