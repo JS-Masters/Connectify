@@ -4,6 +4,7 @@ import AppContext from "../providers/AppContext";
 import { Form } from "react-router-dom";
 import {
   Button,
+  HStack,
   Heading,
   Img,
   Input,
@@ -93,15 +94,16 @@ const UploadForm = () => {
         Upload Avatar
       </ListItem>
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalContent w="fit-content" bg="gray" marginTop="90px">
-          <Form
-            style={{
-              border: "2px dashed green",
-              padding: "15px",
-              textAlign: "center",
-            }}
-            onSubmit={handleSubmit}
-          >
+        <ModalContent
+          border="2px dashed green"
+          p="15px"
+          m="auto"
+          bg="transparent"
+          w="fit-content"
+          textAlign="center"
+          color="goldenrod"
+        >
+          <Form onSubmit={handleSubmit}>
             <CloseIcon
               cursor="pointer"
               float="right"
@@ -110,8 +112,16 @@ const UploadForm = () => {
             />
             {selectedFileUrl ? (
               <>
+                <br />
                 <Img h="300px" w="300px" src={selectedFileUrl} alt="Selected" />
-                <Button type="submit">Upload</Button>
+                <HStack mt="10px" justifyContent="center">
+                  <Button type="submit" colorScheme="green">
+                    Upload
+                  </Button>
+                  <Button onClick={handleCloseClick} colorScheme="red">
+                    Cancel
+                  </Button>
+                </HStack>
               </>
             ) : (
               <>
@@ -121,7 +131,9 @@ const UploadForm = () => {
                   onChange={handleFileChange}
                   style={{ display: "none" }}
                 />
-                <Button onClick={handleUploadClick}>Upload Now</Button>
+                <Button onClick={handleUploadClick} colorScheme="green">
+                  Upload Now
+                </Button>
               </>
             )}
           </Form>
