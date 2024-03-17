@@ -1,0 +1,44 @@
+#logo {
+    border-left: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid rgba(255, 255, 255, 0.3);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+#notifications-list::-webkit-scrollbar {
+    width: 12px;
+}
+
+#notifications-list::-webkit-scrollbar-track {
+    background: #c2bebe;
+}
+
+#notifications-list::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 6px;
+}
+
+#notifications-list {
+    border-left: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid rgba(255, 255, 255, 0.3);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3);
+}
+
+a.active > img {
+    border: 2px dashed #FFBD0A !important;
+    padding: 10px;
+    border-radius: 10px;
+
+}
+
+a > img:hover {
+    border: 1px solid #FFBD0A;
+    padding: 10px;
+    border-radius: 10px;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}

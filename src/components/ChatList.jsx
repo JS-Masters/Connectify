@@ -1,5 +1,5 @@
 // import PropTypes from 'prop-types'
-import CreateChatPopUp from "./CreateChatPopUp";
+import CreateChatPopUp from "./CreateChatPopUp/CreateChatPopUp";
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../providers/AppContext";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,6 +19,7 @@ import {
 } from "../common/constants";
 
 const ChatList = () => {
+
   const { userData } = useContext(AppContext);
   const { chatId } = useParams();
   const navigate = useNavigate();

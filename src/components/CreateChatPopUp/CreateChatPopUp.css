@@ -1,0 +1,78 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap");
+/* @import url('https://fonts.googleapis.com/css2?family=Protest+Revolution&display=swap'); */
+/* @import url('https://fonts.googleapis.com/css2?family=Aladin&family=Amarante&family=Dancing+Script&family=Madimi+One&family=Oswald:wght@200..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Protest+Revolution&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Aladin&family=Amarante&family=Angkor&family=Dancing+Script&family=Madimi+One&family=Oswald:wght@200..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Protest+Revolution&display=swap');
+
+
+#new-chat-button {
+    border: 1px solid bisque;
+    padding: 15px;
+    border-radius: 5px;
+    padding-left: 23px;
+    padding-right: 23px;
+    font-size: 30px;
+    font-family: "Oswald", sans-serif;
+    color: bisque;
+    background-color: #6b6767;
+}
+
+#new-chat-button:hover {
+    opacity: 0.7;
+}
+
+.modal {
+    border-left: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid rgba(255, 255, 255, 0.3);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+/* #new-chat-button {
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal;
+} */
+
+#close-create-chat-button:hover {
+    opacity: 0.5;
+}
+
+#create-chat-input {
+    border: 2px solid black;
+    padding: 8px;
+    outline: none !important;
+}
+
+#create-chat-input:focus {
+    border: 2px solid bisque;
+    outline: none !important;
+}
+
+#create-chat-users-list::-webkit-scrollbar {
+    width: 12px;
+}
+
+#create-chat-users-list::-webkit-scrollbar-track {
+    background: #c2bebe;
+}
+
+#create-chat-users-list::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 6px;
+}
+
+#create-chat-button {
+    color: black;
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 40px;
+    background-color: transparent;
+}
+
+#create-chat-button:hover {
+    opacity: 0.6;
+}
+

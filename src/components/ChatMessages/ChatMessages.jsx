@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useParams } from "react-router";
-import { getChatMessagesById as listenForChatMessages } from "../services/chat.services";
-import ChatMessageBox from "./ChatMessageBox";
-import ChatInput from "./ChatInput";
+import { getChatMessagesById as listenForChatMessages } from "../../services/chat.services";
+import ChatMessageBox from "../ChatMessageBox/ChatMessageBox";
+import ChatInput from "../ChatInput";
 import { Box } from "@chakra-ui/react";
 import { v4 } from "uuid";
+import "./ChatMessages.css";
 
 const ChatMessages = () => {
 
@@ -47,7 +48,14 @@ const ChatMessages = () => {
 
   return (
     <>
-      <Box position='relative' overflowY='scroll' whiteSpace='nowrap' h='88%' w='70%'>
+      <Box 
+      id="chat-messages-box"
+      position='relative'
+        overflow="hidden"
+        overflowY="auto"
+        whiteSpace='nowrap'
+        h='88%'
+        w='70%'>
         {messages && (
           messages.map((message) => (
             isMessageFromSameAuthor(message) ? (

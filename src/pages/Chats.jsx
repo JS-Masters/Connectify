@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import ChatMessages from "../components/ChatMessages";
+import ChatMessages from "../components/ChatMessages/ChatMessages";
 import { Grid, GridItem } from "@chakra-ui/react";
 import ChatList from "../components/ChatList";
 
@@ -13,7 +13,7 @@ const Chats = () => {
         <ChatList />
       </GridItem>
       {chatId &&
-        <GridItem h='87vh' colSpan={3} border='2px solid green'>
+        <GridItem h='87vh' colSpan={3}>
           <ChatMessages />
         </GridItem>
       }

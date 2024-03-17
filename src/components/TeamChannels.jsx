@@ -7,7 +7,7 @@ import CreateChannelPopUp from "./CreateChannelPopUp";
 import AppContext from "../providers/AppContext";
 import TeamMembers from "./TeamMembers";
 // import TeamChannelContent from "./TeamChannelContent";
-import ChatMessages from "./ChatMessages";
+import ChatMessages from "./ChatMessages/ChatMessages";
 
 const TeamChannels = ({ selectedTeam }) => {
 

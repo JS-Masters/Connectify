@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Button, Card, HStack, Heading, Spacer, Text, Textarea, } from '@chakra-ui/react';
-import Reactions from './Reactions';
-import { deleteMessageFromChat, editMessageInChat, getRepliesByMessage, removeReactionFromMessage, replyToMessage } from '../services/chat.services';
+import Reactions from '../Reactions';
+import { deleteMessageFromChat, editMessageInChat, getRepliesByMessage, removeReactionFromMessage, replyToMessage } from '../../services/chat.services';
 import { v4 } from 'uuid';
 // import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
-import AppContext from '../providers/AppContext';
-import FilePreview from './FIlePreview';
+import AppContext from '../../providers/AppContext';
+import FilePreview from '../FIlePreview';
 // import ReplyMessage from "./ReplyMessage";
 import { useParams } from 'react-router-dom';
 import "./ChatMessageBox.css"

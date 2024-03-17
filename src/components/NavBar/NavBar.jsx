@@ -12,15 +12,15 @@ import {
   Box,
 } from "@chakra-ui/react";
 // import PropTypes from "prop-types";
-import Dropdown from "./Dropdown";
+import Dropdown from "../Dropdown";
 import { useContext, useState, useEffect } from "react";
-import AppContext from "../providers/AppContext";
+import AppContext from "../../providers/AppContext";
 import { Link, NavLink, useParams } from "react-router-dom";
 import {
   deleteNotification,
   deleteNotificationsForOpenChat,
   listenForNotificationsByUserHandle,
-} from "../services/chat.services";
+} from "../../services/chat.services";
 
 import useOnclickOutside from "react-cool-onclickoutside";
 import "./NavBar.css"
@@ -79,8 +79,8 @@ const NavBar = () => {
       <Box w='100vw' bg='#2b2b2b'>
         <Flex alignItems="center" maxW='1500px' m='auto'>
           <Image id="logo" src="/LOGO3.png" w="200px" cursor="pointer" margin='15px' />
-          <Spacer />
-          <HStack spacing="5%">
+          {/* <Spacer /> */}
+          <HStack spacing="12%" marginRight='23%' marginLeft='19%'>
             <NavLink to="/chats" style={{ minWidth: "100px" }}>
               <Image src="/chats-y.png" />
             </NavLink>
@@ -94,9 +94,9 @@ const NavBar = () => {
               <Image src="/calendar-y.png" />
             </NavLink>
           </HStack>
-          <Spacer />
+          {/* <Spacer /> */}
           <Avatar
-            onClick={() => setShowNotifications(!showNotifications)}
+            onClick={() => Boolean(notifications.length) && setShowNotifications(!showNotifications)}
             src="/bell.png"
             cursor="pointer"
             pos="relative"
@@ -107,13 +107,18 @@ const NavBar = () => {
             <List
               ref={ref}
               display={showNotifications ? "block" : "none"}
+              id="notifications-list"
               color="white"
               position="absolute"
+              zIndex='5'
               top="50px"
               left="auto"
-              overflow="scroll"
-              height="250px"
+              overflow="hidden"
+              overflowY="auto"
+              height="300px"
               width="300px"
+              border="1px solid gray"
+              borderRadius="10px"
             >
               {notifications.length > 0 &&
                 notifications
@@ -124,6 +129,7 @@ const NavBar = () => {
                       border="1px solid gray"
                       borderRadius="10px"
                       m="10px"
+                      ml='-3'
                       key={notification.id}
                       fontSize="sm"
                     >
@@ -132,7 +138,8 @@ const NavBar = () => {
                         pos="absolute"
                         right="0px"
                         top="0px"
-                        colorScheme="red"
+                        colorScheme="transperent"
+                        color="red"
                         size="xs"
                         onClick={() => {
                           handleDeleteNotification(notification.id);

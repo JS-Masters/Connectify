@@ -58,7 +58,7 @@ const UserStatusIcon = ({ userHandle, iconSize, toggleStatusMenu = () => {} }) =
           w={iconSize}
           h={iconSize}
           borderRadius="50%"
-          border="3px solid gray"
+          bg="gray"
         />}
     </>
   )
