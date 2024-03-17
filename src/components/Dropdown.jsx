@@ -16,20 +16,21 @@ import UploadForm from "./UploadForm";
 import {
   changeUserCurrentStatusInDb,
   changeUserLastStatusInDb,
-  getUserStatusByHandle,
   listenForStatusChange,
 } from "../services/user.services";
 import AppContext from "../providers/AppContext";
 import { statuses } from "../common/constants";
 import BlockedUsersPopUp from "../pages/BlockedUsersPopUp";
 import UserStatusIcon from "./UserStatusIconChats";
+import useOnclickOutside from "react-cool-onclickoutside";
 
 const Dropdown = ({ username = null, avatarUrl = null }) => {
   const [showDropdown, setShowDropdown] = useState(false);
-
   const { userData, setContext } = useContext(AppContext);
   const navigate = useNavigate();
   const toast = useToast();
+
+  const ref = useOnclickOutside(() => setShowDropdown(false));
 
   const [userIsInMeeting, setUserIsInMeeting] = useState(false);
 
@@ -71,6 +72,10 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
       <>
         <ListItem
           cursor="pointer"
+          m="10px"
+          border="1px solid gray"
+          borderRadius="10px"
+          p="5px"
           onClick={() => {
             changeUserCurrentStatusInDb(userData.handle, statuses.online);
             changeUserLastStatusInDb(userData.handle, statuses.online);
@@ -92,6 +97,10 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
         </ListItem>
         <ListItem
           cursor="pointer"
+          m="10px"
+          border="1px solid gray"
+          borderRadius="10px"
+          p="5px"
           onClick={() => {
             changeUserCurrentStatusInDb(userData.handle, statuses.doNotDisturb);
             changeUserLastStatusInDb(userData.handle, statuses.doNotDisturb);
@@ -116,8 +125,10 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
   };
 
   return (
-    <HStack pos="relative">
-      <Text style={{ cursor: "pointer" }}>{username}</Text>
+    <HStack pos="relative" m="0 20px">
+      <Text color="white" cursor="pointer">
+        {username}
+      </Text>
 
       <Avatar
         cursor="pointer"
@@ -131,24 +142,28 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
       </Avatar>
 
       <List
-        bg="black"
+        ref={ref}
         zIndex="5"
-        color="purple.400"
-        p="5px 0"
+        color="white"
         fontSize="md"
-        width="120px"
+        width="150px"
         pos="absolute"
-        display={showDropdown ? "flex" : "none"}
+        display={showDropdown ? "block" : "none"}
         flexDirection="column"
         alignItems="center"
-        top="100px"
-        left="-6px"
+        top="75px"
       >
         {!userIsInMeeting && renderStatusMenu()}
         <BlockedUsersPopUp />
         <UploadForm />
         <ListItem
           cursor="pointer"
+          border="1px solid gray"
+          borderRadius="10px"
+          m="8px"
+          fontSize="sm"
+          p="5px"
+          textAlign="center"
           onClick={() => {
             signOut();
             setShowDropdown(false);

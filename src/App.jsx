@@ -13,7 +13,11 @@ import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import { auth, db } from "./config/firebase-config";
-import { changeUserCurrentStatusInDb, getUserData, getUserLastStatusByHandle } from "./services/user.services";
+import {
+  changeUserCurrentStatusInDb,
+  getUserData,
+  getUserLastStatusByHandle,
+} from "./services/user.services";
 import Chats from "./pages/Chats";
 import Calls from "./pages/Calls";
 import ChatMessages from "./components/ChatMessages";
@@ -22,7 +26,13 @@ import Teams from "./pages/Teams";
 import LandingPage from "./pages/LandingPage";
 import { addUserToCall } from "./services/dyte.services";
 import SingleCallRoom from "./components/SingleCallRoom";
-import { changeIncomingCallStatus, endCall, listenForIncomingCalls, listenForRejectedCalls, setUserHasRejectedCall } from "./services/call.services";
+import {
+  changeIncomingCallStatus,
+  endCall,
+  listenForIncomingCalls,
+  listenForRejectedCalls,
+  setUserHasRejectedCall,
+} from "./services/call.services";
 import { Button, useToast } from "@chakra-ui/react";
 import { v4 } from "uuid";
 import { ATENDED_STATUS, WAITING_STATUS, statuses } from "./common/constants";
@@ -36,15 +46,71 @@ const router = createBrowserRouter(
       <Route path="welcome" element={<LandingPage />} />
       <Route path="sign-in" element={<SignIn />} />
       <Route path="sign-up" element={<SignUp />} />
-      <Route index element={<Authenticated><Home /></Authenticated>} />
-      <Route path="chats" element={<Authenticated><Chats /></Authenticated>} />
-      <Route path="chats/:chatId" element={<Authenticated><Chats /></Authenticated>} />
-      <Route path="calls" element={<Authenticated><Calls /></Authenticated>} />
+      <Route
+        index
+        element={
+          <Authenticated>
+            <Home />
+          </Authenticated>
+        }
+      />
+      <Route
+        path="chats"
+        element={
+          <Authenticated>
+            <Chats />
+          </Authenticated>
+        }
+      />
+      <Route
+        path="chats/:chatId"
+        element={
+          <Authenticated>
+            <Chats />
+          </Authenticated>
+        }
+      />
+      <Route
+        path="calls"
+        element={
+          <Authenticated>
+            <Calls />
+          </Authenticated>
+        }
+      />
       {/* <Route path="calls/:id" element={<Authenticated><Calls /></Authenticated>} /> */}
-      <Route path="teams" element={<Authenticated><Teams /></Authenticated>} />
-      <Route path="teams/:teamId" element={<Authenticated><Teams /></Authenticated>} />
-      <Route path="teams/:teamId/channels/:chatId" element={<Authenticated><Teams /></Authenticated>} />
-      <Route path="calendar" element={<Authenticated><Calendar /></Authenticated>} />
+      <Route
+        path="teams"
+        element={
+          <Authenticated>
+            <Teams />
+          </Authenticated>
+        }
+      />
+      <Route
+        path="teams/:teamId"
+        element={
+          <Authenticated>
+            <Teams />
+          </Authenticated>
+        }
+      />
+      <Route
+        path="teams/:teamId/channels/:chatId"
+        element={
+          <Authenticated>
+            <Teams />
+          </Authenticated>
+        }
+      />
+      <Route
+        path="calendar"
+        element={
+          <Authenticated>
+            <Calendar />
+          </Authenticated>
+        }
+      />
     </Route>
   )
 );
@@ -58,9 +124,9 @@ const App = () => {
 
   const [user] = useAuthState(auth);
   const [userData, setUserData] = useState(null);
-  const [incomingToken, setIncomingToken] = useState('');
+  const [incomingToken, setIncomingToken] = useState("");
   const [incomingCall, setIncomingCall] = useState([]);
-  const [joinedCallDyteId, setJoinedCallDyteId] = useState('');
+  const [joinedCallDyteId, setJoinedCallDyteId] = useState("");
   const toast = useToast();
 
   const showToast = (desc, status) => {
@@ -80,7 +146,10 @@ const App = () => {
         .then((snapshot) => {
           if (snapshot.exists()) {
             const oldUserData = snapshot.val()[Object.keys(snapshot.val())[0]];
-            changeUserCurrentStatusInDb(oldUserData.handle, oldUserData.lastStatus);
+            changeUserCurrentStatusInDb(
+              oldUserData.handle,
+              oldUserData.lastStatus
+            );
           }
         })
         .then(() => getUserData(user.uid))
@@ -106,22 +175,30 @@ const App = () => {
       const unsubscribe = listenForIncomingCalls((snapshot) => {
         if (snapshot.exists()) {
           const incomingCalls = snapshot.val();
-          const callsWaiting = Object.values(incomingCalls).filter((call) => call.status === WAITING_STATUS);
+          const callsWaiting = Object.values(incomingCalls).filter(
+            (call) => call.status === WAITING_STATUS
+          );
           if (callsWaiting.length > 0) {
             callsWaiting.map((call) => {
-              setIncomingCall([{ callId: call.id, dyteRoomId: call.dyteRoomId, caller: call.caller }]);
-            })
+              setIncomingCall([
+                {
+                  callId: call.id,
+                  dyteRoomId: call.dyteRoomId,
+                  caller: call.caller,
+                },
+              ]);
+            });
           } else {
             setIncomingCall([]);
           }
           // логиката тук е само ако има 1 обект с обаждане в incomingCalls във Firebase
         } else {
           setIncomingCall([]);
-        };
+        }
       }, user.uid);
 
       return () => unsubscribe();
-    };
+    }
   }, [user]);
 
   useEffect(() => {
@@ -129,30 +206,33 @@ const App = () => {
       const unsubscribe = listenForRejectedCalls((snapshot) => {
         if (snapshot.exists()) {
           const userDocument = snapshot.val();
-          if ('hasRejectedCall' in userDocument) {
-            showToast('Your call was rejected. You may leave the call room', 'info');
+          if ("hasRejectedCall" in userDocument) {
+            showToast(
+              "Your call was rejected. You may leave the call room",
+              "info"
+            );
             remove(ref(db, `users/${userData.handle}/hasRejectedCall`));
-          };
-        };
+          }
+        }
       }, userData.handle);
 
       return () => unsubscribe();
-    };
+    }
   }, [user]);
 
   useEffect(() => {
-    window.addEventListener('beforeunload', handleTabClose);
+    window.addEventListener("beforeunload", handleTabClose);
 
-    return () => window.removeEventListener('beforeunload', handleTabClose);
+    return () => window.removeEventListener("beforeunload", handleTabClose);
   }, [userData]);
 
   const handleTabClose = async () => {
     try {
-      await logoutUser(); 
+      await logoutUser();
       await changeUserCurrentStatusInDb(userData.handle, statuses.offline);
       // setContext({ user: null, userData: null });
     } catch (error) {
-      console.error('Error updating user status:', error);
+      console.error("Error updating user status:", error);
     }
   };
 
@@ -176,45 +256,49 @@ const App = () => {
       setIncomingCall([]);
     } catch (error) {
       console.log(error.message);
-    };
+    }
   };
 
   const leaveCall = () => {
-
     endCall(userData, joinedCallDyteId)
       .then(() => getUserLastStatusByHandle(userData.handle))
       .then((previousStatus) => {
-        changeUserCurrentStatusInDb(userData.handle, previousStatus)
+        changeUserCurrentStatusInDb(userData.handle, previousStatus);
       })
       .then(() => {
-        setIncomingToken('');
-        setJoinedCallDyteId('');
+        setIncomingToken("");
+        setJoinedCallDyteId("");
       })
-      .catch((error) => console.log(error.message))
-
-
+      .catch((error) => console.log(error.message));
   };
 
   return (
-    <div>
-
-    
+    <>
       <AppContext.Provider value={{ ...context, setContext, setNotifications }}>
         <RouterProvider router={router} />
         {/* component with switch case which takes {modal id, props} and returns modal */}
       </AppContext.Provider>
-      {Boolean(incomingCall.length) && incomingCall.map((call) => { // ако има статус за in a meeting този мап също не е необходим !??
-        return <div key={v4()}>
-          <h3>{call.caller} is Calling</h3>
-          <Button onClick={() => joinCall(call.dyteRoomId, call.callId)}>ANSWER</Button>
-          <Button onClick={() => rejectCall(call.callId, call.caller)}>REJECT</Button>
-        </div>
-      })}
-      {incomingToken &&
-        <div style={{ height: '50vh', width: 'auto' }} >
+      {Boolean(incomingCall.length) &&
+        incomingCall.map((call) => {
+          // ако има статус за in a meeting този мап също не е необходим !??
+          return (
+            <div key={v4()}>
+              <h3>{call.caller} is Calling</h3>
+              <Button onClick={() => joinCall(call.dyteRoomId, call.callId)}>
+                ANSWER
+              </Button>
+              <Button onClick={() => rejectCall(call.callId, call.caller)}>
+                REJECT
+              </Button>
+            </div>
+          );
+        })}
+      {incomingToken && (
+        <div style={{ height: "50vh", width: "auto" }}>
           <SingleCallRoom token={incomingToken} leaveCall={leaveCall} />
-        </div >}
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 export default App;

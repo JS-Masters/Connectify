@@ -80,7 +80,16 @@ const UploadForm = () => {
 
   return (
     <>
-      <ListItem onClick={onOpen} cursor="pointer">
+      <ListItem
+        onClick={onOpen}
+        cursor="pointer"
+        m="8px"
+        border="1px solid gray"
+        borderRadius="10px"
+        fontSize="sm"
+        p="5px"
+        textAlign="center"
+      >
         Upload Avatar
       </ListItem>
       <Modal isOpen={isOpen} onClose={onClose}>

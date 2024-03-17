@@ -64,7 +64,19 @@ const BlockedUsersPopUp = () => {
   return (
     <>
       <Popup
-        trigger={<ListItem cursor="pointer">Blocked Users</ListItem>}
+        trigger={
+          <ListItem
+            cursor="pointer"
+            border="1px solid gray"
+            borderRadius="10px"
+            p="5px"
+            fontSize="sm"
+            m="8px"
+            textAlign="center"
+          >
+            Blocked Users
+          </ListItem>
+        }
         modal
         nested
       >

@@ -1,22 +1,20 @@
-import NavBar from "../components/NavBar/NavBar";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import NavBar from "../components//NavBar";
 import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
   return (
-    <div style={{backgroundColor:'gray'}}>
-
-        <NavBar />
-
-        <Outlet />
- </div>
+    <Box bg="#242424" h="100vh">
+      <NavBar />
+      <Outlet />
+    </Box>
   );
 };
 
 export default RootLayout;
 
-
-{/* <Grid templateColumns="repeat(6, 1fr)" bg="gray.50" backgroundColor='black'>
+{
+  /* <Grid templateColumns="repeat(6, 1fr)" bg="gray.50" backgroundColor='black'>
 <GridItem
   as="nav"
   colSpan={6}
@@ -33,4 +31,5 @@ export default RootLayout;
 <GridItem as="main" colSpan={6} height='90vh' backgroundColor='gray'>
   <Outlet />
 </GridItem>
-</Grid> */}
+</Grid> */
+}
