@@ -7,7 +7,7 @@ const RootLayout = () => {
     <>
       <NavBar />
       <Box
-        bgImage={`url(${"../../public/background.jpg"})`}
+        bgImage={`url(${"/background.jpg"})`}
         h="89vh"
         maxW="1500px"
         m="auto"
