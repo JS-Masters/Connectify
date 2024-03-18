@@ -2,12 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import CreateTeamPopUp from "../../components/CreateTeamPopUp/CreateTeamPopUp";
 import AppContext from "../../providers/AppContext";
 import { getTeamById, leaveTeam, listenForTeamsByUserHandle } from "../../services/team.services";
-import { Box, Button, Flex, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Grid, GridItem, HStack, Text } from "@chakra-ui/react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
-import TeamChannels from "../../components/TeamChannels";
+import TeamChannels from "../../components/TeamChannels/TeamChannels";
 import { v4 } from "uuid";
 import CreateMeetingPopUp from "../../components/CreateMeetingPopUp";
 import "./Teams.css";
+import TeamMembers from "../../components/TeamMembers";
+import ChatMessages from "../../components/ChatMessages/ChatMessages";
 
 const Teams = () => {
 
@@ -60,9 +62,28 @@ const Teams = () => {
         </HStack>
       </Flex>
 
-      {teamId && <TeamChannels selectedTeam={selectedTeam} />}
-      {teamId && selectedTeam.owner === userData.handle && <CreateMeetingPopUp teamName={selectedTeam.teamName} />}
-      {teamId && selectedTeam.owner !== userData.handle && <Button onClick={handleLeaveTeamClick} style={{ color: 'red' }}>Leave Team</Button>}
+      <Grid templateColumns="repeat(5, 1fr)">
+        <GridItem h='70vh' w='30vh' as='aside' colSpan={1}>
+          {teamId && <TeamChannels selectedTeam={selectedTeam} />}
+        </GridItem>
+        <GridItem h='70vh'  colSpan={3}>
+        {chatId && <ChatMessages />}
+        </GridItem>
+        {chatId &&
+          <GridItem h='70vh' colSpan={1}>
+            <TeamMembers selectedTeam={selectedTeam} />
+            {teamId && selectedTeam.owner === userData.handle ?
+            <CreateMeetingPopUp teamName={selectedTeam.teamName} />
+            : <Button onClick={handleLeaveTeamClick} style={{ color: 'red' }}>Leave Team</Button>}
+          </GridItem>
+        }
+      </Grid>
+
+
+
+
+
+
     </>
   );
 };

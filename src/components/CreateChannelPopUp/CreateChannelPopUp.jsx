@@ -1,9 +1,10 @@
 import { Button, Input, useToast } from "@chakra-ui/react"
 import { useContext, useState } from "react";
 import Popup from 'reactjs-popup';
-import AppContext from "../providers/AppContext";
-import { addChannelToTeam } from "../services/channel.servicies";
+import AppContext from "../../providers/AppContext";
+import { addChannelToTeam } from "../../services/channel.servicies";
 import { useNavigate, useParams } from "react-router-dom";
+import "./CreateChannelPopUp.css";
 
 const CreateChannelPopUp = () => {
 
@@ -48,24 +49,27 @@ const CreateChannelPopUp = () => {
 
   return (
     <Popup trigger=
-      {<Button style={{ width: '150px', height: '45px', backgroundColor: 'green', display:'block' }}>+</Button>}
+      {<Button id="new-channel-button" marginBottom='50px'>New Channel</Button>}
       modal nested>
       {
         close => (
-          <div className='modal'>
-            <Button style={{ float: "right", margin: "15px" }} onClick=
+          <div className='modal' style={{ width: '500px', height: '250px', backgroundImage: "url('/pop-up-background2.jpg')" }}>
+            <Button id="close-create-channel-button" size='sm' style={{ float: "right", margin: "10px", backgroundColor: 'transparent' }} onClick=
               {() => handlePopUpClose(close)}>
               X
             </Button>
-            <div style={{ width: '300px', height: '300px', border: '2px solid black', padding: "30px" }} className='content'>
+            <div className='content' style={{ padding: "0 35px" }}>
               <Input
+                id="create-channel-input"
                 type="text"
                 value={channelName}
                 onChange={updateChannelNameInputField}
                 placeholder="Channel name..."
               />
               <br />
-              <Button onClick={() => handleCreateChannelClick(close)}>Create Channel</Button>
+              <Button id="create-channel-button" onClick={() => handleCreateChannelClick(close)}
+                style={{ position: 'absolute', bottom: '0', marginBottom: '60px', marginLeft: '20px' }}
+              >Create Channel</Button>
             </div>
           </div>
         )

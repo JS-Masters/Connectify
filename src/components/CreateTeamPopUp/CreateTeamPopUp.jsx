@@ -138,7 +138,7 @@ const CreateTeamPopUp = () => {
     >
       {
         close => (
-          <div className='modal' style={{ width: '500px', height: '700px', backgroundColor: '#6b6767' }}>
+          <div className='modal' style={{ width: '500px', height: '700px', backgroundImage: "url('/pop-up-background2.jpg')" }}>
             <Button id="close-create-team-button" size='sm' style={{ float: "right", margin: "10px", backgroundColor: 'transparent' }} onClick=
               {() => handlePopUpClose(close)}>
               X

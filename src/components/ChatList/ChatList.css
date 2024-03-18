@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Aladin&family=Amarante&family=Angkor&family=Dancing+Script&family=Madimi+One&family=Oswald:wght@200..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Protest+Revolution&display=swap');
 
 .chat-list-box {
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    border: 3px solid transparent;
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     margin-top: 15px;
+    margin-left: 20px;
   }
 
 .single-chat-box:hover {

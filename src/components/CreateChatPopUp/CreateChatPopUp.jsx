@@ -83,7 +83,7 @@ const CreateChatPopUp = () => {
       closeOnEscape={false}>
       {
         close => (
-          <div className='modal' style={{ width: '500px', height: '500px', backgroundColor: '#6b6767' }}>
+          <div className='modal' style={{ width: '500px', height: '500px', backgroundImage: "url('/pop-up-background2.jpg')"}}>
             <Button id="close-create-chat-button" size='sm' style={{ float: "right", margin: "10px", backgroundColor: 'transparent' }} onClick=
               {() => handlePopUpClose(close)}>
               X

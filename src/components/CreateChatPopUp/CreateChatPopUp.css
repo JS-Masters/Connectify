@@ -18,11 +18,23 @@
     color: green;
 }
 
+#create-chat-input::placeholder {
+    color: black;
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#create-chat-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+
+}
+
 #new-chat-button:hover {
-    -webkit-backdrop-filter: blur(5px); 
-     backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
     box-shadow: 4px 4px 60px #739A66;
-    }
+}
 
 .modal {
     border-left: 3px solid rgba(255, 255, 255, 0.3);
@@ -31,13 +43,9 @@
     backdrop-filter: blur(5px);
     box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3);
     border-radius: 10px;
+    background-color: #6b6767;
 }
 
-/* #new-chat-button {
-    font-family: "Angkor", serif;
-    font-weight: 400;
-    font-style: normal;
-} */
 
 #close-create-chat-button:hover {
     opacity: 0.5;
@@ -47,6 +55,9 @@
     border: 2px solid black;
     padding: 8px;
     outline: none !important;
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 #create-chat-input:focus {
@@ -85,4 +96,3 @@
     font-weight: 400;
     font-style: normal;
 }
-
