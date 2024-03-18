@@ -50,19 +50,14 @@ const Teams = () => {
         <HStack id="teams-hstack" spacing="5%" overflow="hidden" overflowX="auto" >
           {Boolean(teams.length) && teams.map((team) => <NavLink key={v4()} to={`/teams/${team.id}`}
             style={{ textAlign: 'center' }}
-
           >
-            <Box id="team-name-box" style={{ display:'flex', alignItems:'center', border: '1px solid bisque', borderRadius:'10px', color: 'white', width: '150px', height: '74px', marginBottom: '12px', marginTop:'40px' }}>
+            <Box id="team-name-box" style={{ display: 'flex', alignItems: 'center', border: '1px solid bisque', borderRadius: '10px', color: 'white', width: '150px', height: '74px', marginBottom: '12px', marginTop: '40px' }}>
               <Text m='auto'>
                 {team.teamName}
               </Text>
-
             </Box>
-
           </NavLink>)}
         </HStack>
-
-
       </Flex>
 
       {teamId && <TeamChannels selectedTeam={selectedTeam} />}

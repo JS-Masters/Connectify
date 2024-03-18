@@ -43,7 +43,6 @@ const CreateChatPopUp = () => {
     }
   }, [searchField, users]);
 
-  // const formattedSelection = () => selectedUsers.length > 0 ? selectedUsers.join(", ") : "";
 
   const updateSelectedUsers = (userHandle) => {
     if (selectedUsers.includes(userHandle)) {
@@ -117,30 +116,31 @@ const CreateChatPopUp = () => {
                       />
                     </Tag>
                   ))
-                  : <p style={{ display: 'inline-block', marginTop: '10px', marginLeft: '125px', marginBottom:'10px', color:'bisque' }}>No users selected yet!</p>}
+                  : <p style={{ display: 'inline-block', marginTop: '10px', marginLeft: '125px', marginBottom: '10px', color: '#611f26', fontWeight: 'bold' }}>No users selected yet!</p>}
               </div>
               <List
-              id="create-chat-users-list"
+                id="create-chat-users-list"
                 overflow="hidden"
                 overflowY="auto"
-                style={{ border: '2px solid black', borderRadius:'10px', height: '275px', padding:'10px',  }}>
-                {searchField && Boolean(foundUsers.length) &&
+                style={{ border: '2px solid black', borderRadius: '10px', height: '275px', padding: '2px', }}>
+                {Boolean(foundUsers.length) &&
                   foundUsers.map((user) => (
                     <ListItem
+                      className="create-form-user"
                       key={v4()}
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: "pointer", border: '1px solid transparent', borderRadius: '5px', padding: '2px' }}
                       onClick={() => updateSelectedUsers(user.handle)}
                     >
                       <Avatar size='md' src={user.avatarUrl}>
-                        <AvatarBadge  bg="teal.500" >{<UserStatusIcon userHandle={user.handle} iconSize={'10px'} />}</AvatarBadge>
+                        <AvatarBadge bg="teal.500" >{<UserStatusIcon userHandle={user.handle} iconSize={'10px'} />}</AvatarBadge>
                       </Avatar>
-                      <span className="user-handle-span" style={{margin:'10px', fontSize:'20px'}}>{user.handle}</span>
-                      <AddIcon style={{ padding: '3px', marginLeft: '5px', color: 'rgb(38, 70, 9)', border: '1px solid rgb(38, 70, 9)', borderRadius: '5px', width:'30px', height:'30px' }} />
+                      <span className="user-handle-span" style={{ margin: '10px', fontSize: '20px' }}>{user.handle}</span>
+                      {/* <AddIcon style={{ padding: '3px', marginLeft: '5px', color: 'rgb(38, 70, 9)', border: '1px solid rgb(38, 70, 9)', borderRadius: '5px', width:'30px', height:'30px' }} /> */}
                     </ListItem>
                   ))}
               </List>
               <br />
-              <Button id="create-chat-button" onClick={() => handleCreateChatClick(close)} style={{ position: 'absolute', bottom: '0', marginBottom: '25px', marginLeft: '80px'}}>CONNECT</Button>
+              <Button id="create-chat-button" onClick={() => handleCreateChatClick(close)} style={{ position: 'absolute', bottom: '0', marginBottom: '25px', marginLeft: '80px' }}>CONNECT</Button>
             </div>
           </div>
         )
