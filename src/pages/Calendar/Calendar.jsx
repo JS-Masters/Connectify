@@ -9,6 +9,8 @@ import AppContext from '../../providers/AppContext'
 import { getMeetingsByUserHandle, joinMeeting, listenForMeetingsByUserHandle } from '../../services/meeting.services'
 import SingleCallRoom from '../../components/SingleCallRoom'
 import { changeUserCurrentStatusInDb, getUserLastStatusByHandle } from '../../services/user.services'
+import { Box } from '@chakra-ui/react'
+// import enLocale from '@fullcalendar/core/locales/en';
 
 const Calendar = () => {
 
@@ -64,7 +66,7 @@ const Calendar = () => {
   const handleJoinMeeting = (dyteRoomId) => {
     joinMeeting(dyteRoomId, userData, (data) => setMeetingToken(data));
   };
-  
+
   const leaveMeeting = () => {
     getUserLastStatusByHandle(userData.handle)
       .then((previousStatus) => {
@@ -90,39 +92,35 @@ const Calendar = () => {
   return (
     <>
       {(meetings.length > 0 || userHasNoTeams) &&
-        <div > {/* we can add styles to this div (change calendar size for example !!!) */}
-          <div className='demo-app'>
-            <Sidebar
-              weekendsVisible={weekendsVisible}
-              handleWeekendsToggle={handleWeekendsToggle}
-              currentEvents={currentEvents}
+        <Box id='calendar-main-box' w='89%'>
+          <Sidebar
+            weekendsVisible={weekendsVisible}
+            handleWeekendsToggle={handleWeekendsToggle}
+            currentEvents={currentEvents}
+          />
+          <div id='calendar-box' className='demo-app-main'>
+            <FullCalendar
+              height='100%'
+              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+              headerToolbar={{
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+              }}   
+              initialView='timeGridWeek'
+            
+              editable={false}
+              selectable={false}
+              selectMirror={true}
+              dayMaxEvents={true}
+              weekends={weekendsVisible}
+              initialEvents={meetings}
+              eventContent={renderEventContent}
+              eventsSet={handleEvents} // called after events are initialized/added/changed/removed
             />
-            <div className='demo-app-main'>
-              <FullCalendar
-                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                headerToolbar={{
-                  left: 'prev,next today',
-                  center: 'title',
-                  right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                }}
-                initialView='timeGridWeek'
-                editable={false}
-                selectable={false}
-                selectMirror={true}
-                dayMaxEvents={true}
-                weekends={weekendsVisible}
-                initialEvents={meetings}
-                eventContent={renderEventContent}
-                eventsSet={handleEvents} // called after events are initialized/added/changed/removed
-              /* you can update a remote database when these fire:
-              eventAdd={function(){}}
-              eventChange={function(){}}
-              eventRemove={function(){}}
-              */
-              />
-            </div>
           </div>
-        </div>}
+
+        </Box>}
       {meetingToken &&
         <div style={{ height: '50vh', width: 'auto' }} >
           <SingleCallRoom token={meetingToken} leaveCall={leaveMeeting} />

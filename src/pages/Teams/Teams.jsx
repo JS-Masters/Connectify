@@ -18,7 +18,7 @@ import {
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import TeamChannels from "../../components/TeamChannels/TeamChannels";
 import { v4 } from "uuid";
-import CreateMeetingPopUp from "../../components/CreateMeetingPopUp";
+import CreateMeetingPopUp from "../../components/CreateMeetingPopUp/CreateMeetingPopUp";
 import "./Teams.css";
 import TeamMembers from "../../components/TeamMembers";
 import ChatMessages from "../../components/ChatMessages/ChatMessages";

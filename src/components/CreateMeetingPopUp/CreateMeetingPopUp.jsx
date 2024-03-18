@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import Popup from "reactjs-popup";
-import Sidebar from "../pages/Calendar/CalendarSidebar";
+import Sidebar from "../../pages/Calendar/CalendarSidebar";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -8,7 +8,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
-import { createDyteMeeting, createMeetingInDb, deleteMeeting, getMeetingsByTeamId } from "../services/meeting.services";
+import { createDyteMeeting, createMeetingInDb, deleteMeeting, getMeetingsByTeamId } from "../../services/meeting.services";
 
 
 
@@ -104,13 +104,14 @@ const CreateMeetingPopUp = ({ teamName }) => {
             <div style={{ width: '1100px', height: '800px', border: '2px solid black', backgroundColor: 'bisque' }} className='content'>
               <h1 style={{ textAlign: 'center', fontSize: '24px' }}>{teamName}</h1>
               <div className='demo-app'>
-                <Sidebar
+                {/* <Sidebar
                   weekendsVisible={weekendsVisible}
                   handleWeekendsToggle={handleWeekendsToggle}
                   currentEvents={currentEvents}
-                />
-                <div className='demo-app-main'>
+                /> */}
+                <div id="pop-up-calendar" className='demo-app-main' >
                   <FullCalendar
+                  height='650px'
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     headerToolbar={{
                       left: 'prev,next today',

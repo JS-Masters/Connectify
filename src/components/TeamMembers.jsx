@@ -21,7 +21,6 @@ import {
 } from "@chakra-ui/react";
 import UserStatusIcon from "./UserStatusIconChats";
 import { useParams } from "react-router-dom";
-import { v4 } from "uuid";
 import AddMemberToTeamPopUp from "./AddMemberToTeamPopUp";
 import AppContext from "../providers/AppContext";
 import { ChatIcon, PhoneIcon } from "@chakra-ui/icons";
@@ -119,7 +118,7 @@ const TeamMembers = ({ selectedTeam }) => {
       })
       .catch((error) => console.log(error.message));
   };
-  // console.log(teamOwner);
+
   return (
     <>
       {teamOwner && (
@@ -138,7 +137,16 @@ const TeamMembers = ({ selectedTeam }) => {
             <Heading display="inline" as="h3" size="sm" color="white">
               {teamOwner.handle}
             </Heading>
-            <Image src="/crown.png" w="40px" h="40px" display="inline" />
+            <Image src="/crown.png" w="28px" h="28px" display="inline" />
+            {userData.handle !== teamOwner.handle &&
+              <PhoneIcon
+                onClick={() => startCall(member.handle)}
+                float="right"
+                m="5px"
+                cursor="pointer"
+                color="green"
+                fontSize="23px"
+              />}
           </HStack>
 
           {teamMembers
@@ -165,6 +173,7 @@ const TeamMembers = ({ selectedTeam }) => {
                     m="5px"
                     cursor="pointer"
                     color="green"
+                    fontSize="23px"
                   />
                 )}
                 <br />

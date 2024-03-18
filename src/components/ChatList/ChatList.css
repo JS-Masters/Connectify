@@ -36,3 +36,8 @@
     font-size: 20px;
     color: bisque;
 }
+
+#leave-chat-button:hover {
+color: red;
+opacity: 1;
+}

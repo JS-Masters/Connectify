@@ -137,35 +137,16 @@ const ChatList = () => {
                     </AvatarBadge>
                   </Avatar>
                 )
-                //     < HStack key = { v4() } style = {{ marginRight: "10px", justifyContent: 'left' }}>
-                //   <Avatar
-                //     size="md"
-                //     style={{ cursor: "pointer", marginRight: "10px" }}
-                //     src={member.avatarUrl}
-                //   >
-                //     <AvatarBadge bg="teal.500" >
-                //       {
-                //         <UserStatusIcon
-                //           userHandle={member.handle}
-                //           iconSize={"10px"}
-                //         />
-                //       }
-                //     </AvatarBadge>
-                //   </Avatar>
-                //   {chatMembers.length <= 1 && (
-                //     <Heading id="chat-member-handle" display="inline" as="h3" size="sm">
-                //       {member.handle}
-                //     </Heading>
-                //   )}
-                // </HStack>
               ))}
               <Button
+              id="leave-chat-button"
+              // title="LEAVE CHAT"
                 cursor="pointer"
                 pos="absolute"
                 right="0px"
                 top="0px"
                 colorScheme="transperent"
-                color="red"
+                color="#611f26"
                 size="xs"
                 onClick={() => handleLeaveChatClick(chatID, userData.handle)}
               >
