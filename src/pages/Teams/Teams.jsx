@@ -49,11 +49,14 @@ const Teams = () => {
         <Box>
           <CreateTeamPopUp />
         </Box>
-        <HStack id="teams-hstack" spacing="5%" overflow="hidden" overflowX="auto" >
-          {Boolean(teams.length) && teams.map((team) => <NavLink key={v4()} to={`/teams/${team.id}`}
-            style={{ textAlign: 'center' }}
+        <HStack id="teams-hstack" spacing="4%" overflow="hidden" overflowX="auto" >
+          {Boolean(teams.length) && teams.map((team) => <NavLink
+            to={`/teams/${team.id}`}
+            key={v4()}
+            className='team-name-nav'
+            style={{ textAlign: 'center', marginBottom: '12px', marginTop: '40px', border: '2px solid bisque', borderRadius: '10px', }}
           >
-            <Box id="team-name-box" style={{ display: 'flex', alignItems: 'center', border: '1px solid bisque', borderRadius: '10px', color: 'white', width: '150px', height: '74px', marginBottom: '12px', marginTop: '40px' }}>
+            <Box id="team-name-box" style={{ display: 'flex', alignItems: 'center', color: 'white', width: '150px', height: '74px' }}>
               <Text m='auto'>
                 {team.teamName}
               </Text>
@@ -62,26 +65,22 @@ const Teams = () => {
         </HStack>
       </Flex>
 
-      <Grid templateColumns="repeat(5, 1fr)">
+      {teamId && <Grid templateColumns="repeat(5, 1fr)">
         <GridItem h='70vh' w='30vh' as='aside' colSpan={1}>
-          {teamId && <TeamChannels selectedTeam={selectedTeam} />}
+          <TeamChannels selectedTeam={selectedTeam} />
         </GridItem>
-        <GridItem h='70vh'  colSpan={3}>
-        {chatId && <ChatMessages />}
+        <GridItem h='70vh' colSpan={3}>
+          {chatId && <ChatMessages />}
         </GridItem>
-        {chatId &&
+        {selectedTeam &&
           <GridItem h='70vh' colSpan={1}>
             <TeamMembers selectedTeam={selectedTeam} />
-            {teamId && selectedTeam.owner === userData.handle ?
-            <CreateMeetingPopUp teamName={selectedTeam.teamName} />
-            : <Button onClick={handleLeaveTeamClick} style={{ color: 'red' }}>Leave Team</Button>}
+            {selectedTeam.owner === userData.handle ?
+              <CreateMeetingPopUp teamName={selectedTeam.teamName} />
+              : <Button onClick={handleLeaveTeamClick} style={{ color: 'red' }}>Leave Team</Button>}
           </GridItem>
         }
-      </Grid>
-
-
-
-
+      </Grid>}
 
 
     </>

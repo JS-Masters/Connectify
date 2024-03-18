@@ -1,21 +1,19 @@
 import PropTypes from 'prop-types'
-
 import { useContext, useState } from "react";
 import { Form, useParams } from "react-router-dom";
-import { addMessageToChat } from "../services/chat.services";
-import AppContext from "../providers/AppContext";
-
+import { addMessageToChat } from "../../services/chat.services";
+import AppContext from "../../providers/AppContext";
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { Box, Input } from "@chakra-ui/react";
 import { FaRegSmile } from "react-icons/fa";
 import { SlPicture } from "react-icons/sl";
 import { PiGifFill } from "react-icons/pi";
-import { uploadMessageFile } from "../services/storage.service";
+import { uploadMessageFile } from "../../services/storage.service";
 import { DeleteIcon } from "@chakra-ui/icons";
-import Giphy from './Giphy/Giphy';
-import FilePreview from './FIlePreview';
-
+import Giphy from '../Giphy/Giphy';
+import FilePreview from '../FIlePreview';
+import "./ChatInput.css";
 
 
 const ChatInput = () => {
@@ -57,7 +55,9 @@ const ChatInput = () => {
   };
 
   return (
-    <Form onSubmit={sendMessage} style={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'space-around', marginTop: '5px', width: '40%', backgroundColor: 'transparent', color: 'white', padding: '10px', borderRadius: '5px' }}>
+    <Form onSubmit={sendMessage}
+      id='chat-input-form'
+      style={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'space-around', marginTop: '5px', width: '40%', backgroundColor: 'transparent', color: 'white', padding: '10px', borderRadius: '5px' }}>
       {isPickerVisible &&
         <Box position='absolute' top='-430px' right='0'>
           <Picker data={data} previewPosition='none' onEmojiSelect={(e) => {
@@ -71,8 +71,8 @@ const ChatInput = () => {
           <DeleteIcon position="absolute" cursor='pointer' top="5px" right="5px" color="red.500" onClick={() => { setFileUrl('') }} />
         </Box>}
       {giphy && <Giphy handleGif={handleGif} />}
-      <Input value={msg} onChange={(event) => setMsg(event.target.value)} placeholder="type here..." w='80%' />
-      <FaRegSmile onClick={() => { setGiphy(false); setPickerVisible(!isPickerVisible) }} style={{ fontSize: '30px', cursor: 'pointer', color:'#FFBD0A' }} />
+      <Input id='new-message-input' value={msg} onChange={(event) => setMsg(event.target.value)} placeholder="type here..." w='80%' />
+      <FaRegSmile onClick={() => { setGiphy(false); setPickerVisible(!isPickerVisible) }} style={{ fontSize: '30px', cursor: 'pointer', color: '#FFBD0A' }} />
       <label htmlFor="file" onClick={() => { setGiphy(false); setPickerVisible(false) }} style={{ fontSize: '30px', cursor: 'pointer' }}><SlPicture /></label>
       <Input type="file" id="file" style={{ display: 'none' }} onChange={handleFile} />
       <label style={{

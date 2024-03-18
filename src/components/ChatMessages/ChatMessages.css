@@ -2,17 +2,18 @@
 
 
 #chat-messages-box {
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    border: 3px solid transparent;
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     margin-top: 15px;
+    padding: 9px;
 }
 
 
 #chat-messages-box::-webkit-scrollbar {
-    width: 17px;
+    width: 9px;
 }
 
 #chat-messages-box::-webkit-scrollbar-track {

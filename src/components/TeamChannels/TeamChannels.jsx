@@ -30,33 +30,36 @@ const TeamChannels = ({ selectedTeam }) => {
     <>
 
 
-      <Box id="team-channels-main-box" w='100%' h='100%' paddingLeft='30px' paddingRight='30px' alignItems='center' overflow="hidden" overflowY="auto">
+      <Box id="team-channels-main-box" w='90%' h='88%' marginTop='6%' paddingLeft='30px' paddingRight='30px' alignItems='center' overflow="hidden" overflowY="auto">
 
         {channels && channels.map((channel) => (
-          <Box
-            onClick={() => navigate(`/teams/${teamId}/channels/${channel.chatId}`)}
-            border="1px solid gray"
-            borderRadius='10px'
-            margin='8px'
-            padding='9px'
-            size="md"
-            cursor="pointer"
-            position='relative'
-            key={v4()}
-          >
-            <HStack style={{ marginRight: "10px", justifyContent: 'center', overflow: '' }}>
-            {/* <Heading id="channel-title" display="inline" as="h3" size="md"
-                      style={{
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                      }}>
-                      {member.handle}
-                    </Heading> */}
-              <Button key={v4()} style={{ backgroundColor: 'yellow' }}>{channel.title}</Button>
-            </HStack>
+          // <NavLink border= "1px solid gray">
+            <Box
+              id="single-channel-box"
+              onClick={() => navigate(`/teams/${teamId}/channels/${channel.chatId}`)}
+              border="1px solid gray"
+              borderRadius='10px'
+              margin='8px'
+              padding='9px'
+              size="md"
+              cursor="pointer"
+              position='relative'
+              key={v4()}
+            >
+              <HStack style={{ marginRight: "10px", justifyContent: 'center', overflow: '' }}>
+                <Heading className="channel-title" display="inline" as="h3" size="md"
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}>
+                  {channel.title}
+                </Heading>
+              </HStack>
 
-          </Box>
+            </Box>
+          // </NavLink>
+
         ))}
         <HStack style={{ justifyContent: 'center', overflow: '' }}>
           {selectedTeam.owner === userData.handle && <CreateChannelPopUp />}

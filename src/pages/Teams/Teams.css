@@ -18,3 +18,8 @@ box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3); */
     background-color: #5f5c5c;
     border-radius: 6px;
 }
+
+.team-name-nav.active {
+    border: 2px dashed bisque !important;
+    border-radius: 10px !important;
+}

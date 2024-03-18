@@ -86,7 +86,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
 
   return (
     <>
-      <Box id='chat-message-box' onMouseEnter={handleHoverEnter} onMouseLeave={handleHoverLeave} mt={sameAuthor ? '0px' : '5px'}  >
+      <Box id='chat-message-box' onMouseEnter={handleHoverEnter} onMouseLeave={handleHoverLeave} mt={sameAuthor ? '0px' : '5px'} p='5px'>
         {'deleteMessage' in message ? (
           <Text style={{ color: '#a7555e' }}>
             <Text style={{ color: '#a7555e', fontWeight: 'bold', display: 'inline' }}>{message.deleteMessage} </Text>
@@ -97,7 +97,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
           <>
             {!sameAuthor && (
               <>
-                <Box style={{ border: '1px solid black' }}>
+                <Box style={{ border: '2px solid black', borderRadius:'10px' }}>
                   <HStack style={{ gap: '8px', height: '55px' }}>
                     <Avatar src={message.authorUrl} style={{ marginLeft: '10px' }} />
                     <Heading className='user-handle-chat-box' as='h3' size='sm'>{message.author}</Heading>
@@ -106,8 +106,8 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                     {userData.handle === message.author && isHovered && (
                       <>
                         {/* <Image onClick={handleEditButtonClick} style={{ height: 'fit-content', width: 'fit-content' }}><img src="../../edit.png" style={{ width: '40px', height: '40px', padding: '4px' }}></img></Image> */}
-                        <Image id='edit-message-img' onClick={handleEditButtonClick} style={{ width: '52px', height: '52px', padding: '4px' }} src="../../edit.png" />
-                        <Image id='delete-message-img' onClick={handleDeleteButtonClick} style={{ width: '42px', height: '42px', padding: '4px', marginRight: '10px' }} src="../../delete.png" />
+                        <Image id='edit-message-img' onClick={handleEditButtonClick} style={{ width: '52px', height: '52px', padding: '4px' }} src="../../../edit.png" />
+                        <Image id='delete-message-img' onClick={handleDeleteButtonClick} style={{ width: '42px', height: '42px', padding: '4px', marginRight: '10px' }} src="../../../delete.png" />
                       </>
                     )}
                   </HStack>
@@ -156,7 +156,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                   >
                     {('repliedMessageContent' in message && message.repliedMessageContent.length > 0) ? (
                       <>
-                        <HStack>
+                        <HStack marginTop='5px'>
                           <Avatar src={message.messageAuthorAvatar} style={{ marginLeft: '10px', width: '25px', height: '25px' }} />
                           <Text id='user-handle-chat-box-reply' className='user-handle-chat-box'>{message.messageAuthor}</Text>
                         </HStack>
@@ -175,14 +175,14 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                   {userData.handle !== message.author && !isReplying && isHovered && (
                     <HStack pos='absolute' top='0' right='0'>
                       <Reactions messageId={message.id} />
-                      <Image id='delete-message-img' onClick={handleReplyButtonClick} style={{ width: '42px', height: '42px', padding: '4px', marginRight: '10px' }} src="../../reply.png" />
+                      <Image id='delete-message-img' onClick={handleReplyButtonClick} style={{ width: '42px', height: '42px', padding: '4px', marginRight: '10px' }} src="../../../reply.png" />
                       {/* <Button onClick={handleReplyButtonClick} style={{ height: 'fit-content', width: 'fit-content', marginRight: '15px' }}><img src="../../reply.png" style={{ width: '40px', height: '40px' }}></img></Button> */}
                     </HStack>
                   )}
                   {userData.handle === message.author && sameAuthor && isHovered && (
                     <HStack pos='absolute' top='0' right='0' spacing='7px' >
-                      <Image id='edit-message-img' onClick={handleEditButtonClick} style={{ width: '45px', height: '45px', padding: '4px', marginBottom: '7px' }} src="../../edit.png" />
-                      <Image id='delete-message-img' onClick={handleDeleteButtonClick} style={{ width: '37px', height: '37px', padding: '4px', marginRight: '10px', marginBottom: '7px' }} src="../../delete.png" />
+                      <Image id='edit-message-img' onClick={handleEditButtonClick} style={{ width: '45px', height: '45px', padding: '4px', marginBottom: '7px' }} src="../../../edit.png" />
+                      <Image id='delete-message-img' onClick={handleDeleteButtonClick} style={{ width: '37px', height: '37px', padding: '4px', marginRight: '10px', marginBottom: '7px' }} src="../../../delete.png" />
                     </HStack>
                   )}
                   {message.img && <FilePreview fileUrl={message.img} />}

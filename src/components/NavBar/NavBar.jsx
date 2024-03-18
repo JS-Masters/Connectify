@@ -21,10 +21,10 @@ import {
   deleteNotificationsForOpenChat,
   listenForNotificationsByUserHandle,
 } from "../../services/chat.services";
-
 import useOnclickOutside from "react-cool-onclickoutside";
 import "./NavBar.css";
 const NavBar = () => {
+
   const { userData } = useContext(AppContext);
   const [notifications, setNotifications] = useState([]);
   const { chatId, channelId } = useParams();
@@ -178,6 +178,7 @@ const NavBar = () => {
                             setShowNotifications(false);
                           }}
                         >
+                          <Text as="span">{notification.title}</Text>
                           <p>{notification.body}</p>
                         </Link>
                       )}
@@ -189,6 +190,7 @@ const NavBar = () => {
                             setShowNotifications(false);
                           }}
                         >
+                          <Text as="span">{notification.title}</Text>
                           <Text>{notification.body}</Text>
                         </Link>
                       )}
