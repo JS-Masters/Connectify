@@ -5,6 +5,7 @@ import { Form, useLocation, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/auth.service";
 
 import {
+  Box,
   Button,
   HStack,
   Heading,
@@ -63,35 +64,41 @@ const SignIn = () => {
   };
 
   return (
-    <Form
-      onSubmit={handleSubmit}
-      style={{ width: "380px", margin: "auto", marginTop: "200px" }}
-    >
-      <VStack spacing="10px">
-        <Heading>Welcome to Connectify</Heading>
-        <Input type="email" placeholder="Email" name="email" />
+    <Box display="flex" alignItems="center" justifyContent="center" h="100%">
+      <Form
+        onSubmit={handleSubmit}
+        style={{ width: "380px", color: "goldenrod" }}
+      >
+        <VStack spacing="10px">
+          <Heading>Welcome to Connectify</Heading>
+          <Input type="email" placeholder="Email" name="email" />
 
-        <InputGroup>
-          <Input
-            type={show ? "text" : "password"}
-            placeholder="Password"
-            name="password"
-          />
-          <InputRightElement>
-            {show ? (
-              <ViewOffIcon cursor="pointer" onClick={toggleShow} />
-            ) : (
-              <ViewIcon cursor="pointer" onClick={toggleShow} />
-            )}
-          </InputRightElement>
-        </InputGroup>
+          <InputGroup>
+            <Input
+              type={show ? "text" : "password"}
+              placeholder="Password"
+              name="password"
+            />
+            <InputRightElement>
+              {show ? (
+                <ViewOffIcon cursor="pointer" onClick={toggleShow} />
+              ) : (
+                <ViewIcon cursor="pointer" onClick={toggleShow} />
+              )}
+            </InputRightElement>
+          </InputGroup>
 
-        <HStack spacing="20px">
-          <Button type="submit">Sign In</Button>
-          <Button onClick={() => navigate("/sign-up")}>Register</Button>
-        </HStack>
-      </VStack>
-    </Form>
+          <HStack spacing="20px">
+            <Button colorScheme="green" type="submit">
+              Sign In
+            </Button>
+            <Button colorScheme="green" onClick={() => navigate("/sign-up")}>
+              Register
+            </Button>
+          </HStack>
+        </VStack>
+      </Form>
+    </Box>
   );
 };
 

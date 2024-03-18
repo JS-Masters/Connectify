@@ -5,6 +5,7 @@ import { Form, useNavigate } from "react-router-dom";
 import { createUserHandle, getUserByHandle } from "../services/user.services";
 import { registerUser } from "../services/auth.service";
 import {
+  Box,
   Button,
   HStack,
   Heading,
@@ -15,7 +16,6 @@ import {
 import { statuses } from "../common/constants";
 
 const SignUp = () => {
-
   const toast = useToast();
   const { setContext } = useContext(AppContext);
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const SignUp = () => {
       duration: 5000,
       isClosable: true,
       status: status,
-      position: "top"
+      position: "top",
     });
   };
 
@@ -84,28 +84,34 @@ const SignUp = () => {
   };
 
   return (
-    <Form
-      onSubmit={handleSubmit}
-      style={{ width: "380px", margin: "auto", marginTop: "150px" }}
-    >
-      <VStack spacing="10px">
-        <Heading>Sign up</Heading>
-        <Input placeholder="username" name="username" />
-        <Input placeholder="First name" name="firstName" />
-        <Input placeholder="Last name" name="lastName" />
-        <Input type="email" placeholder="Email" name="email" />
-        <Input type="password" placeholder="Password" name="password" />
-        <Input
-          type="password"
-          placeholder="Confirm password"
-          name="confirmPassword"
-        />
-        <HStack spacing="20px">
-          <Button type="submit">Sign up</Button>
-          <Button onClick={() => navigate(-1)}>Cancel</Button>
-        </HStack>
-      </VStack>
-    </Form>
+    <Box display="flex" alignItems="center" justifyContent="center" h="100%">
+      <Form
+        onSubmit={handleSubmit}
+        style={{ width: "380px", color: "goldenrod" }}
+      >
+        <VStack spacing="10px">
+          <Heading>Sign up</Heading>
+          <Input placeholder="username" name="username" />
+          <Input placeholder="First name" name="firstName" />
+          <Input placeholder="Last name" name="lastName" />
+          <Input type="email" placeholder="Email" name="email" />
+          <Input type="password" placeholder="Password" name="password" />
+          <Input
+            type="password"
+            placeholder="Confirm password"
+            name="confirmPassword"
+          />
+          <HStack spacing="20px">
+            <Button colorScheme="green" type="submit">
+              Sign up
+            </Button>
+            <Button colorScheme="red" onClick={() => navigate(-1)}>
+              Cancel
+            </Button>
+          </HStack>
+        </VStack>
+      </Form>
+    </Box>
   );
 };
 
