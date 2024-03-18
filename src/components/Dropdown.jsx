@@ -136,7 +136,7 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
         name={username}
         src={avatarUrl}
       >
-        <AvatarBadge w="1em" bg="teal.500">
+        <AvatarBadge bg="teal.500">
           {<UserStatusIcon userHandle={username} iconSize={"12px"} />}
         </AvatarBadge>
       </Avatar>

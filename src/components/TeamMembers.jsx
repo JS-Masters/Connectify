@@ -94,7 +94,7 @@ const TeamMembers = ({selectedTeam}) => {
       {teamMembers.map((member) =>
         <span key={member.handle}>
           <Avatar size='sm' src={member.avatarUrl}>
-            <AvatarBadge w="1em" bg="teal.500">
+            <AvatarBadge bg="teal.500">
               {<UserStatusIcon userHandle={member.handle} iconSize={'5px'} />}
             </AvatarBadge>
           </Avatar>

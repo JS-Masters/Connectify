@@ -132,7 +132,7 @@ const CreateChatPopUp = () => {
                       onClick={() => updateSelectedUsers(user.handle)}
                     >
                       <Avatar size='md' src={user.avatarUrl}>
-                        <AvatarBadge w="1em" bg="teal.500" >{<UserStatusIcon userHandle={user.handle} iconSize={'10px'} />}</AvatarBadge>
+                        <AvatarBadge  bg="teal.500" >{<UserStatusIcon userHandle={user.handle} iconSize={'10px'} />}</AvatarBadge>
                       </Avatar>
                       <span className="user-handle-span" style={{margin:'10px', fontSize:'20px'}}>{user.handle}</span>
                       <AddIcon style={{ padding: '3px', marginLeft: '5px', color: 'rgb(38, 70, 9)', border: '1px solid rgb(38, 70, 9)', borderRadius: '5px', width:'30px', height:'30px' }} />

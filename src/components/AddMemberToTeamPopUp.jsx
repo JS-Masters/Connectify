@@ -70,7 +70,7 @@ const AddMemberToTeamPopUp = () => {
                   {Boolean(usersBySearchTerm.length) && usersBySearchTerm.map((user) =>
                     <div key={v4()} style={{ marginBottom: '25px' }}>
                       <Avatar size='sm' src={user.avatarUrl}>
-                        <AvatarBadge w="1em" bg="teal.500">{<UserStatusIcon userHandle={user.handle} iconSize={'5px'} />}</AvatarBadge>
+                        <AvatarBadge  bg="teal.500">{<UserStatusIcon userHandle={user.handle} iconSize={'5px'} />}</AvatarBadge>
                       </Avatar>
                       <Heading display='inline' as='h3' size='sm'>{user.handle}</Heading>
                       {isUserAlreadyInTheTeam(user.handle) ? <h3 style={{display:'inline', float:'right', color:'orange'}}>Team Member</h3>
