@@ -56,23 +56,3 @@ export const addUserToCall = (listenFn, userData, dyteRoomId) => {
     .catch(e => console.error(e));
   return dyteRoomId;
 };
-
-// export const deleteDyteMeeting = async (meetingId) => {
-//   try {
-//     const response = await fetch(`https://api.dyte.io/v2/meetings/${meetingId}`, {
-//       method: 'DELETE',
-//       headers: {
-//         Authorization: `Bearer ${DYTE_KEY}`,
-//         'Content-Type': 'application/json',
-//       },
-//     });
-
-//     if (response.ok) {
-//       console.log(`Meeting  deleted successfully.`);
-//     } else {
-//       console.error(`Error deleting meeting: ${response.status} - ${response.statusText}`);
-//     }
-//   } catch (error) {
-//     console.error('An error occurred while deleting the meeting:', error);
-//   }
-// };

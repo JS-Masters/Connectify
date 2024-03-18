@@ -1,7 +1,7 @@
-import { Avatar, AvatarBadge, Box, Button, Heading, Input, Text, useToast } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Box, Button, Heading, Input, Text, useToast, Image } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { changeUserCurrentStatusInDb, checkUsersIfBannedLoggedUser, getAllUsers, getUserLastStatusByHandle, getUserStatusByHandle } from "../services/user.services";
-import { addIncomingCallToDb, createCall, endCall } from "../services/call.services";
+import { addIncomingCallToDb, createCall, endCall, getCallsByUserHandle } from "../services/call.services";
 import { useContext } from "react";
 import AppContext from "../providers/AppContext";
 import { addUserToCall, createDyteCall } from "../services/dyte.services";
@@ -14,6 +14,7 @@ const Calls = () => {
 
   const { userData } = useContext(AppContext);
   const [users, setUsers] = useState([]);
+  const [calls, setCalls] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [usersBySearchTerm, setUsersBySearchTerm] = useState([]);
   const [token, setToken] = useState('');
@@ -36,6 +37,16 @@ const Calls = () => {
     getAllUsers().then((users) => setUsers(Object.keys(users).map(user => ({ ...users[user] }))));
   }, []);
 
+  useEffect(() => {
+    if (userData) {
+      getCallsByUserHandle(userData.handle)
+        .then((loggedUserCalls) => {
+          if (loggedUserCalls) {
+            setCalls(Object.values(loggedUserCalls));
+          }
+        })
+    }
+  }, [])
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
@@ -87,7 +98,7 @@ const Calls = () => {
       })
       .catch((error) => console.log(error.message))
   };
-
+console.log(calls);
   return (
     <>
       <Input value={searchTerm} onChange={handleInputChange} />
@@ -95,13 +106,43 @@ const Calls = () => {
         {Boolean(usersBySearchTerm.length) && usersBySearchTerm.map((user) =>
           <div key={v4()} style={{ marginBottom: '25px' }}>
             <Avatar size='sm' src={user.avatarUrl}>
-              <AvatarBadge  bg="teal.500">{<UserStatusIcon userHandle={user.handle} iconSize={'5px'} />}</AvatarBadge>
+              <AvatarBadge bg="teal.500">{<UserStatusIcon userHandle={user.handle} iconSize={'5px'} />}</AvatarBadge>
             </Avatar>
             <Heading display='inline' as='h3' size='sm'>{user.handle}</Heading>
             <Button style={{ float: 'right', color: 'blue' }} onClick={() => startCall(user.handle)}>CALL {user.handle}</Button>
           </div>
         )}
       </Box>
+      {calls ? (
+        calls.map((call) => {
+          return call.incoming ? (
+            <Box>
+              <Avatar size='sm' src={call.madeCallAvatar}>
+                <AvatarBadge bg="teal.500">
+                  {<UserStatusIcon userHandle={call.madeCall} iconSize={'5px'} />}
+                </AvatarBadge>
+              </Avatar>
+              <Heading display='inline' as='h3' size='sm'>{call.madeCall}</Heading>
+              <Heading style={{color:'white'}}>{call.createdOn}</Heading>
+              <Image id='incoming-call-img'  style={{ width: '52px', height: '52px', padding: '4px', display:'inline' }} src="../../incoming-call.png" />
+            </Box>
+          ) : (
+            <Box>
+              <Avatar size='sm' src={call.recievedCallAvatar}>
+                <AvatarBadge bg="teal.500">
+                  {<UserStatusIcon userHandle={call.recievedCall} iconSize={'5px'} />}
+                </AvatarBadge>
+              </Avatar>
+              <Heading display='inline' as='h3' size='sm'>{call.recievedCall}</Heading>
+              <Heading style={{color:'white'}}>{call.createdOn}</Heading>
+              <Image id='outgoing-call-img'  style={{ width: '52px', height: '52px', padding: '4px', display:'inline' }} src="../../outgoing-call.png" />
+            </Box>
+          );
+        })
+      ) : (
+        <Heading>You have no calls made yet...</Heading>
+      )}
+
       {token && <div style={{ height: '50vh', width: 'auto' }}><SingleCallRoom token={token} leaveCall={leaveCall} /></div>}
     </>
   );

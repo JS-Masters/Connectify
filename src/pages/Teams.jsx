@@ -5,7 +5,6 @@ import { getTeamById, leaveTeam, listenForTeamsByUserHandle } from "../services/
 import { Button } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import TeamChannels from "../components/TeamChannels";
-// import TeamChannelContent from "../components/TeamChannelContent";
 import { v4 } from "uuid";
 import CreateMeetingPopUp from "../components/CreateMeetingPopUp";
 
