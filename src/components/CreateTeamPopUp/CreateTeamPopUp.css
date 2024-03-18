@@ -1,0 +1,6 @@
+
+#new-team-button:hover {
+-webkit-backdrop-filter: blur(5px); 
+ backdrop-filter: blur(5px);
+box-shadow: 4px 4px 60px #739A66;
+}

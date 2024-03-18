@@ -62,29 +62,28 @@ const ChatList = () => {
 
   return (
     <Box className="chat-list-box" h='85vh' w='32vh'>
-      {<CreateChatPopUp />}
+      <CreateChatPopUp />
       {myChats ? (
         Object.keys(myChats).map((chatID) => {
           const chatParticipantsHandles = Object.keys(
             myChats[chatID].participants
           ).filter((participant) => participant !== userData.handle);
-          let chatMembers = [];
-          {
+          const chatMembers =
             chatParticipantsHandles.length === 0
-              ? (chatMembers = [
+              ? [
                 {
                   handle: NO_USERS_MESSAGE,
                   avatarUrl: NO_USERS_AVATAR,
                   currentStatus: statuses.offline,
                 },
-              ])
-              : (chatMembers = users.filter((u) =>
+              ]
+              : users.filter((u) =>
                 chatParticipantsHandles.includes(u.handle)
-              ));
-          }
+              );
+
           return (
             <Box
-            className="single-chat-box"
+              className="single-chat-box"
               border="1px solid gray"
               borderRadius='10px'
               margin='8px'
@@ -123,6 +122,7 @@ const ChatList = () => {
                   </HStack>
                 ) : (
                   <Avatar
+                  key={v4()}
                     size="md"
                     style={{ cursor: "pointer", marginRight: "10px" }}
                     src={member.avatarUrl}

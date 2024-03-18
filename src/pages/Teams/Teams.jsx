@@ -1,12 +1,13 @@
 import { useContext, useEffect, useState } from "react";
-import CreateTeamPopUp from "../components/CreateTeamPopUp";
-import AppContext from "../providers/AppContext";
-import { getTeamById, leaveTeam, listenForTeamsByUserHandle } from "../services/team.services";
-import { Button } from "@chakra-ui/react";
-import { useNavigate, useParams } from "react-router-dom";
-import TeamChannels from "../components/TeamChannels";
+import CreateTeamPopUp from "../../components/CreateTeamPopUp/CreateTeamPopUp";
+import AppContext from "../../providers/AppContext";
+import { getTeamById, leaveTeam, listenForTeamsByUserHandle } from "../../services/team.services";
+import { Box, Button, Flex, HStack, Text } from "@chakra-ui/react";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
+import TeamChannels from "../../components/TeamChannels";
 import { v4 } from "uuid";
-import CreateMeetingPopUp from "../components/CreateMeetingPopUp";
+import CreateMeetingPopUp from "../../components/CreateMeetingPopUp";
+import "./Teams.css";
 
 const Teams = () => {
 
@@ -40,8 +41,30 @@ const Teams = () => {
 
   return (
     <>
-      {<CreateTeamPopUp />}
-      {Boolean(teams.length) && teams.map((team) => <Button key={v4()} onClick={() => navigate(`/teams/${team.id}`)} style={{ width: 'fit-content', height: '45px', border: '2px solid black' }}>{team.teamName}</Button>)}
+
+
+      <Flex spacing="12%" marginRight="21%" marginLeft="19%" >
+        <Box>
+          <CreateTeamPopUp />
+        </Box>
+        <HStack id="teams-hstack" spacing="5%" overflow="hidden" overflowX="auto" >
+          {Boolean(teams.length) && teams.map((team) => <NavLink key={v4()} to={`/teams/${team.id}`}
+            style={{ textAlign: 'center' }}
+
+          >
+            <Box id="team-name-box" style={{ display:'flex', alignItems:'center', border: '1px solid bisque', borderRadius:'10px', color: 'white', width: '150px', height: '74px', marginBottom: '12px', marginTop:'40px' }}>
+              <Text m='auto'>
+                {team.teamName}
+              </Text>
+
+            </Box>
+
+          </NavLink>)}
+        </HStack>
+
+
+      </Flex>
+
       {teamId && <TeamChannels selectedTeam={selectedTeam} />}
       {teamId && selectedTeam.owner === userData.handle && <CreateMeetingPopUp teamName={selectedTeam.teamName} />}
       {teamId && selectedTeam.owner !== userData.handle && <Button onClick={handleLeaveTeamClick} style={{ color: 'red' }}>Leave Team</Button>}

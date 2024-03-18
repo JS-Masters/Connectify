@@ -5,7 +5,7 @@
 
 
 #new-chat-button {
-    border: 1px solid bisque;
+    border: 1px solid green;
     padding: 15px;
     border-radius: 5px;
     padding-left: 23px;
@@ -13,13 +13,16 @@
     font-size: 30px;
     font-family: "Oswald", sans-serif;
     color: #ffe4c4;
-    background-color: #6b6767;
+    background-color: transparent;
     margin-left: 45px;
+    color: green;
 }
 
 #new-chat-button:hover {
-    opacity: 0.7;
-}
+    -webkit-backdrop-filter: blur(5px); 
+     backdrop-filter: blur(5px);
+    box-shadow: 4px 4px 60px #739A66;
+    }
 
 .modal {
     border-left: 3px solid rgba(255, 255, 255, 0.3);

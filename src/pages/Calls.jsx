@@ -98,7 +98,7 @@ const Calls = () => {
       })
       .catch((error) => console.log(error.message))
   };
-console.log(calls);
+
   return (
     <>
       <Input value={searchTerm} onChange={handleInputChange} />
@@ -116,7 +116,7 @@ console.log(calls);
       {calls ? (
         calls.map((call) => {
           return call.incoming ? (
-            <Box>
+            <Box key={v4()}>
               <Avatar size='sm' src={call.madeCallAvatar}>
                 <AvatarBadge bg="teal.500">
                   {<UserStatusIcon userHandle={call.madeCall} iconSize={'5px'} />}
@@ -127,7 +127,7 @@ console.log(calls);
               <Image id='incoming-call-img'  style={{ width: '52px', height: '52px', padding: '4px', display:'inline' }} src="../../incoming-call.png" />
             </Box>
           ) : (
-            <Box>
+            <Box key={v4()}>
               <Avatar size='sm' src={call.recievedCallAvatar}>
                 <AvatarBadge bg="teal.500">
                   {<UserStatusIcon userHandle={call.recievedCall} iconSize={'5px'} />}

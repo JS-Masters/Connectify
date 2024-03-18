@@ -1,14 +1,15 @@
 import { Button, Input, List, Tag, useToast } from "@chakra-ui/react"
 import { useContext, useEffect, useState } from "react";
 import Popup from 'reactjs-popup';
-import AppContext from "../providers/AppContext";
+import AppContext from "../../providers/AppContext";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
-import { getAllUsers } from "../services/user.services";
+import { getAllUsers } from "../../services/user.services";
 import { v4 } from "uuid";
-import { createTeam } from "../services/team.services";
-import { addChannelToTeam } from "../services/channel.servicies";
+import { createTeam } from "../../services/team.services";
+import { addChannelToTeam } from "../../services/channel.servicies";
 import { useNavigate } from "react-router-dom";
-import { sendNotification } from "../services/chat.services";
+import { sendNotification } from "../../services/chat.services";
+import "./CreateTeamPopUp.css";
 
 const CreateTeamPopUp = () => {
 
@@ -131,7 +132,7 @@ const CreateTeamPopUp = () => {
 
   return (
     <Popup trigger=
-      {<Button style={{ width: '45px', height: '45px', backgroundColor: 'green' }}>+</Button>}
+      {<Button id="new-team-button" style={{ width: '150px', height: '74px', border:'1px solid green', backgroundColor: 'transparent', color:'green', marginTop:'40px', marginRight:'30px' }}>New Team</Button>}
       modal nested>
       {
         close => (

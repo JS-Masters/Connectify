@@ -22,7 +22,7 @@ import Chats from "./pages/Chats";
 import Calls from "./pages/Calls";
 import ChatMessages from "./components/ChatMessages/ChatMessages";
 import Authenticated from "./hoc/Authenticated";
-import Teams from "./pages/Teams";
+import Teams from "./pages/Teams/Teams";
 import LandingPage from "./pages/LandingPage";
 import { addUserToCall } from "./services/dyte.services";
 import SingleCallRoom from "./components/SingleCallRoom";
