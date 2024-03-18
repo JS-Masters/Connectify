@@ -61,7 +61,7 @@ const ChatList = () => {
   };
 
   return (
-    <Box className="chat-list-box" h='85vh' w='32vh'>
+    <Box className="chat-list-box" h='85vh' w='32vh'  overflow="hidden" overflowY="auto">
       <CreateChatPopUp />
       {myChats ? (
         Object.keys(myChats).map((chatID) => {
@@ -96,7 +96,7 @@ const ChatList = () => {
             >
               {chatMembers.map((member) => (
                 chatMembers.length <= 1 ? (
-                  <HStack key={v4()} style={{ marginRight: "10px", justifyContent: 'left', overflow: '' }}>
+                  <HStack key={v4()} style={{ marginRight: "10px", justifyContent: 'left', overflowT: 'scroll' }}>
                     <Avatar
                       size="md"
                       style={{ cursor: "pointer", marginRight: "10px" }}

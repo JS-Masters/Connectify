@@ -8,14 +8,28 @@
     border-radius: 10px;
     margin-top: 15px;
     margin-left: 20px;
-  }
+}
+
+.chat-list-box::-webkit-scrollbar {
+    width: 9px;
+}
+
+.chat-list-box::-webkit-scrollbar-track {
+    background: #c2bebe;
+}
+
+.chat-list-box::-webkit-scrollbar-thumb {
+    background-color: #5f5c5c;
+    border-radius: 6px;
+}
+
 
 .single-chat-box:hover {
     opacity: 0.4;
 
 }
 
-#chat-member-handle{
+#chat-member-handle {
     font-family: "Angkor", serif;
     font-weight: 400;
     font-style: normal;

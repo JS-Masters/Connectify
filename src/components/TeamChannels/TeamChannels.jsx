@@ -46,7 +46,7 @@ const TeamChannels = ({ selectedTeam }) => {
               position='relative'
               key={v4()}
             >
-              <HStack style={{ marginRight: "10px", justifyContent: 'center', overflow: '' }}>
+              <HStack style={{ marginRight: "10px", justifyContent: 'center'}}>
                 <Heading className="channel-title" display="inline" as="h3" size="md"
                   style={{
                     whiteSpace: 'nowrap',

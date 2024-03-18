@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { getTeamById, listenForNewTeamMember } from "../services/team.services";
-import { changeUserCurrentStatusInDb, getUserLastStatusByHandle, getUserStatusByHandle, getUsersAvatarsByHandles } from "../services/user.services";
-import { Avatar, AvatarBadge, GridItem, Heading, VStack, useToast } from "@chakra-ui/react";
+import { changeUserCurrentStatusInDb, getUserAvatarByHandle, getUserLastStatusByHandle, getUserStatusByHandle, getUsersAvatarsByHandles } from "../services/user.services";
+import { Avatar, AvatarBadge, GridItem, Heading, VStack, useToast, Image } from "@chakra-ui/react";
 import UserStatusIcon from "./UserStatusIconChats";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
@@ -14,12 +14,12 @@ import { statuses } from "../common/constants";
 import SingleCallRoom from "./SingleCallRoom";
 
 
-const TeamMembers = ({selectedTeam}) => {
+const TeamMembers = ({ selectedTeam }) => {
 
   const { userData } = useContext(AppContext);
   const { teamId } = useParams();
   const [teamMembers, setTeamMembers] = useState([]);
-  // const [selectedTeam, setSelectedTeam] = useState({});
+  const [teamOwner, setTeamOwner] = useState(null);
   const [token, setToken] = useState('');
   const [userToCall, setUserToCall] = useState('');
   const [joinedCallDyteId, setJoinedCallDyteId] = useState('');
@@ -29,15 +29,17 @@ const TeamMembers = ({selectedTeam}) => {
     const unsubscribe = listenForNewTeamMember((snapshot) => {
       const teamMembers = snapshot.exists() ? snapshot.val() : [];
       getUsersAvatarsByHandles(Object.keys(teamMembers))
-      .then(setTeamMembers)
+        .then(setTeamMembers)
+      // .then(() => )
     }, teamId);
     return () => unsubscribe();
   }, [teamId]);
 
-  // useEffect(() => {
-  //   getTeamById(teamId)
-  //     .then(setSelectedTeam)
-  // }, [teamId])
+  useEffect(() => {
+    if (teamMembers) {
+      setTeamOwner(teamMembers.find((m) => m.handle === selectedTeam.owner))
+    }
+  }, [teamMembers])
 
 
   const showToast = (title, desc, status) => {
@@ -61,14 +63,14 @@ const TeamMembers = ({selectedTeam}) => {
         showToast('User is Busy!', `${userToCallHandle} is currently In a meeting. Please try again later`, "info");
       } else {
         await createCall(userData.handle, userToCallHandle)
-        .then((newCallId) => createDyteCall(newCallId))
-        .then((roomID) => addIncomingCallToDb(userToCallHandle, userData.handle, roomID))
-        .then((roomID) => addUserToCall((data) => setToken(data), userData, roomID))
-        .then((roomID) => {
-          setUserToCall(userToCallHandle);
-          setJoinedCallDyteId(roomID);
-        });
-      }   
+          .then((newCallId) => createDyteCall(newCallId))
+          .then((roomID) => addIncomingCallToDb(userToCallHandle, userData.handle, roomID))
+          .then((roomID) => addUserToCall((data) => setToken(data), userData, roomID))
+          .then((roomID) => {
+            setUserToCall(userToCallHandle);
+            setJoinedCallDyteId(roomID);
+          });
+      }
     } catch (error) {
       console.log(error.message);
     };
@@ -87,28 +89,45 @@ const TeamMembers = ({selectedTeam}) => {
       })
       .catch((error) => console.log(error.message))
   };
-
+  // console.log(teamOwner);
   return (
-    <> 
-    <VStack>
-      {teamMembers.map((member) =>
-        <span key={member.handle}>
-          <Avatar size='sm' src={member.avatarUrl}>
-            <AvatarBadge bg="teal.500">
-              {<UserStatusIcon userHandle={member.handle} iconSize={'5px'} />}
-            </AvatarBadge>
-          </Avatar>
-          <Heading display='inline' as='h3' size='sm'>{member.handle}</Heading>
-          {/* <ChatIcon style={{float:'right', margin:'5px'}}/> */}
-          {member.handle !== userData.handle && <PhoneIcon onClick={() => startCall(member.handle)} style={{float:'right', margin:'5px', cursor:'pointer'}}/>}
-          <br />
-        </span>
+    <>
+      {teamOwner && (
+        <VStack>
+          <span key={teamOwner.handle}>
+            <Avatar size='sm' src={teamOwner.avatarUrl}>
+              <AvatarBadge bg="teal.500">
+                {<UserStatusIcon userHandle={teamOwner.handle} iconSize={'5px'} />}
+              </AvatarBadge>
+            </Avatar>
+            <Heading display='inline' as='h3' size='sm'>{teamOwner.handle}</Heading>
+            <Image src="/crown.png" style={{ width: '40px', height: '40px', padding: '4px' }} />
+            <br />
+          </span>
+  
+          {teamMembers.filter((m) => m.handle !== teamOwner.handle).map((member) => (
+            <span key={member.handle}>
+              <Avatar size='sm' src={member.avatarUrl}>
+                <AvatarBadge bg="teal.500">
+                  {<UserStatusIcon userHandle={member.handle} iconSize={'5px'} />}
+                </AvatarBadge>
+              </Avatar>
+              <Heading display='inline' as='h3' size='sm'>{member.handle}</Heading>
+              {member.handle !== userData.handle && <PhoneIcon onClick={() => startCall(member.handle)} style={{ float: 'right', margin: '5px', cursor: 'pointer' }} />}
+              <br />
+            </span>
+          ))}
+          {selectedTeam.owner === userData.handle && <AddMemberToTeamPopUp />}
+        </VStack>
       )}
-      {selectedTeam.owner === userData.handle && <AddMemberToTeamPopUp />}
-    </VStack>
-    {token && <div style={{ height: '50vh', width: 'auto' }}><SingleCallRoom token={token} leaveCall={leaveCall} /></div>}
+      {token && (
+        <div style={{ height: '50vh', width: 'auto' }}>
+          <SingleCallRoom token={token} leaveCall={leaveCall} />
+        </div>
+      )}
     </>
-  )
+  );
+  
 };
 
 export default TeamMembers;
