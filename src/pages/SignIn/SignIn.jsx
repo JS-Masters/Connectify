@@ -1,20 +1,18 @@
 // import PropTypes from "prop-types";
 import { useContext, useState, useEffect } from "react";
-import AppContext from "../providers/AppContext";
+import AppContext from "../../providers/AppContext";
 import { Form, useLocation, useNavigate } from "react-router-dom";
-import { loginUser } from "../services/auth.service";
+import { loginUser } from "../../services/auth.service";
 
 import {
   Box,
-  Button,
-  HStack,
-  Input,
+  Heading,
   InputGroup,
   InputRightElement,
-  VStack,
   useToast,
 } from "@chakra-ui/react";
 import { UnlockIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import "./SignIn.css";
 
 const SignIn = () => {
   const toast = useToast();
@@ -63,38 +61,45 @@ const SignIn = () => {
   };
 
   return (
-    <Box display="flex" alignItems="center" justifyContent="center" h="100%">
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      h="100%"
+      fontFamily="Poppins"
+    >
       <Form
+        className="form"
         onSubmit={handleSubmit}
         style={{ width: "350px", color: "goldenrod" }}
       >
-        <VStack spacing="10px">
-          <Input type="email" placeholder="Email" name="email" />
-
-          <InputGroup>
-            <Input
-              type={show ? "text" : "password"}
-              placeholder="Password"
-              name="password"
-            />
-            <InputRightElement>
-              {show ? (
-                <ViewOffIcon cursor="pointer" onClick={toggleShow} />
-              ) : (
-                <ViewIcon cursor="pointer" onClick={toggleShow} />
-              )}
-            </InputRightElement>
-          </InputGroup>
-
-          <HStack spacing="20px">
-            <Button colorScheme="green" type="submit">
-              Sign In
-            </Button>
-            <Button colorScheme="green" onClick={() => navigate("/sign-up")}>
-              Register
-            </Button>
-          </HStack>
-        </VStack>
+        <Heading>Log in</Heading>
+        <Box className="form-content">
+          <Box className="form-box">
+            <label>Username</label>
+            <input type="email" name="email" placeholder="email.com" />
+          </Box>
+          <Box className="form-box">
+            <label>Password</label>
+            <InputGroup>
+              <input
+                type={show ? "text" : "password"}
+                name="password"
+                placeholder="••••••••"
+              />
+              <InputRightElement mt="4px">
+                {show ? (
+                  <ViewOffIcon cursor="pointer" onClick={toggleShow} />
+                ) : (
+                  <ViewIcon cursor="pointer" onClick={toggleShow} />
+                )}
+              </InputRightElement>
+            </InputGroup>
+          </Box>
+          <Box className="form-box">
+            <input type="submit" value="Sign In" />
+          </Box>
+        </Box>
       </Form>
     </Box>
   );

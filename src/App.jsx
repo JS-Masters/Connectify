@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import RootLayout from "./layouts/RootLayout";
 import Home from "./pages/Home/Home";
-import SignIn from "./pages/SignIn";
+import SignIn from "./pages/SignIn/SignIn";
 import SignUp from "./pages/SignUp";
 import { auth, db } from "./config/firebase-config";
 import {
