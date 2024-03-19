@@ -101,24 +101,25 @@ const NavBar = () => {
             <AvatarBadge w="16px" border="none">
               <Text>{notifications.length}</Text>
             </AvatarBadge>
-            <List
-              ref={ref}
-              display={showNotifications ? "block" : "none"}
-              id="notifications-list"
-              color="white"
-              position="absolute"
-              zIndex="5"
-              top="50px"
-              left="auto"
-              overflow="hidden"
-              overflowY="auto"
-              height="300px"
-              width="300px"
-              border="1px solid gray"
-              borderRadius="10px"
-            >
-              {notifications.length > 0 &&
-                notifications
+
+            {notifications.length > 0 && (
+              <List
+                ref={ref}
+                display={showNotifications ? "block" : "none"}
+                id="notifications-list"
+                color="white"
+                position="absolute"
+                zIndex="5"
+                top="50px"
+                left="auto"
+                overflow="hidden"
+                overflowY="auto"
+                height="300px"
+                width="300px"
+                border="1px solid gray"
+                borderRadius="10px"
+              >
+                {notifications
                   .sort((a, b) => a.createdOn - b.createdOn)
                   .map((notification) => (
                     <ListItem
@@ -129,6 +130,7 @@ const NavBar = () => {
                       ml="-3"
                       key={notification.id}
                       fontSize="sm"
+                      onClick={() => setShowNotifications(false)}
                     >
                       <Button
                         cursor="pointer"
@@ -149,7 +151,6 @@ const NavBar = () => {
                           to={`/chats/${notification.eventId}`}
                           onClick={() => {
                             handleDeleteNotification(notification.id);
-                            setShowNotifications(false);
                           }}
                         >
                           {" "}
@@ -162,7 +163,6 @@ const NavBar = () => {
                           to={`/teams/${notification.eventId}`}
                           onClick={() => {
                             handleDeleteNotification(notification.id);
-                            setShowNotifications(false);
                           }}
                         >
                           <Text as="span">{notification.title}</Text>
@@ -174,7 +174,6 @@ const NavBar = () => {
                           to={`/teams/${notification.teamId}/channels/${notification.eventId}`}
                           onClick={() => {
                             handleDeleteNotification(notification.id);
-                            setShowNotifications(false);
                           }}
                         >
                           <Text as="span">{notification.title}</Text>
@@ -184,7 +183,8 @@ const NavBar = () => {
                       <Text>{notification.createdOn}</Text>
                     </ListItem>
                   ))}
-            </List>
+              </List>
+            )}
           </Avatar>
           {userData && <Dropdown />}
         </Flex>
