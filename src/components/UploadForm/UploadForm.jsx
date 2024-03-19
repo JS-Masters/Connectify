@@ -74,6 +74,7 @@ const UploadForm = () => {
           .then((url) => {
             updateUserByHandle(userData.handle, "avatarUrl", url);
             showToast("Image uploaded!", "success");
+            onClose();
           })
           .catch((error) => showToast(error.message, "error"));
       })
