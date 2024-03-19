@@ -51,10 +51,10 @@ const UploadForm = () => {
     fileInput.click();
   };
 
-  const handleCloseClick = (close) => {
+  const handleCloseClick = () => {
     setSelectedFile(null);
     setSelectedFileUrl(null);
-    close();
+    onClose();
   };
 
   const handleSubmit = () => {
@@ -83,7 +83,7 @@ const UploadForm = () => {
   return (
     <>
       <ListItem
-      className="dropdown-item"
+        className="dropdown-item"
         onClick={onOpen}
         cursor="pointer"
         m="8px"
@@ -110,7 +110,7 @@ const UploadForm = () => {
               cursor="pointer"
               float="right"
               m="10px"
-              onClick={() => handleCloseClick(close)}
+              onClick={handleCloseClick}
             />
             {selectedFileUrl ? (
               <>
