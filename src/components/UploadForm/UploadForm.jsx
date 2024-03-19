@@ -3,7 +3,6 @@ import { useContext, useState } from "react";
 import AppContext from "../../providers/AppContext";
 import { Form } from "react-router-dom";
 import {
-  Button,
   HStack,
   Heading,
   Img,
@@ -22,7 +21,6 @@ import { CloseIcon } from "@chakra-ui/icons";
 import "./UploadForm.css";
 
 const UploadForm = () => {
-  
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileUrl, setSelectedFileUrl] = useState(null);
   const { userData } = useContext(AppContext);
@@ -99,7 +97,6 @@ const UploadForm = () => {
       </ListItem>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent
-        
           border="2px dashed #b88e1d"
           p="15px"
           m="auto"
@@ -108,7 +105,7 @@ const UploadForm = () => {
           textAlign="center"
           color="goldenrod"
         >
-          <Form id='upload-photo-modal' onSubmit={handleSubmit}>
+          <Form id="upload-photo-modal" onSubmit={handleSubmit}>
             <CloseIcon
               cursor="pointer"
               float="right"
@@ -120,12 +117,17 @@ const UploadForm = () => {
                 <br />
                 <Img h="300px" w="300px" src={selectedFileUrl} alt="Selected" />
                 <HStack mt="10px" justifyContent="center">
-                  <Button className="upload-cancel-buttons" type="submit" >
-                    Upload
-                  </Button>
-                  <Button onClick={handleCloseClick}>
-                    Cancel
-                  </Button>
+                  <input
+                    className="upload-cancel-buttons"
+                    value="Upload"
+                    type="submit"
+                  />
+                  <input
+                    className="upload-cancel-buttons"
+                    value="Cancel"
+                    type="button"
+                    onClick={handleCloseClick}
+                  />
                 </HStack>
               </>
             ) : (
@@ -136,7 +138,12 @@ const UploadForm = () => {
                   onChange={handleFileChange}
                   style={{ display: "none" }}
                 />
-                <input onClick={handleUploadClick} id="upload-now-button" type="button" value='Upload Now'/>           
+                <input
+                  onClick={handleUploadClick}
+                  id="upload-now-button"
+                  type="button"
+                  value="Upload Now"
+                />
               </>
             )}
           </Form>
