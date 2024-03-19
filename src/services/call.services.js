@@ -134,9 +134,6 @@ export const endCall = async (userToCall, dyteRoomId) => {
 export const getIncomingCallsByUid = async (uid) => {
   try {
     const incomingCallsSnapshot = await get(ref(db, `incomingCalls/${uid}`));
-    // if(!incomingCallsSnapshot.exists()) {
-    //   throw new Error(DATABASE_ERROR_MSG);
-    // };
     if (incomingCallsSnapshot) {
       return incomingCallsSnapshot.val();
     } else {
@@ -148,7 +145,6 @@ export const getIncomingCallsByUid = async (uid) => {
 };
 
 export const setUserHasRejectedCall = async (userHandle) => {
-  console.log(userHandle);
   try {
     const userRef = ref(db, `users/${userHandle}`);
     await update(userRef, { hasRejectedCall: true });

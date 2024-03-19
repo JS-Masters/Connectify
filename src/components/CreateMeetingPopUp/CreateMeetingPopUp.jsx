@@ -17,7 +17,7 @@ import {
 import "./CreateMeetingPopUp.css";
 
 const CreateMeetingPopUp = ({ teamName }) => {
-  
+
   const [weekendsVisible, setWeekendsVisible] = useState(true);
   const [currentEvents, setCurrentEvents] = useState([]);
   const [teamMeetings, setTeamMeetings] = useState([]);
@@ -114,7 +114,8 @@ const CreateMeetingPopUp = ({ teamName }) => {
   };
 
   return (
-    <Popup trigger={<Button mb="20px">Meetings Calendar</Button>} modal nested closeOnDocumentClick={false}
+    <Popup trigger={<Button mb="20px">Meetings Calendar</Button>} modal nested
+      closeOnDocumentClick={false}
       closeOnEscape={false}>
       {(close) => (
         <Box id="pop-up-calendar" minW="1000px">
@@ -126,10 +127,11 @@ const CreateMeetingPopUp = ({ teamName }) => {
           >
             X
           </Button>
-
-          <Heading as="h3" m="10px" color="cyan">
-            {teamName}
-          </Heading>
+          <Box textAlign='center'>
+            <Heading as="h3" m="10px" fontSize='40px'>
+              {teamName}
+            </Heading>
+          </Box>
           <FullCalendar
             height="650px"
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}

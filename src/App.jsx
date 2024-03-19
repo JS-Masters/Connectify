@@ -32,7 +32,7 @@ import {
   listenForRejectedCalls,
   setUserHasRejectedCall,
 } from "./services/call.services";
-import { Box, Button, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, useToast } from "@chakra-ui/react";
 import { v4 } from "uuid";
 import { ATENDED_STATUS, WAITING_STATUS, statuses } from "./common/constants";
 import { ref, remove } from "firebase/database";
@@ -264,38 +264,41 @@ const App = () => {
   };
 
   return (
-    <Box  position="relative">
+    <Box position="relative">
       <AppContext.Provider value={{ ...context, setContext, setNotifications }}>
         <RouterProvider router={router} />
       </AppContext.Provider>
+      {Boolean(incomingCall.length) && (
+        <Box id="incoming-call-box">
+          {incomingCall.map((call) => (
+            <Box key={v4()}>
+              <h3 style={{ fontSize: '25px', marginBottom:'13px' }}>{call.caller} is calling...</h3>
+              <HStack justifyContent='space-around'>
+                <img className="incoming-call-buttons" src="/answer-call.png" onClick={() => joinCall(call.dyteRoomId, call.callId)} />
+                <img className="incoming-call-buttons" src="/reject-call.png" onClick={() => rejectCall(call.callId, call.caller)}  />
+              </HStack>
+            </Box>
+          ))}
+        </Box>
+      )}
+
+
+
+
+
       {incomingToken && (
-        <div    style={{
+        <div style={{
           height: "50vh",
           width: "74%",
-          marginLeft:'13%',
-          marginTop:'5%',
+          marginLeft: '13%',
+          marginTop: '5%',
           position: "absolute",
           zIndex: "20",
-          top:'0'
+          top: '0'
         }}>
           <SingleCallRoom token={incomingToken} leaveCall={leaveCall} />
         </div>
       )}
-      {Boolean(incomingCall.length) &&
-        incomingCall.map((call) => {
-          return (
-            <div key={v4()}>
-              <h3>{call.caller} is Calling</h3>
-              <Button onClick={() => joinCall(call.dyteRoomId, call.callId)}>
-                ANSWER
-              </Button>
-              <Button onClick={() => rejectCall(call.callId, call.caller)}>
-                REJECT
-              </Button>
-            </div>
-          );
-        })}
-
     </Box>
   );
 };
