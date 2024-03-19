@@ -31,20 +31,17 @@ const LandingPage = () => {
       justifyContent="center"
       h="100%"
       pos="relative"
-    >
-      <Heading as="h4" pos="absolute" top="0" right="0" color="red">
-        {" "}
-        <CountUp duration={10} end={userCount} /> users are already using
-        Connectify.
-      </Heading>
+    >  
       <VStack w="380px" color="goldenrod" textAlign='center'>
         <Heading id="landing-page-heading">Welcome to Connectify</Heading>
-
         <Text id="landing-page-text" mb='10px'>
           Here, you&apos;ll find everything you need to stay connected with your
           friends.
         </Text>
-
+        <Heading fontSize='28px' as="h4" color="#B00B1D">
+        {" "}
+        <CountUp duration={6} end={userCount} /> <span style={{color:'#b88e1d', fontSize:'22px'}}>Connected users</span>
+      </Heading>
         <HStack>
           <Button id="sign-in-button-landing" onClick={() => navigate("/sign-in")}>
             Sign in
