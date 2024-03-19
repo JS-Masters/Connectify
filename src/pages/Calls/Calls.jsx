@@ -145,7 +145,7 @@ const Calls = () => {
 
   return (
     <Flex justifyContent="center" h='100%'>
-      <Box w="73%" h='90%' position="relative" textAlign="center" overflow='scroll'>
+      <Box w="73%" h='90%' position="relative" textAlign="center" overflow='hidden' overflowY='auto'>
         {token && (
           <div
             style={{
@@ -340,7 +340,9 @@ const Calls = () => {
             );
           })
         ) : (
-          <Heading>You have no calls made yet...</Heading>
+          <Box textAlign='center' color='#FFBD0A' marginTop='40px'>
+          <Heading fontSize="2em">You have no calls made yet...</Heading>
+        </Box>
         )}
       </Box>
     </Flex>

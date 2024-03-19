@@ -1,11 +1,13 @@
 import { Box, Button, HStack, Heading, Text, VStack } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AppContext from "../providers/AppContext";
-import { fetchAllUsers } from "../services/user.services";
+import AppContext from "../../providers/AppContext";
+import { fetchAllUsers } from "../../services/user.services";
 import CountUp from "react-countup";
+import "./LandingPage.css";
 
 const LandingPage = () => {
+
   const { user } = useContext(AppContext);
   const [users, setUsers] = useState(null);
   const navigate = useNavigate();
@@ -35,26 +37,19 @@ const LandingPage = () => {
         <CountUp duration={10} end={userCount} /> users are already using
         Connectify.
       </Heading>
-      <VStack w="380px" color="goldenrod" textAlign="center">
-        <Heading>Welcome to Connectify</Heading>
+      <VStack w="380px" color="goldenrod" textAlign='center'>
+        <Heading id="landing-page-heading">Welcome to Connectify</Heading>
 
-        <Text mb="10px">
+        <Text id="landing-page-text" mb='10px'>
           Here, you&apos;ll find everything you need to stay connected with your
-          friends and loved ones.
-          <br />
-          From talk about everything to planning hangouts, our platform makes
-          communication easy and fun.
-          <br />
-          Dive into conversations, express yourself with a wide range of emojis
-          and GIFs, and enjoy the experience of staying in touch with those who
-          matter most.
+          friends.
         </Text>
 
         <HStack>
-          <Button colorScheme="green" onClick={() => navigate("/sign-in")}>
+          <Button id="sign-in-button-landing" onClick={() => navigate("/sign-in")}>
             Sign in
           </Button>
-          <Button colorScheme="green" onClick={() => navigate("/sign-up")}>
+          <Button id="sign-up-button-landing" onClick={() => navigate("/sign-up")}>
             Sign up
           </Button>
         </HStack>

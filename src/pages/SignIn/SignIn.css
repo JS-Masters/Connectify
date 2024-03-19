@@ -20,6 +20,9 @@
 .form .form-content .form-box {
   margin-top: 25px;
 }
+#sign-in-input {
+  font-size: 44px;
+}
 
 .form .form-content .form-box input {
   background: transparent;
@@ -38,6 +41,11 @@
   text-shadow: 0 0 10px goldenrod;
   color: goldenrod;
 }
+/* #sign-up-button-landing:active, 
+#sign-in-button-landing:active {
+    color: #b88e1d;
+    opacity: 1;
+} */
 .form .form-content .form-box input[type="submit"],
 .form .form-content .form-box input[name="navigate"] {
   box-shadow: -3px -3px 6px rgba(255, 255, 255, 0.1),
@@ -49,10 +57,7 @@
 
 .form .form-content .form-box input[type="submit"]:active, 
 .form .form-content .form-box input[name="navigate"]:active {
-  box-shadow: 0 0 20px goldenrod;
-  background: goldenrod;
-  color: #091921;
-  margin-top: 20px;
+  color: #b88e1d;
 }
 
 .form .form-content .form-box input::placeholder {

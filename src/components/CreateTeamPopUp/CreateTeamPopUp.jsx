@@ -168,7 +168,7 @@ const CreateTeamPopUp = () => {
                       onClick={() => updateSelectedUsers(user)}
                       style={{
                         cursor: "pointer",
-                        backgroundColor: "darkgray",
+                        backgroundColor: "rgb(117 110 78)",
                         color: "black",
                         margin: "2px",
                       }}
@@ -211,14 +211,13 @@ const CreateTeamPopUp = () => {
                 style={{ width: "275px" }}
               />
                <AddIcon onClick={() => addChannelToSelected()} style={{ padding: '3px', marginLeft: '10px', marginBottom:'px', color: 'rgb(38, 70, 9)', border: '2px solid rgb(38, 70, 9)', borderRadius: '5px', width: '36px', height: '36px', cursor:'pointer' }} />
-              {/* <Button onClick={() => addChannelToSelected()}>+</Button> */}
               <br />
               {channels.length ? (channels.map((channel) =>
                 <Tag
                   key={v4()}
                   style={{
                     cursor: "pointer",
-                    backgroundColor: "darkgray",
+                    backgroundColor: "rgb(117 110 78)",
                     color: "black",
                     margin: "2px",
                   }}

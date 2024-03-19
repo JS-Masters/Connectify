@@ -106,7 +106,7 @@ const CreateChatPopUp = () => {
                       onClick={() => updateSelectedUsers(user)}
                       style={{
                         cursor: "pointer",
-                        backgroundColor: "darkgray",
+                        backgroundColor: "rgb(117 110 78)",
                         color: "black",
                         margin: "2px",
                       }}

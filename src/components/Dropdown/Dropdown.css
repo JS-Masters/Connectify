@@ -13,3 +13,7 @@
     box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3);
     align-items: center !important;
 }
+
+.dropdown-item:hover {
+opacity: 0.6;
+}

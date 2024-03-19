@@ -98,7 +98,7 @@ const UploadForm = () => {
       </ListItem>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent
-          border="2px dashed green"
+          border="2px dashed #b88e1d"
           p="15px"
           m="auto"
           bg="transparent"
@@ -134,9 +134,7 @@ const UploadForm = () => {
                   onChange={handleFileChange}
                   style={{ display: "none" }}
                 />
-                <Button onClick={handleUploadClick} colorScheme="green">
-                  Upload Now
-                </Button>
+                <input onClick={handleUploadClick} id="upload-now-button" type="button" value='Upload Now'/>           
               </>
             )}
           </Form>

@@ -74,7 +74,7 @@ const SignUp = () => {
         onSubmit={handleSubmit}
         style={{ width: "350px", color: "goldenrod" }}
       >
-        <Heading>Sign up</Heading>
+        <Heading fontSize='44px !important'>SIGN UP</Heading>
         <Box className="form-content">
           <Box className="form-box">
             <input placeholder="username" name="username" />

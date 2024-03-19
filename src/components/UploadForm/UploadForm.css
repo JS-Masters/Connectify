@@ -3,3 +3,32 @@
     font-weight: 400;
     font-style: normal;
 }
+
+#upload-now-button {
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    box-shadow: inset -3px -3px 6px rgba(255, 255, 255, 0.1),
+      inset 3px 3px 6px rgba(0, 0, 0, 0.8);
+    color: #6f6f6f;
+    font-size: 18px;
+    height: 50px;
+    outline: none;
+    padding: 5px 15px;
+    width: 100%;
+    box-shadow: -3px -3px 6px rgba(255, 255, 255, 0.1),
+    3px 3px 6px rgba(0, 0, 0, 0.8);
+  font-weight: 600;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+#upload-now-button:hover {
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+#upload-now-button:active {
+    box-shadow: none;
+    cursor: pointer;
+}

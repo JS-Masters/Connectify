@@ -73,7 +73,7 @@ const SignIn = () => {
         onSubmit={handleSubmit}
         style={{ width: "350px", color: "goldenrod" }}
       >
-        <Heading>Sign in</Heading>
+        <Heading id="sign-in-input">Sign in</Heading>
         <Box className="form-content">
           <Box className="form-box">
             <input type="email" name="email" placeholder="email" />
@@ -95,7 +95,7 @@ const SignIn = () => {
             </InputGroup>
           </Box>
           <Box className="form-box">
-            <input type="submit" value="Sign in" />
+            <input id="" type="submit" value="Sign in" />
           </Box>
           <Box className="form-box" mt="0px !important">
             <input
