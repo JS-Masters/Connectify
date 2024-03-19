@@ -144,8 +144,15 @@ const Calls = () => {
   };
 
   return (
-    <Flex justifyContent="center" h='100%'>
-      <Box w="73%" h='90%' position="relative" textAlign="center" overflow='hidden' overflowY='auto'>
+    <Flex justifyContent="center" h="100%">
+      <Box
+        w="73%"
+        h="90%"
+        position="relative"
+        textAlign="center"
+        overflow="hidden"
+        overflowY="auto"
+      >
         {token && (
           <div
             style={{
@@ -229,8 +236,6 @@ const Calls = () => {
                         fontSize="40px"
                       />
                     </Box>
-
-                    {/* <Button style={{ float: 'right', color: 'blue' }} onClick={() => startCall(user.handle)}>CALL {user.handle}</Button> */}
                   </ListItem>
                 ))}
               </List>
@@ -334,15 +339,13 @@ const Calls = () => {
                     fontSize="45px"
                   />
                 </Box>
-
-                {/* <Image id='outgoing-call-img' style={{ width: '52px', height: '52px', padding: '4px', display: 'inline', marginLeft:'20px' }} src="../../outgoing-call.png" /> */}
               </HStack>
             );
           })
         ) : (
-          <Box textAlign='center' color='#FFBD0A' marginTop='40px'>
-          <Heading fontSize="2em">You have no calls made yet...</Heading>
-        </Box>
+          <Box textAlign="center" color="#FFBD0A" marginTop="40px">
+            <Heading fontSize="2em">You have no calls made yet...</Heading>
+          </Box>
         )}
       </Box>
     </Flex>

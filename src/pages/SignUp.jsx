@@ -1,4 +1,3 @@
-// import PropTypes from "prop-types";
 import { useContext } from "react";
 import AppContext from "../providers/AppContext";
 import { Form, useNavigate } from "react-router-dom";
@@ -108,7 +107,5 @@ const SignUp = () => {
     </Box>
   );
 };
-
-// SignUp.propTypes = {};
 
 export default SignUp;

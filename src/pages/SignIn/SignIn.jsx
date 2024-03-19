@@ -1,4 +1,3 @@
-// import PropTypes from "prop-types";
 import { useContext, useState, useEffect } from "react";
 import AppContext from "../../providers/AppContext";
 import { Form, useLocation, useNavigate } from "react-router-dom";
@@ -110,7 +109,5 @@ const SignIn = () => {
     </Box>
   );
 };
-
-// SignIn.propTypes = {};
 
 export default SignIn;
