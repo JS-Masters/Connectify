@@ -4,15 +4,7 @@ import AppContext from "../providers/AppContext";
 import { Form, useNavigate } from "react-router-dom";
 import { createUserHandle, getUserByHandle } from "../services/user.services";
 import { registerUser } from "../services/auth.service";
-import {
-  Box,
-  Button,
-  HStack,
-  Heading,
-  Input,
-  VStack,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Heading, useToast } from "@chakra-ui/react";
 import { statuses } from "../common/constants";
 
 const SignUp = () => {
@@ -84,32 +76,48 @@ const SignUp = () => {
   };
 
   return (
-    <Box display="flex" alignItems="center" justifyContent="center" h="100%">
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      h="100%"
+      fontFamily="Oswald"
+    >
       <Form
+        className="form"
         onSubmit={handleSubmit}
-        style={{ width: "380px", color: "goldenrod" }}
+        style={{ width: "350px", color: "goldenrod" }}
       >
-        <VStack spacing="10px">
-          <Heading>Sign up</Heading>
-          <Input placeholder="username" name="username" />
-          <Input placeholder="First name" name="firstName" />
-          <Input placeholder="Last name" name="lastName" />
-          <Input type="email" placeholder="Email" name="email" />
-          <Input type="password" placeholder="Password" name="password" />
-          <Input
-            type="password"
-            placeholder="Confirm password"
-            name="confirmPassword"
-          />
-          <HStack spacing="20px">
-            <Button colorScheme="green" type="submit">
-              Sign up
-            </Button>
-            <Button colorScheme="red" onClick={() => navigate(-1)}>
-              Cancel
-            </Button>
-          </HStack>
-        </VStack>
+        <Heading>Sign up</Heading>
+        <Box className="form-content">
+          <Box className="form-box">
+            <input placeholder="username" name="username" />
+          </Box>
+          <Box className="form-box">
+            <input type="email" placeholder="Email" name="email" />
+          </Box>
+          <Box className="form-box">
+            <input type="password" placeholder="Password" name="password" />
+          </Box>
+          <Box className="form-box">
+            <input
+              type="password"
+              placeholder="Confirm password"
+              name="confirmPassword"
+            />
+          </Box>
+          <Box className="form-box">
+            <input type="submit" value="Sign up" />
+          </Box>
+          <Box className="form-box" mt='0 !important'>
+            <input
+              type="button"
+              value="Cancel"
+              name="navigate"
+              onClick={() => navigate(-1)}
+            />
+          </Box>
+        </Box>
       </Form>
     </Box>
   );

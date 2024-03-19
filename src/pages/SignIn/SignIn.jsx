@@ -66,21 +66,19 @@ const SignIn = () => {
       alignItems="center"
       justifyContent="center"
       h="100%"
-      fontFamily="Poppins"
+      fontFamily="Oswald"
     >
       <Form
         className="form"
         onSubmit={handleSubmit}
         style={{ width: "350px", color: "goldenrod" }}
       >
-        <Heading>Log in</Heading>
+        <Heading>Sign in</Heading>
         <Box className="form-content">
           <Box className="form-box">
-            <label>Username</label>
-            <input type="email" name="email" placeholder="email.com" />
+            <input type="email" name="email" placeholder="email" />
           </Box>
           <Box className="form-box">
-            <label>Password</label>
             <InputGroup>
               <input
                 type={show ? "text" : "password"}
@@ -97,7 +95,15 @@ const SignIn = () => {
             </InputGroup>
           </Box>
           <Box className="form-box">
-            <input type="submit" value="Sign In" />
+            <input type="submit" value="Sign in" />
+          </Box>
+          <Box className="form-box" mt='0px !important'>
+            <input
+              type="button"
+              value="Register"
+              name="navigate"
+              onClick={() => navigate("/sign-up")}
+            />
           </Box>
         </Box>
       </Form>

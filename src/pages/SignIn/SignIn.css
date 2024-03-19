@@ -1,19 +1,14 @@
 .form {
-  background: #091921;
-  border-radius: 10px;
-  box-shadow: -5px -5px 8px rgba(255, 255, 255, 0.1),
-    5px 5px 15px rgba(0, 0, 0, 0.8);
-  padding: 50px 20px 60px;
   position: relative;
   text-align: center;
   width: 370px;
 }
 
 .form h2 {
-  color: #22f2aa;
+  color: goldenrod;
   font-size: 28px;
   font-weight: 700;
-  text-shadow: 0 0 10px #22f2aa;
+  text-shadow: 0 0 10px goldenrod;
   text-transform: uppercase;
 }
 
@@ -26,16 +21,8 @@
   margin-top: 25px;
 }
 
-.form .form-content .form-box label {
-  color: #ffffff;
-  display: block;
-  font-size: 18px;
-  letter-spacing: 2px;
-  margin-bottom: 5px;
-}
-
 .form .form-content .form-box input {
-  background: #091921;
+  background: transparent;
   border: none;
   border-radius: 10px;
   box-shadow: inset -3px -3px 6px rgba(255, 255, 255, 0.1),
@@ -48,10 +35,11 @@
   width: 100%;
 }
 .form .form-content .form-box input:focus {
-  text-shadow: 0 0 10px #22f2aa;
-  color: #22f2aa;
+  text-shadow: 0 0 10px goldenrod;
+  color: goldenrod;
 }
-.form .form-content .form-box input[type="submit"] {
+.form .form-content .form-box input[type="submit"],
+.form .form-content .form-box input[name="navigate"] {
   box-shadow: -3px -3px 6px rgba(255, 255, 255, 0.1),
     3px 3px 6px rgba(0, 0, 0, 0.8);
   font-weight: 600;
@@ -59,9 +47,10 @@
   cursor: pointer;
 }
 
-.form .form-content .form-box input[type="submit"]:active {
-  box-shadow: 0 0 20px #22f2aa;
-  background: #22f2aa;
+.form .form-content .form-box input[type="submit"]:active, 
+.form .form-content .form-box input[name="navigate"]:active {
+  box-shadow: 0 0 20px goldenrod;
+  background: goldenrod;
   color: #091921;
   margin-top: 20px;
 }
