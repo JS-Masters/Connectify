@@ -5,7 +5,7 @@ import { listenForNewTeamChannels } from "../../services/channel.servicies";
 import { v4 } from "uuid";
 import CreateChannelPopUp from "../CreateChannelPopUp/CreateChannelPopUp";
 import AppContext from "../../providers/AppContext";
-import TeamMembers from "../TeamMembers";
+import TeamMembers from "../TeamMembers/TeamMembers";
 // import TeamChannelContent from "./TeamChannelContent";
 import ChatMessages from "../ChatMessages/ChatMessages";
 import "./TeamChannels.css";

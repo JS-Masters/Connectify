@@ -1,6 +1,6 @@
 // import PropTypes from "prop-types";
 import { useContext, useState } from "react";
-import AppContext from "../providers/AppContext";
+import AppContext from "../../providers/AppContext";
 import { Form } from "react-router-dom";
 import {
   Button,
@@ -14,11 +14,12 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { storage } from "../config/firebase-config";
+import { storage } from "../../config/firebase-config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { updateUserByHandle } from "../services/user.services";
+import { updateUserByHandle } from "../../services/user.services";
 import { v4 } from "uuid";
 import { CloseIcon } from "@chakra-ui/icons";
+import "./UploadForm.css";
 
 const UploadForm = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -82,11 +83,12 @@ const UploadForm = () => {
   return (
     <>
       <ListItem
+      className="dropdown-item"
         onClick={onOpen}
         cursor="pointer"
         m="8px"
         border="1px solid gray"
-        borderRadius="10px"
+        borderRadius="5px"
         fontSize="sm"
         p="5px"
         textAlign="center"

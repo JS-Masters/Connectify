@@ -12,7 +12,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 // import PropTypes from "prop-types";
-import Dropdown from "../Dropdown";
+import Dropdown from "../Dropdown/Dropdown";
 import { useContext, useState, useEffect } from "react";
 import AppContext from "../../providers/AppContext";
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";

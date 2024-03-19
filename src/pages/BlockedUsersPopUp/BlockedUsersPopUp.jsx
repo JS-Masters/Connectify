@@ -1,16 +1,18 @@
 import { useContext, useEffect, useState } from "react";
-import AppContext from "../providers/AppContext";
+import AppContext from "../../providers/AppContext";
 import { Button, Input, ListItem, Text } from "@chakra-ui/react";
 import {
   blockUser,
   getAllUsers,
   getBlockedUsers,
   unblockUser,
-} from "../services/user.services";
+} from "../../services/user.services";
 import Popup from "reactjs-popup";
 import { v4 } from "uuid";
+import "./BlockedUsersPopUp.css";
 
 const BlockedUsersPopUp = () => {
+  
   const { userData } = useContext(AppContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [blockedUsers, setBlockedUsers] = useState([]);
@@ -66,9 +68,10 @@ const BlockedUsersPopUp = () => {
       <Popup
         trigger={
           <ListItem
+          className="dropdown-item"
             cursor="pointer"
             border="1px solid gray"
-            borderRadius="10px"
+            borderRadius="5px"
             p="5px"
             fontSize="sm"
             m="8px"

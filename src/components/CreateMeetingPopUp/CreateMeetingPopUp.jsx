@@ -17,6 +17,7 @@ import {
 import "./CreateMeetingPopUp.css";
 
 const CreateMeetingPopUp = ({ teamName }) => {
+  
   const [weekendsVisible, setWeekendsVisible] = useState(true);
   const [currentEvents, setCurrentEvents] = useState([]);
   const [teamMeetings, setTeamMeetings] = useState([]);

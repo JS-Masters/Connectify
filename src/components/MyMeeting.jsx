@@ -16,7 +16,7 @@ const MyMeeting = ({ leaveCall, isMeeting = false }) => {
   }, [meeting, userData]);
 
   return (
-    <div style={{ height: isMeeting ? '85vh' : '55vh', width: isMeeting ?'75vw' : 'auto', marginLeft: isMeeting ? '28px' : '0px' }}>
+    <div style={{ height: isMeeting ? '81vh' : '55vh', width: isMeeting ?'75vw' : 'auto', marginLeft: isMeeting ? '28px' : '0px' }}>
       <DyteMeeting
         mode='fill'
         meeting={meeting}

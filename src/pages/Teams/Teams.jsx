@@ -20,7 +20,7 @@ import TeamChannels from "../../components/TeamChannels/TeamChannels";
 import { v4 } from "uuid";
 import CreateMeetingPopUp from "../../components/CreateMeetingPopUp/CreateMeetingPopUp";
 import "./Teams.css";
-import TeamMembers from "../../components/TeamMembers";
+import TeamMembers from "../../components/TeamMembers/TeamMembers";
 import ChatMessages from "../../components/ChatMessages/ChatMessages";
 import AddMemberToTeamPopUp from "../../components/AddMemberToTeamPopUp";
 

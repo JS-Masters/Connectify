@@ -1,4 +1,6 @@
 .bg-gray-700 {
-    border: 3px solid red !important;
+    border: 1px solid #FFBD0A !important;
     border-radius: 10px !important;
+    margin-top: 30px !important;
+    box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3) !important;
 }

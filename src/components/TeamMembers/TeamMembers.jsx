@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { getTeamById, listenForNewTeamMember } from "../services/team.services";
+import { getTeamById, listenForNewTeamMember } from "../../services/team.services";
 import {
   changeUserCurrentStatusInDb,
   getUserAvatarByHandle,
   getUserLastStatusByHandle,
   getUserStatusByHandle,
   getUsersAvatarsByHandles,
-} from "../services/user.services";
+} from "../../services/user.services";
 import {
   Avatar,
   AvatarBadge,
@@ -18,22 +18,25 @@ import {
   useToast,
   Image,
   Text,
+  Spacer,
 } from "@chakra-ui/react";
-import UserStatusIcon from "./UserStatusIconChats";
+import UserStatusIcon from "../UserStatusIconChats";
 import { useParams } from "react-router-dom";
-import AddMemberToTeamPopUp from "./AddMemberToTeamPopUp";
-import AppContext from "../providers/AppContext";
+import AddMemberToTeamPopUp from "../AddMemberToTeamPopUp";
+import AppContext from "../../providers/AppContext";
 import { ChatIcon, PhoneIcon } from "@chakra-ui/icons";
 import {
   addIncomingCallToDb,
   createCall,
   endCall,
-} from "../services/call.services";
-import { addUserToCall, createDyteCall } from "../services/dyte.services";
-import { statuses } from "../common/constants";
-import SingleCallRoom from "./SingleCallRoom";
+} from "../../services/call.services";
+import { addUserToCall, createDyteCall } from "../../services/dyte.services";
+import { statuses } from "../../common/constants";
+import SingleCallRoom from "../SingleCallRoom";
+import "./TeamMembers.css";
 
 const TeamMembers = ({ selectedTeam }) => {
+
   const { userData } = useContext(AppContext);
   const { teamId } = useParams();
   const [teamMembers, setTeamMembers] = useState([]);
@@ -122,7 +125,7 @@ const TeamMembers = ({ selectedTeam }) => {
   return (
     <>
       {teamOwner && (
-        <VStack h="84%" alignItems="start">
+        <VStack h="84%" alignItems="start" w='70%'>
           <HStack key={teamOwner.handle} m="5px 0">
             <Avatar size="sm" src={teamOwner.avatarUrl}>
               <AvatarBadge bg="teal.500">
@@ -134,7 +137,7 @@ const TeamMembers = ({ selectedTeam }) => {
                 }
               </AvatarBadge>
             </Avatar>
-            <Heading display="inline" as="h3" size="sm" color="white">
+            <Heading className="team-member-handle" display="inline" as="h3" size="sm" color="white" >
               {teamOwner.handle}
             </Heading>
             <Image src="/crown.png" w="28px" h="28px" display="inline" />
@@ -152,7 +155,7 @@ const TeamMembers = ({ selectedTeam }) => {
           {teamMembers
             .filter((m) => m.handle !== teamOwner.handle)
             .map((member) => (
-              <HStack key={member.handle} m="5px 0">
+              <HStack key={member.handle} m="5px 0" w='100%'>
                 <Avatar size="sm" src={member.avatarUrl}>
                   <AvatarBadge bg="teal.500">
                     {
@@ -163,9 +166,10 @@ const TeamMembers = ({ selectedTeam }) => {
                     }
                   </AvatarBadge>
                 </Avatar>
-                <Heading display="inline" as="h3" size="sm" color="white">
+                <Heading className="team-member-handle" display="inline" as="h3" size="sm" color="white">
                   {member.handle}
                 </Heading>
+                <Spacer />
                 {member.handle !== userData.handle && (
                   <PhoneIcon
                     onClick={() => startCall(member.handle)}
@@ -173,10 +177,10 @@ const TeamMembers = ({ selectedTeam }) => {
                     m="5px"
                     cursor="pointer"
                     color="green"
-                    fontSize="23px"
+                    fontSize="25px"
                   />
                 )}
-                <br />
+             
               </HStack>
             ))}
         </VStack>

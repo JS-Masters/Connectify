@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Aladin&family=Amarante&family=Angkor&family=Dancing+Script&family=Madimi+One&family=Oswald:wght@200..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Protest+Revolution&display=swap');
+
+
+#logged-user-handle {
+    font-family: "Angkor", serif !important;
+    font-weight: 400;
+    font-style: normal;
+    /* font-size: 23px; */
+}
+
+#dropdown-menu {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(25px);
+    box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3);
+    align-items: center !important;
+}
