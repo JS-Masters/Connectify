@@ -33,7 +33,7 @@ const Giphy = ({ handleGif }) => {
   return (
     <Box
       position={"absolute"}
-      top={"-360px"}
+      bottom={"55px"}
       right={"0"}
       bg="#242424"
       p="10px"

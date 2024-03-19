@@ -2,26 +2,25 @@ import PropTypes from "prop-types";
 import { Box, Image, Text } from "@chakra-ui/react";
 import { getFileNameAndExtension } from "../services/storage.service";
 import { DownloadIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
 
 const FilePreview = ({ fileUrl }) => {
   const [fileName, fileType] = getFileNameAndExtension(fileUrl);
 
-  // const handleDownload = async () => {
-  //   try {
-  //     const response = await fetch(fileUrl);
-  //     const blob = await response.blob();
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
 
-  //     const link = document.createElement("a");
-  //     link.href = window.URL.createObjectURL(blob);
-  //     link.download = fileName || "downloaded-file";
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     document.body.removeChild(link);
-  //   } catch (error) {
-  //     console.error("Error downloading GIF:", error);
-  //   }
-  // };
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = fileName || "downloaded-file";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading GIF:", error);
+    }
+  };
 
   const renderPreview = () => {
     switch (fileType) {
@@ -32,14 +31,15 @@ const FilePreview = ({ fileUrl }) => {
         return (
           <Box position="relative" width="fit-content">
             <Image as="img" src={fileUrl} alt="Image" maxW="60%" h="auto" />
-            <Link to={fileUrl} target="_blank" download>
-              <DownloadIcon
-                cursor="pointer"
-                position="absolute"
-                top="0px"
-                right="auto"
-              />
-            </Link>
+            <DownloadIcon
+              cursor="pointer"
+              position="absolute"
+              top="5px"
+              left="5px"
+              color="cyan"
+              fontSize="large"
+              onClick={handleDownload}
+            />
           </Box>
         );
       case "video":
@@ -51,15 +51,13 @@ const FilePreview = ({ fileUrl }) => {
       default:
         return (
           <Box w="100%" h="auto" display="flex" gap="20px">
-            <Link to={fileUrl} download>
-              <Image
-                src="/public/file-solid.svg"
-                alt="File"
-                cursor="pointer"
-                w="5%"
-                h="auto"
-              />
-            </Link>
+            <Image
+              src="/public/file-solid.svg"
+              alt="File"
+              cursor="pointer"
+              w="5%"
+              h="auto"
+            />
             <Box fontSize="17px" fontWeight="bold">
               <Text>{fileName}</Text>
               <Text>{fileType.toUpperCase()}</Text>
