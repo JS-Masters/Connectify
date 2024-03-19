@@ -33,19 +33,23 @@ export const getAllUsers = async () => {
   return null;
 };
 
-// export const getUsersBySearchTerm = async (searchTerm) => {
-//   try {
-//     const allUsersSnapshot = await getAllUsers();
-//     const allUsers = allUsersSnapshot.val();
-//     const usersFilteredBySearchTerm = Object.keys(allUsers).filter((handle) => handle.toLowerCase().includes(searchTerm.toLowerCase()));
-//     console.log(usersFilteredBySearchTerm);
-//     return usersFilteredBySearchTerm;
+export const getUsersObjectsByHandles = async (usersHandles) => {
+  try {
+    const usersObjectsPromises = usersHandles.map(async (u) => {
+      const userRef = await getUserByHandle(u);
+      if (!userRef.exists()) {
+        throw new Error(DATABASE_ERROR_MSG);
+      }
+      const user = userRef.val();
+      return user;
+    })
+    const usersObjects = await Promise.all(usersObjectsPromises);
+    return usersObjects;
 
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-
-// }
+  } catch(error) {
+    console.log(error.message);
+  }
+};
 
 export const changeUserCurrentStatusInDb = async (handle, status) => {
  await update(ref(db, `users/${handle}`),
