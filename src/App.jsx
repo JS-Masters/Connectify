@@ -19,7 +19,7 @@ import {
   getUserLastStatusByHandle,
 } from "./services/user.services";
 import Chats from "./pages/Chats";
-import Calls from "./pages/Calls";
+import Calls from "./pages/Calls/Calls";
 import ChatMessages from "./components/ChatMessages/ChatMessages";
 import Authenticated from "./hoc/Authenticated";
 import Teams from "./pages/Teams/Teams";
