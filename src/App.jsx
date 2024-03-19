@@ -224,7 +224,7 @@ const App = () => {
     window.addEventListener("beforeunload", handleTabClose);
 
     return () => window.removeEventListener("beforeunload", handleTabClose);
-  }, [userData]);
+  }, []);
 
   const handleTabClose = async () => {
     try {

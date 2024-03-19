@@ -102,90 +102,101 @@ const Calls = () => {
   };
 
   return (
-    <Flex justifyContent='center'>
-      <Box w='73%' position='relative' h='100%'>
-      {token && <div style={{ height: '50vh', width: '100%', position:'absolute', zIndex:'20'}}><SingleCallRoom token={token} leaveCall={leaveCall} /></div>}
-        <Input id="calls-input" value={searchTerm} onChange={handleInputChange} placeholder="Connect with..." />
-        <Box  size='md' key={v4()} >
 
-          <List
-            id="calls-search-users-list"
-            overflow="hidden"
-            overflowY="auto"
-            position='absolute'
-            style={{ border: '2px solid black', borderRadius: '10px', maxHeight: '275px', padding: '2px' }}
-          >
-            {Boolean(usersBySearchTerm.length) && usersBySearchTerm.map((user) => (
-              <ListItem
-                className="calls-form-user"
-                key={v4()}
-                style={{ cursor: "pointer", border: '1px solid transparent', borderRadius: '5px', padding: '2px' }}
-              >
-                <Avatar size='sm' src={user.avatarUrl}>
-                  <AvatarBadge bg="teal.500">{<UserStatusIcon userHandle={user.handle} iconSize={'5px'} />}</AvatarBadge>
-                </Avatar>
-                <Heading display='inline' as='h3' size='sm'>{user.handle}</Heading>
-                <Button style={{ float: 'right', color: 'blue' }} onClick={() => startCall(user.handle)}>CALL {user.handle}</Button>
-              </ListItem>
-            ))}
-          </List>
+      <Flex justifyContent='center'>
+        <Box w='73%' position='relative' h='50vw' textAlign='center' overflow="hidden" >
+          {token && <div style={{ height: '50vh', width: '100%', position: 'absolute', zIndex: '20' }}><SingleCallRoom token={token} leaveCall={leaveCall} /></div>}
+          <Input id="calls-input" value={searchTerm} onChange={handleInputChange} placeholder="Connect with..." />
+          <Box size='md' key={v4()}  >
 
-          {/* {Boolean(usersBySearchTerm.length) && usersBySearchTerm.map((user) =>
+            {Boolean(usersBySearchTerm.length) &&
+              <Flex>
+                <List
+                  id="calls-search-users-list"
+                  overflow="hidden"
+                  overflowY="auto"
+                  position='absolute'
+                  left='71px'
+                  zIndex='6'
+                  style={{ border: '2px solid transparent', borderRadius: '10px', maxHeight: '445px', padding: '2px' }}
+                >
+                  {usersBySearchTerm.map((user) => (
+                    <ListItem
+                      className="calls-form-user"
+                      key={v4()}
+                      style={{ border: '1px solid transparent', borderRadius: '5px', padding: '7px', textAlign: 'left', margin: '9px', marginTop: '15px', display: 'flex', alignItems: 'center', height: '70px' }}
+                    >
+                      <Avatar fontSize='10px' src={user.avatarUrl}>
+                        <AvatarBadge bg="teal.500">{<UserStatusIcon userHandle={user.handle} iconSize={'10px'} />}</AvatarBadge>
+                      </Avatar>
+                      <Heading className="calls-user-handle" display='inline' as='h3' size='sm' fontSize='30px' marginLeft='15px' >{user.handle}</Heading>
+                      <Spacer />
+                      <Box className="phone-icon">
+                        <PhoneIcon
+                          onClick={() => startCall(user.handle)}
+                          float="right"
+                          m="10px"
+                          mr='45px'
+                          cursor="pointer"
+                          color="green"
+                          fontSize="40px"
+                        />
+                      </Box>
 
-        
-          <div key={v4()} style={{ marginBottom: '25px' }}>
-            <Avatar size='sm' src={user.avatarUrl}>
-              <AvatarBadge bg="teal.500">{<UserStatusIcon userHandle={user.handle} iconSize={'5px'} />}</AvatarBadge>
-            </Avatar>
-            <Heading display='inline' as='h3' size='sm'>{user.handle}</Heading>
-            <Button style={{ float: 'right', color: 'blue' }} onClick={() => startCall(user.handle)}>CALL {user.handle}</Button>
-          </div>
-        )} */}
-        </Box >
-        {
-          calls ? (
+                      {/* <Button style={{ float: 'right', color: 'blue' }} onClick={() => startCall(user.handle)}>CALL {user.handle}</Button> */}
+                    </ListItem>
+                  ))}
+                </List>
+              </Flex>
+            }
+          </Box >
+
+          {calls ? (
             calls.map((call) => {
               return call.incoming ? (
-                <HStack key={v4()} justifyContent='space-between'>
+
+                <HStack key={v4()} justifyContent='space-between' m='30px 65px 10px 71px' >
                   <Avatar size='md' src={call.madeCallAvatar}>
                     <AvatarBadge bg="teal.500">
                       {<UserStatusIcon userHandle={call.madeCall} iconSize={'15px'} />}
                     </AvatarBadge>
                   </Avatar>
-                  <Heading style={{ color: 'white', paddingLeft:'10px' }}> {call.madeCall}</Heading>
-                  <Spacer/>
+                  <Heading className="calls-user-handle" style={{ color: 'white', paddingLeft: '10px' }}> {call.madeCall}</Heading>
+                  <Spacer />
                   <Text fontSize='15px' color='#2E5E17'>Incoming Call </Text>
-                  <Heading fontSize='25px' style={{ color: 'white', marginLeft:'15px' }}>{call.createdOn}</Heading>
-                  <PhoneIcon
-                    onClick={() => startCall(call.recievedCall)}
-                    float="right"
-                    m="10px"
-                    ml='25px'
-                    cursor="pointer"
-                    color="green"
-                    fontSize="40px"
-                  />
+                  <Heading fontSize='25px' style={{ color: 'white', marginLeft: '15px', marginRight: '85px' }}>{call.createdOn}</Heading>
+                  <Box className="phone-icon" position='absolute' right='0'>
+                    <PhoneIcon
+                      onClick={() => startCall(call.recievedCall)}
+                      float="right"
+                      cursor="pointer"
+                      color="green"
+                      fontSize="45px"
+                    />
+                  </Box>
+
                 </HStack>
               ) : (
-                <HStack key={v4()} justifyContent='space-between' m='20px' marginTop='30px'>
+                <HStack key={v4()} justifyContent='space-between' m='30px 65px 10px 71px' position='relative'>
                   <Avatar size='md' src={call.recievedCallAvatar}>
                     <AvatarBadge bg="teal.500">
                       {<UserStatusIcon userHandle={call.recievedCall} iconSize={'15px'} />}
                     </AvatarBadge>
                   </Avatar>
-                  <Heading style={{ color: 'white', paddingLeft:'10px' }}> {call.recievedCall}</Heading>
-                  <Spacer/>
+                  <Heading className="calls-user-handle" style={{ color: 'white', paddingLeft: '10px' }}> {call.recievedCall}</Heading>
+                  <Spacer />
                   <Text fontSize='15px' color='#FFBD0A'>Outgoing Call </Text>
-                  <Heading fontSize='25px' style={{ color: 'white', marginLeft:'15px' }}>{call.createdOn}</Heading>
-                  <PhoneIcon
-                    onClick={() => startCall(call.recievedCall)}
-                    float="right"
-                    m="10px"
-                    ml='25px'
-                    cursor="pointer"
-                    color="green"
-                    fontSize="40px"
-                  />
+                  <Heading fontSize='25px' style={{ color: 'white', marginLeft: '15px', marginRight: '85px' }}>{call.createdOn}</Heading>
+                  <Box className="phone-icon" position='absolute' right='0'>
+                    <PhoneIcon
+                      onClick={() => startCall(call.recievedCall)}
+                      float="right"
+                      cursor="pointer"
+                      color="green"
+                      fontSize="45px"
+                    />
+                  </Box>
+
                   {/* <Image id='outgoing-call-img' style={{ width: '52px', height: '52px', padding: '4px', display: 'inline', marginLeft:'20px' }} src="../../outgoing-call.png" /> */}
                 </HStack>
               );
@@ -194,9 +205,9 @@ const Calls = () => {
             <Heading>You have no calls made yet...</Heading>
           )}
 
-       
-      </Box>
-    </Flex>
+        </Box>
+      </Flex>
+
   );
 };
 

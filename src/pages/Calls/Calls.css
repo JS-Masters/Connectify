@@ -2,8 +2,20 @@
 
 #calls-input {
     padding: 8px;
-    margin: 10px;
+    margin-top: 30px;
+    width: 87%;
     outline: none !important;
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal;
+    color: black;
+    font-size: 25px;
+}
+
+#calls-search-users-list {
+    width: 87%;
+    padding: 8px;
+    color: bisque;
     font-family: "Angkor", serif;
     font-weight: 400;
     font-style: normal;
@@ -14,3 +26,63 @@
     border: 2px solid bisque;
     outline: none !important;
 }
+
+.calls-form-user {
+    border: 1px solid bisque !important;
+    border-radius: 5px !important;
+    height: 50px;
+    font-size: 40px !important;
+  
+}
+
+.calls-form-user:hover {
+    /* background-color: gray; */
+    opacity: 0.5;
+}
+
+.calls-user-handle:hover {
+cursor: default !important;
+}
+
+#calls-search-users-list::-webkit-scrollbar {
+    width: 8px;
+
+}
+
+#calls-search-users-list::-webkit-scrollbar-track {
+    background: #c2bebe;
+    border-radius: 5px;
+}
+
+#calls-search-users-list::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 6px;
+}
+
+#calls-search-users-list {
+    border-left: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid rgba(255, 255, 255, 0.3);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(25px);
+    box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.9);
+}
+
+.phone-icon:hover {
+    /* border: 2px solid transparent; */
+    padding: 9px;
+    border-radius: 10px;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+
+}
+.phone-icon {
+    align-items: center;
+    margin-left: 25px;
+}
+/* a > img:hover {
+    border: 1px solid #FFBD0A;
+    padding: 10px;
+    border-radius: 10px;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+} */

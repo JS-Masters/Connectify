@@ -86,7 +86,6 @@ const NavBar = () => {
             cursor="pointer"
             margin="15px"
           />
-          {/* <Spacer /> */}
           <HStack spacing="12%" marginRight="23%" marginLeft="19%">
             <NavLink to="/chats" style={{ minWidth: "100px" }}>
               <Image src="/chats-y.png" />
@@ -101,7 +100,6 @@ const NavBar = () => {
               <Image src="/calendar-y.png" />
             </NavLink>
           </HStack>
-          {/* <Spacer /> */}
           <Avatar
             onClick={() =>
               Boolean(notifications.length) &&

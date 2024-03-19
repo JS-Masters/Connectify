@@ -8,11 +8,13 @@
 }
 
 #notifications-list::-webkit-scrollbar {
-    width: 12px;
+    width: 10px;
 }
 
 #notifications-list::-webkit-scrollbar-track {
     background: #c2bebe;
+    border-radius: 5px;
+
 }
 
 #notifications-list::-webkit-scrollbar-thumb {
