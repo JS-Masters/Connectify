@@ -24,7 +24,8 @@ import BlockedUsersPopUp from "../pages/BlockedUsersPopUp";
 import UserStatusIcon from "./UserStatusIconChats";
 import useOnclickOutside from "react-cool-onclickoutside";
 
-const Dropdown = ({ username = null, avatarUrl = null }) => {
+const Dropdown = () => {
+
   const [showDropdown, setShowDropdown] = useState(false);
   const { userData, setContext } = useContext(AppContext);
   const navigate = useNavigate();
@@ -127,17 +128,17 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
   return (
     <HStack pos="relative" m="0 20px">
       <Text color="white" cursor='default'>
-        {username}
+        {userData.handle}
       </Text>
 
       <Avatar
         cursor="pointer"
         onClick={() => setShowDropdown(!showDropdown)}
-        name={username}
-        src={avatarUrl}
+        name={userData.handle}
+        src={userData.avatarUrl}
       >
         <AvatarBadge bg="teal.500">
-          {<UserStatusIcon userHandle={username} iconSize={"12px"} />}
+          {<UserStatusIcon userHandle={userData.handle} iconSize={"15px"} />}
         </AvatarBadge>
       </Avatar>
 
@@ -176,9 +177,6 @@ const Dropdown = ({ username = null, avatarUrl = null }) => {
   );
 };
 
-Dropdown.propTypes = {
-  username: PropTypes.string,
-  avatarUrl: PropTypes.string,
-};
+
 
 export default Dropdown;

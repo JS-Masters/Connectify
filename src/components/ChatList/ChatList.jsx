@@ -106,7 +106,7 @@ const ChatList = () => {
                         {
                           <UserStatusIcon
                             userHandle={member.handle}
-                            iconSize={"10px"}
+                            iconSize={"13px"}
                           />
                         }
                       </AvatarBadge>
@@ -131,7 +131,7 @@ const ChatList = () => {
                       {
                         <UserStatusIcon
                           userHandle={member.handle}
-                          iconSize={"10px"}
+                          iconSize={"13px"}
                         />
                       }
                     </AvatarBadge>

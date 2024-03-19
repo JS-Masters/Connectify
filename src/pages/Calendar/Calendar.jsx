@@ -92,7 +92,11 @@ const Calendar = () => {
   return (
     <>
       {(meetings.length > 0 || userHasNoTeams) &&
-        <Box id='calendar-main-box' w='89%'>
+        <Box id='calendar-main-box' w='89%' position='relative' h='100%'>
+          {meetingToken &&
+            <div style={{ height: '90vh', width: '100%', position:'absolute', zIndex:'20' }} >
+              <SingleCallRoom token={meetingToken} leaveCall={leaveMeeting} isMeeting={true}/>
+            </div>}
           <Sidebar
             weekendsVisible={weekendsVisible}
             handleWeekendsToggle={handleWeekendsToggle}
@@ -106,9 +110,9 @@ const Calendar = () => {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
-              }}   
+              }}
               initialView='timeGridWeek'
-            
+
               editable={false}
               selectable={false}
               selectMirror={true}
@@ -121,10 +125,7 @@ const Calendar = () => {
           </div>
 
         </Box>}
-      {meetingToken &&
-        <div style={{ height: '50vh', width: 'auto' }} >
-          <SingleCallRoom token={meetingToken} leaveCall={leaveMeeting} />
-        </div>}
+
     </>
   );
 };

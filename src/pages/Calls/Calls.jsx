@@ -103,7 +103,8 @@ const Calls = () => {
 
   return (
     <Flex justifyContent='center'>
-      <Box w='70%'>
+      <Box w='73%' position='relative' h='100%'>
+      {token && <div style={{ height: '50vh', width: '100%', position:'absolute', zIndex:'20'}}><SingleCallRoom token={token} leaveCall={leaveCall} /></div>}
         <Input id="calls-input" value={searchTerm} onChange={handleInputChange} placeholder="Connect with..." />
         <Box  size='md' key={v4()} >
 
@@ -193,7 +194,7 @@ const Calls = () => {
             <Heading>You have no calls made yet...</Heading>
           )}
 
-        {token && <div style={{ height: '50vh', width: 'auto' }}><SingleCallRoom token={token} leaveCall={leaveCall} /></div>}
+       
       </Box>
     </Flex>
   );

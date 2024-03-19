@@ -199,12 +199,7 @@ const NavBar = () => {
                   ))}
             </List>
           </Avatar>
-          {userData && (
-            <Dropdown
-              username={userData.handle}
-              avatarUrl={userData.avatarUrl}
-            />
-          )}
+          {userData && <Dropdown/>}
         </Flex>
       </Box>
     </>

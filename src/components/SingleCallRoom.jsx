@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import MyMeeting from "./MyMeeting";
 
 
-const SingleCallRoom = ({ token, leaveCall }) => {
+const SingleCallRoom = ({ token, leaveCall, isMeeting = false }) => {
 
   const [client, initClient] = useDyteClient();
 
@@ -25,10 +25,10 @@ const SingleCallRoom = ({ token, leaveCall }) => {
 
   return (
     <>
-      <div className="flex-1 flex flex-col bg-gray-700">
+      <div>
         {client ?
           <DyteProvider value={client}>
-            <MyMeeting leaveCall={leaveCall} />
+            <MyMeeting leaveCall={leaveCall} isMeeting={isMeeting}/>
           </DyteProvider>
           : <div style={{ height: '30vh', width: 'auto' }}> </div>
         }
