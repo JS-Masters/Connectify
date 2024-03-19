@@ -174,6 +174,6 @@ export const listenForNewTeamMember = (listenFn, teamId) => {
     limitToFirst(50)
   )
   return onValue(q, listenFn);
-}
+};
 
 

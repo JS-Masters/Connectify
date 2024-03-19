@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import UserStatusIcon from "../UserStatusIconChats";
 import { useParams } from "react-router-dom";
-import AddMemberToTeamPopUp from "../AddMemberToTeamPopUp";
+import AddMemberToTeamPopUp from "../AddMemberToTeamPopUp/AddMemberToTeamPopUp";
 import AppContext from "../../providers/AppContext";
 import { ChatIcon, PhoneIcon } from "@chakra-ui/icons";
 import {

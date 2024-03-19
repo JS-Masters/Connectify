@@ -1,0 +1,109 @@
+#add-member-title {
+    text-align: center;
+}
+
+
+#add-member-heading {
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal;
+    margin-top: 25px;
+    font-size: 24px;
+}
+
+#add-member-subheading {
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal;
+margin-bottom: 10px;
+    font-size: 20px;
+}
+
+#close-add-member-popup:hover {
+    opacity: 0.5;
+}
+
+#add-members-search {
+    border: 2px solid black;
+    padding: 8px;
+    outline: none !important;
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#add-members-search:focus {
+    border: 2px solid bisque;
+    outline: none !important;
+    
+}
+
+#add-members-search::placeholder {
+    color: black;
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#add-members-search::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+
+#add-member-form::-webkit-scrollbar {
+    width: 7px;
+}
+
+#add-member-form::-webkit-scrollbar-track {
+    background: #c2bebe;
+}
+
+#add-member-form::-webkit-scrollbar-thumb {
+    background-color: #4d4c4c;
+    border-radius: 6px;
+}
+
+#popup-add-member-button {
+    background-color: transparent;
+    border: 3px solid rgb(0, 128, 0);
+    color: rgb(0, 128, 0);
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#popup-add-member-button:hover {
+    background-color: rgb(11, 80, 11);
+    color: white;
+}
+
+#team-member-text {
+    color: #2b2a2a;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 5px;
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal;  
+}
+
+#team-add-member-button {
+    font-family: "Angkor", serif;
+    font-weight: 400;
+    font-style: normal; 
+    color: bisque;
+    background-color: transparent;
+    font-size: 15px;
+    opacity: 0.5;
+}
+
+#team-add-member-button:hover {
+    border: 2px solid bisque;
+    padding-top: 13px !important;
+    padding-bottom: 13px !important;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}
+
+#team-add-member-button:active {
+    opacity: 1;
+}

@@ -80,7 +80,8 @@ const CreateChatPopUp = () => {
       {<Button id="new-chat-button" m='20px'>NEW CHAT</Button>}
       modal nested
       closeOnDocumentClick={false}
-      closeOnEscape={false}>
+      closeOnEscape={false}
+      >
       {
         close => (
           <div className='modal' style={{ width: '500px', height: '500px', backgroundImage: "url('/pop-up-background2.jpg')"}}>

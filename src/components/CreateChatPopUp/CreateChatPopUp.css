@@ -21,7 +21,6 @@
 
 #create-chat-input::-webkit-search-cancel-button {
     -webkit-appearance: none;
-
 }
 
 #new-chat-button:hover {
@@ -59,7 +58,7 @@
 }
 
 #create-chat-users-list::-webkit-scrollbar {
-    width: 12px;
+    width: 8px;
 }
 
 #create-chat-users-list::-webkit-scrollbar-track {
@@ -67,7 +66,7 @@
 }
 
 #create-chat-users-list::-webkit-scrollbar-thumb {
-    background-color: #888;
+    background-color: #4d4c4c;
     border-radius: 6px;
 }
 

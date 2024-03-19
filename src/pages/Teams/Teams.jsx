@@ -22,7 +22,7 @@ import CreateMeetingPopUp from "../../components/CreateMeetingPopUp/CreateMeetin
 import "./Teams.css";
 import TeamMembers from "../../components/TeamMembers/TeamMembers";
 import ChatMessages from "../../components/ChatMessages/ChatMessages";
-import AddMemberToTeamPopUp from "../../components/AddMemberToTeamPopUp";
+import AddMemberToTeamPopUp from "../../components/AddMemberToTeamPopUp/AddMemberToTeamPopUp";
 
 const Teams = () => {
   const { userData } = useContext(AppContext);
@@ -99,35 +99,41 @@ const Teams = () => {
       </Flex>
 
       {teamId && (
-        <Grid templateColumns="repeat(5, 1fr)">
-          <GridItem h="70vh" w="30vh" as="aside" colSpan={1}>
-            <TeamChannels selectedTeam={selectedTeam} />
-          </GridItem>
-          <GridItem h="70vh" colSpan={3}>
-            {chatId && <ChatMessages />}
-          </GridItem>
-          {selectedTeam && (
-            <GridItem h="70vh" colSpan={1} textAlign="center">
-              {selectedTeam.owner === userData.handle && (
-                <CreateMeetingPopUp teamName={selectedTeam.teamName} />
-              )}
-              <TeamMembers selectedTeam={selectedTeam} />
-              {selectedTeam.owner === userData.handle ? (
-                <AddMemberToTeamPopUp />
-              ) : (
-                <Button
-                  onClick={handleLeaveTeamClick}
-                  colorScheme="red"
-                  mr="10px"
-                  size="sm"
-                  float='right'
-                >
-                  Leave
-                </Button>
-              )}
+        <>
+          <Grid templateColumns="repeat(5, 1fr)">
+            <GridItem h="70vh" w="30vh" as="aside" colSpan={1}>
+              <TeamChannels selectedTeam={selectedTeam} />
             </GridItem>
+            <GridItem h="70vh" colSpan={3}>
+              {chatId && <ChatMessages />}
+            </GridItem>
+            {selectedTeam && (
+              <GridItem h="70vh" colSpan={1} textAlign="center">
+                {selectedTeam.owner === userData.handle && (
+                  <CreateMeetingPopUp teamName={selectedTeam.teamName} />
+                )}
+                <TeamMembers selectedTeam={selectedTeam} />
+
+              </GridItem>
+            )}
+          </Grid>
+          {selectedTeam.owner === userData.handle ? (
+            <AddMemberToTeamPopUp />
+          ) : (
+            <Button
+              id="leave-team-button"
+              onClick={handleLeaveTeamClick}
+              colorScheme="red"
+              mr="10px"
+              size="sm"
+              float='right'
+            // marginBottom='0px'
+            >
+              Leave
+            </Button>
           )}
-        </Grid>
+        </>
+
       )}
     </>
   );

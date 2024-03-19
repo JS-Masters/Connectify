@@ -15,7 +15,7 @@ box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3); */
 }
 
 #teams-hstack::-webkit-scrollbar-thumb {
-    background-color: #5f5c5c;
+    background-color: #4d4c4c;
     border-radius: 6px;
 }
 
@@ -23,3 +23,14 @@ box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3); */
     border: 2px dashed bisque !important;
     border-radius: 10px !important;
 }
+
+#leave-team-button {
+    background-color: transparent !important;
+    color: #B00B1D;
+    border: 1px solid #B00B1D;
+    opacity: 0.4;
+    margin-bottom: 0px !important;
+}
+#leave-team-button:hover {
+    opacity: 1;
+}   
