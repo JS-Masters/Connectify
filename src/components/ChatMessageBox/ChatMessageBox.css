@@ -1,13 +1,8 @@
 #chat-message-box {
     background-color: #2b2b2b;
-    border-left: 2px solid rgba(255, 255, 255, 0.3);
-    border-top: 2px solid rgba(255, 255, 255, 0.3);
-    border-right: 2px solid rgba(255, 255, 255, 0.3);
-
-    /* -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px); */
-    /* box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3); */
-    border-radius: 10px;
+    /* border: 1px solid transparent; */
+    border-top: 2px solid rgb(41, 37, 35) !important;
+    border-radius: 5px;
     color: white !important;
 }
 
@@ -27,8 +22,12 @@
     color: bisque;
 }
 
+.user-handle-chat-box:hover {
+    cursor: default;
+}
+
 #user-handle-chat-box-reply {
-    font-size: 12px;
+    font-size: 11px;
 }
 
 #edited-span {
@@ -41,10 +40,46 @@
     display: inline;
 }
 
-#edit-message-img:hover {
-cursor: pointer;
+#edit-message-img {
+    opacity: 0.3;
+}
+
+#delete-message-img {
+    opacity: 0.6;
 }
 
 #delete-message-img:hover {
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+    opacity: 1;
+}
+
+#edit-message-img:hover {
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    opacity: 1;
+}
+
+#edit-message-img:hover,
+#delete-message-img:hover {
     cursor: pointer;
-    }
+}
+
+#edit-textarea{
+    height: 20px !important;
+}
+
+#edit-textarea:focus {
+    border: 2px solid bisque;
+    outline: none !important;
+}
+
+#reply-textarea {
+    border: 2px solid bisque;
+    outline: none !important;
+}
+
+#user-reacted-emoji {
+    box-shadow: 4px 4px 10px #b88e1d;
+    background-color: transparent;
+}

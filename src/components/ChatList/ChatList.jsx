@@ -61,7 +61,7 @@ const ChatList = () => {
   };
 
   return (
-    <Box className="chat-list-box" h='85vh' w='32vh'  overflow="hidden" overflowY="auto">
+    <Box className="chat-list-box" h='85vh' w='32vh' overflow="hidden" overflowY="auto">
       <CreateChatPopUp />
       {myChats ? (
         Object.keys(myChats).map((chatID) => {
@@ -122,7 +122,7 @@ const ChatList = () => {
                   </HStack>
                 ) : (
                   <Avatar
-                  key={v4()}
+                    key={v4()}
                     size="md"
                     style={{ cursor: "pointer", marginRight: "10px" }}
                     src={member.avatarUrl}
@@ -139,8 +139,7 @@ const ChatList = () => {
                 )
               ))}
               <Button
-              id="leave-chat-button"
-              // title="LEAVE CHAT"
+                id="leave-chat-button"
                 cursor="pointer"
                 pos="absolute"
                 right="0px"
@@ -156,7 +155,11 @@ const ChatList = () => {
           );
         })
       ) : (
-        <Heading fontSize="2em">You dont have any chats yet...</Heading>
+
+        <Box textAlign='center' color='#FFBD0A' marginTop='40px'>
+          <Heading fontSize="2em">You dont have any chats...</Heading>
+        </Box>
+
       )}
     </Box >
   );

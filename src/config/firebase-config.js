@@ -8,13 +8,13 @@ import { getStorage } from 'firebase/storage';
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDwfCLAlvRQirDSxoIgNHVcBIyLdufq3xo",
-  authDomain: "connectify-7b984.firebaseapp.com",
-  projectId: "connectify-7b984",
-  storageBucket: "connectify-7b984.appspot.com",
-  messagingSenderId: "657069245755",
-  appId: "1:657069245755:web:422fe673638a67537c631e",
-  databaseURL: 'https://connectify-7b984-default-rtdb.europe-west1.firebasedatabase.app/'
+  apiKey: "AIzaSyCOqhpAMGjIobubeBhhh6yogat8PKQ6A0w",
+  authDomain: "connectify-416322.firebaseapp.com",
+  projectId: "connectify-416322",
+  storageBucket: "connectify-416322.appspot.com",
+  messagingSenderId: "64193715475",
+  appId: "1:64193715475:web:1674a7058d1c1dfac28ee6",
+ databaseURL: 'https://connectify-416322-default-rtdb.europe-west1.firebasedatabase.app/'
 };
 
 
@@ -22,3 +22,5 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getDatabase(app);
 export const storage = getStorage(app);
+
+

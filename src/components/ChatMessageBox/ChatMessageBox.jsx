@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Button, Card, HStack, Heading, Image, Spacer, Text, Textarea, } from '@chakra-ui/react';
-import Reactions from '../Reactions';
+import Reactions from '../Reactions/Reactions';
 import { deleteMessageFromChat, editMessageInChat, getRepliesByMessage, removeReactionFromMessage, replyToMessage } from '../../services/chat.services';
 import { v4 } from 'uuid';
 // import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
@@ -18,7 +18,6 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
   const { chatId } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
-
   const [isHovered, setIsHovered] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState('');
@@ -88,7 +87,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
     <>
       <Box id='chat-message-box' onMouseEnter={handleHoverEnter} onMouseLeave={handleHoverLeave} mt={sameAuthor ? '0px' : '5px'} p='5px'>
         {'deleteMessage' in message ? (
-          <Text style={{ color: '#a7555e' }}>
+          <Text style={{ color: '#a7555e', cursor:'default', fontSize:'15px' }}>
             <Text style={{ color: '#a7555e', fontWeight: 'bold', display: 'inline' }}>{message.deleteMessage} </Text>
             by <Text className='deleted-by'>{message.deletedBy} </Text>
             on {message.deletedOn}
@@ -97,17 +96,15 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
           <>
             {!sameAuthor && (
               <>
-                <Box style={{ border: '2px solid black', borderRadius:'10px' }}>
-                  <HStack style={{ gap: '8px', height: '55px' }}>
-                    <Avatar src={message.authorUrl} style={{ marginLeft: '10px' }} />
+                <Box style={{ borderBottom: '1px solid black', paddingBottom: '5px' }}>
+                  <HStack style={{ gap: '8px', height: '35px' }}>
+                    <Avatar src={message.authorUrl} style={{ marginLeft: '5px', width:'42px', height:'42px' }} />
                     <Heading className='user-handle-chat-box' as='h3' size='sm'>{message.author}</Heading>
-                    {/* <Text fontSize='10px'>{message.createdOn}</Text> */}
                     <Spacer />
                     {userData.handle === message.author && isHovered && (
                       <>
-                        {/* <Image onClick={handleEditButtonClick} style={{ height: 'fit-content', width: 'fit-content' }}><img src="../../edit.png" style={{ width: '40px', height: '40px', padding: '4px' }}></img></Image> */}
-                        <Image id='edit-message-img' onClick={handleEditButtonClick} style={{ width: '52px', height: '52px', padding: '4px' }} src="../../../edit.png" />
-                        <Image id='delete-message-img' onClick={handleDeleteButtonClick} style={{ width: '42px', height: '42px', padding: '4px', marginRight: '10px' }} src="../../../delete.png" />
+                        <Image id='edit-message-img' onClick={handleEditButtonClick} style={{ width: '42px', height: '42px', padding: '4px' }} src="../../../edit.png" />
+                        <Image id='delete-message-img' onClick={handleDeleteButtonClick} style={{ width: '32px', height: '32px', padding: '4px', marginRight: '10px' }} src="../../../delete.png" />
                       </>
                     )}
                   </HStack>
@@ -117,7 +114,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
 
             {isEditing ? (
               <Box position='relative'>
-                <Textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} style={{ marginTop: '30px' }} /> <br />
+                <Textarea id='edit-textarea' value={editedContent} onChange={(e) => setEditedContent(e.target.value)} style={{ marginTop: '30px' }} /> <br />
                 <Button onClick={handleSaveEditClick}
                   cursor="pointer"
                   pos="absolute"
@@ -140,7 +137,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                   color="red"
                   size="sm"
                   fontSize='22px'
-                  // marginTop='2px'
+                // marginTop='2px'
                 >X</Button>
               </Box>
             ) : (
@@ -157,26 +154,25 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                     {('repliedMessageContent' in message && message.repliedMessageContent.length > 0) ? (
                       <>
                         <HStack marginTop='5px'>
-                          <Avatar src={message.messageAuthorAvatar} style={{ marginLeft: '10px', width: '25px', height: '25px' }} />
+                          <Avatar src={message.messageAuthorAvatar} style={{ marginLeft: '10px', width: '18px', height: '18px' }} />
                           <Text id='user-handle-chat-box-reply' className='user-handle-chat-box'>{message.messageAuthor}</Text>
                         </HStack>
 
-                        <span style={{ display: 'block' }}>{message.repliedMessageContent}</span>
-                        <span style={{ display: 'block' }}><img style={{ width: '20px', height: '20px', display: 'inline' }} src='../../public/down-arrow.png' />{message.content}</span>
+                        <span style={{ display: 'block', marginTop:'4px', fontSize:'14px' }}>{message.repliedMessageContent}</span>
+                        <span style={{ display: 'block', marginBottom:'4px' }}><img style={{ width: '25px', height: '25px', display: 'inline', marginRight:'4px' }} src='../../public/down-arrow.png' />{message.content}</span>
                       </>
                     ) : (
                       <>
-                        <span style={{ display: 'block', marginTop: '15px', marginBottom: '17px', fontSize: '18px' }}> {message.content}</span>
+                        <span style={{ display: 'block', marginBottom: '4px', fontSize: '20px' }}>{message.content}</span>
                       </>
                     )}
-                    <span style={{ display: 'block', fontSize: '10px' }}>{message.createdOn}</span>
-                    {message.editedOn && <Text style={{ fontSize: '10px', color: 'bisque' }}> (edited) {message.editedOn}</Text>}
+                    <span style={{ display: 'block', fontSize: '10px', opacity:'0.3' }}>{message.createdOn}</span>
+                    {message.editedOn && <Text style={{ fontSize: '10px', color: 'bisque', opacity:'0.6' }}> (edited) {message.editedOn}</Text>}
                   </Text>
                   {userData.handle !== message.author && !isReplying && isHovered && (
                     <HStack pos='absolute' top='0' right='0'>
                       <Reactions messageId={message.id} />
                       <Image id='delete-message-img' onClick={handleReplyButtonClick} style={{ width: '42px', height: '42px', padding: '4px', marginRight: '10px' }} src="../../../reply.png" />
-                      {/* <Button onClick={handleReplyButtonClick} style={{ height: 'fit-content', width: 'fit-content', marginRight: '15px' }}><img src="../../reply.png" style={{ width: '40px', height: '40px' }}></img></Button> */}
                     </HStack>
                   )}
                   {userData.handle === message.author && sameAuthor && isHovered && (
@@ -188,7 +184,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                   {message.img && <FilePreview fileUrl={message.img} />}
                   {'reactions' in message && countMessageReactions(Object.values(message.reactions)).map((entry) => (
                     message.reactions[userData.handle] === entry[0] ? (
-                      < span style={{ border: '1px solid blue', cursor: 'pointer', borderRadius: '5px', width: 'fit-content' }} key={v4()} onClick={() => removeReactionFromMessage(chatId, message.id, userData.handle)} > {entry[0]} {entry[1]}</span>
+                      < span id='user-reacted-emoji' style={{  cursor: 'pointer', borderRadius: '5px', width: 'fit-content' }} key={v4()} onClick={() => removeReactionFromMessage(chatId, message.id, userData.handle)} > {entry[0]} {entry[1]}</span>
                     ) : (
                       < span style={{ width: 'fit-content' }} key={v4()} > {entry[0]} {entry[1]}</span>
                     )
@@ -196,7 +192,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
 
                   {isReplying && (
                     <Box>
-                      <Textarea value={replyContent} onChange={(e) => setReplyContent(e.target.value)} style={{ marginTop: '30px' }} /> <br />
+                      <Textarea id='reply-textarea' value={replyContent} onChange={(e) => setReplyContent(e.target.value)} style={{ marginTop: '30px' }} /> <br />
                       <Button onClick={handleSaveReplyClick}
                         cursor="pointer"
                         pos="absolute"
@@ -205,7 +201,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                         colorScheme="transperent"
                         color="green"
                         size="xs"
-                        marginTop='68px'
+                        marginTop='46px'
                         padding='0px'
                         fontSize='25px'
 
@@ -219,7 +215,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                         color="red"
                         size="sm"
                         fontSize='22px'
-                        marginTop='65px'
+                        marginTop='44px'
                       >X</Button>
                     </Box>
                   )}

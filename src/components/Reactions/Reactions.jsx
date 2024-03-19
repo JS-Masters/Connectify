@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import AppContext from "../providers/AppContext";
+import AppContext from "../../providers/AppContext";
 import {
   getReactionsByMessage,
   addReactionToMessage,
@@ -9,52 +9,34 @@ import {
   getReactionsByReply,
   addReactionToReply,
   removeReactionFromReply,
-} from "../services/chat.services";
-
+} from "../../services/chat.services";
 import { Box } from "@chakra-ui/react";
 import { FaRegSmile } from "react-icons/fa";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import "./Reactions.css";
 
 const Reactions = ({ messageId, replyID = null }) => {
+
   const { userData } = useContext(AppContext);
   const { chatId } = useParams();
   const [messageReactions, setMessageReactions] = useState({});
   const [replyReactions, setReplyReactions] = useState({});
   const [pickerIsVisible, setPickerIsVisible] = useState(false);
-
   const [pickerPositon, setPickerPosition] = useState({});
-  // const pickerRef = useRef(null);
   const parentRef = useRef(null);
 
   useEffect(() => {
-    // const pickerElement = pickerRef.current;
     const parentElement = parentRef.current;
 
     if (parentElement) {
       const parentRect = parentElement.getBoundingClientRect();
-      // const pickerRect = pickerElement.getBoundingClientRect();
-      // const pickerWidth = 230;
       const pickerHeight = 440;
-
-      // Calculate available space around the parent element
-      const spaceLeft = parentRect.left;
-      const spaceRight = window.innerWidth - parentRect.right;
       const spaceTop = parentRect.top;
       const spaceBottom = window.innerHeight - parentRect.bottom;
 
-      // Decide the best position for the dropdown menu based on available space
       let left = -250;
       let top;
-      // if (spaceRight >= pickerWidth) {
-      //   left = pickerWidth - 300;
-      // } else if (spaceLeft >= pickerWidth) {
-      //   left = -pickerWidth - 300;
-      // } else {
-      //   left = 0;
-      // }
-
-
       if (spaceBottom >= pickerHeight) {
         top = 35;
       } else if (spaceTop >= pickerHeight) {
@@ -63,7 +45,6 @@ const Reactions = ({ messageId, replyID = null }) => {
         top = pickerHeight / -2;
         left = -355;
       }
-
       setPickerPosition({ left, top });
     }
   }, []);
@@ -120,9 +101,9 @@ const Reactions = ({ messageId, replyID = null }) => {
     <Box ref={parentRef} position="relative">
       <FaRegSmile
         onClick={() => setPickerIsVisible(!pickerIsVisible)}
-        style={{ fontSize: "30px", cursor: "pointer", color:'bisque' }}
+        id="smile-icon"
+        style={{ fontSize: "30px", cursor: "pointer"}}
       />
-
       <Box
         pos="absolute"
         left={pickerPositon.left}

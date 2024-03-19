@@ -10,10 +10,12 @@
 
 .chat-list-box::-webkit-scrollbar {
     width: 9px;
+
 }
 
 .chat-list-box::-webkit-scrollbar-track {
     background: #c2bebe;
+    border-radius: 6px;
 }
 
 .chat-list-box::-webkit-scrollbar-thumb {
