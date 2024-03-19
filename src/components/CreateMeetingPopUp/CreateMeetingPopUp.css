@@ -1,5 +1,10 @@
-
-/* 
 #pop-up-calendar {
-    height: 600px !important;
-} */
+  flex-grow: 1;
+  background-color: transparent;
+  border: 3px solid transparent;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  color: rgb(116, 108, 37);
+}
