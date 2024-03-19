@@ -39,7 +39,7 @@ const SingleCallRoom = ({ token, leaveCall, isMeeting = false }) => {
 SingleCallRoom.propTypes = {
   token: PropTypes.string.isRequired,
   leaveCall: PropTypes.func.isRequired,
-  isMeeting: PropTypes.bool.isRequired,
+  isMeeting: PropTypes.bool,
 };
 
 export default SingleCallRoom;

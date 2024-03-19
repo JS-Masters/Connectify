@@ -284,7 +284,7 @@ const Calls = () => {
                 </Heading>
                 <Box className="phone-icon" position="absolute" right="0">
                   <PhoneIcon
-                    onClick={() => startCall(call.recievedCall)}
+                    onClick={() => startCall(call.madeCall)}
                     float="right"
                     cursor="pointer"
                     color="green"
@@ -297,7 +297,6 @@ const Calls = () => {
                 key={v4()}
                 justifyContent="space-between"
                 m="30px 65px 10px 71px"
-                position="relative"
               >
                 <Avatar size="md" src={call.recievedCallAvatar}>
                   <AvatarBadge bg="teal.500">

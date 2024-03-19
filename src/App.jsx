@@ -32,7 +32,7 @@ import {
   listenForRejectedCalls,
   setUserHasRejectedCall,
 } from "./services/call.services";
-import { Button, useToast } from "@chakra-ui/react";
+import { Box, Button, useToast } from "@chakra-ui/react";
 import { v4 } from "uuid";
 import { ATENDED_STATUS, WAITING_STATUS, statuses } from "./common/constants";
 import { ref, remove } from "firebase/database";
@@ -264,10 +264,23 @@ const App = () => {
   };
 
   return (
-    <>
+    <Box  position="relative">
       <AppContext.Provider value={{ ...context, setContext, setNotifications }}>
         <RouterProvider router={router} />
       </AppContext.Provider>
+      {incomingToken && (
+        <div    style={{
+          height: "50vh",
+          width: "74%",
+          marginLeft:'13%',
+          marginTop:'5%',
+          position: "absolute",
+          zIndex: "20",
+          top:'0'
+        }}>
+          <SingleCallRoom token={incomingToken} leaveCall={leaveCall} />
+        </div>
+      )}
       {Boolean(incomingCall.length) &&
         incomingCall.map((call) => {
           return (
@@ -282,12 +295,8 @@ const App = () => {
             </div>
           );
         })}
-      {incomingToken && (
-        <div style={{ height: "50vh", width: "auto" }}>
-          <SingleCallRoom token={incomingToken} leaveCall={leaveCall} />
-        </div>
-      )}
-    </>
+
+    </Box>
   );
 };
 export default App;

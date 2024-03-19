@@ -15,7 +15,7 @@ const SignUp = () => {
     toast({
       title: "Registration",
       description: desc,
-      duration: 5000,
+      duration: 3000,
       isClosable: true,
       status: status,
       position: "top",
@@ -56,8 +56,6 @@ const SignUp = () => {
     } catch (error) {
       showToast("Invalid email or password", "error");
     }
-
-    showToast("User registered successfully", "success");
   };
 
   return (

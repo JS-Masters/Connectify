@@ -55,8 +55,6 @@ const SignIn = () => {
       showToast("Invalid email or password", "error");
       return;
     }
-
-    showToast("Successfully logged in", "success");
   };
 
   return (

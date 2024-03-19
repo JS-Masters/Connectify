@@ -63,7 +63,6 @@ const Dropdown = () => {
     await logoutUser();
     await changeUserCurrentStatusInDb(userData.handle, statuses.offline);
     setContext({ user: null, userData: null });
-    showToast();
     navigate("/");
   };
 
