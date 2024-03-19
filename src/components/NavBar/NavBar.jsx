@@ -3,7 +3,6 @@ import {
   AvatarBadge,
   Image,
   Text,
-  Spacer,
   HStack,
   Flex,
   List,
@@ -15,7 +14,7 @@ import {
 import Dropdown from "../Dropdown/Dropdown";
 import { useContext, useState, useEffect } from "react";
 import AppContext from "../../providers/AppContext";
-import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import {
   deleteNotification,
   deleteNotificationsForOpenChat,
@@ -24,12 +23,10 @@ import {
 import useOnclickOutside from "react-cool-onclickoutside";
 import "./NavBar.css";
 const NavBar = () => {
-
   const { userData } = useContext(AppContext);
   const [notifications, setNotifications] = useState([]);
   const { chatId, channelId } = useParams();
   const [showNotifications, setShowNotifications] = useState(false);
-  const navigate = useNavigate();
 
   const ref = useOnclickOutside(() => setShowNotifications(false));
 
@@ -81,9 +78,7 @@ const NavBar = () => {
           <Image
             id="logo"
             src="/LOGO3.png"
-            onClick={() => navigate("/")}
             w="200px"
-            cursor="pointer"
             margin="15px"
           />
           <HStack spacing="12%" marginRight="23%" marginLeft="19%">
@@ -197,7 +192,7 @@ const NavBar = () => {
                   ))}
             </List>
           </Avatar>
-          {userData && <Dropdown/>}
+          {userData && <Dropdown />}
         </Flex>
       </Box>
     </>

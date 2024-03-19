@@ -97,7 +97,7 @@ const SignIn = () => {
           <Box className="form-box">
             <input type="submit" value="Sign in" />
           </Box>
-          <Box className="form-box" mt='0px !important'>
+          <Box className="form-box" mt="0px !important">
             <input
               type="button"
               value="Register"

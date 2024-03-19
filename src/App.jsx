@@ -9,7 +9,6 @@ import AppContext from "./providers/AppContext";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import RootLayout from "./layouts/RootLayout";
-import Home from "./pages/Home/Home";
 import SignIn from "./pages/SignIn/SignIn";
 import SignUp from "./pages/SignUp";
 import { auth, db } from "./config/firebase-config";
@@ -43,17 +42,9 @@ import { logoutUser } from "./services/auth.service";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
-      <Route path="welcome" element={<LandingPage />} />
+      <Route index element={<LandingPage />} />
       <Route path="sign-in" element={<SignIn />} />
       <Route path="sign-up" element={<SignUp />} />
-      <Route
-        index
-        element={
-          <Authenticated>
-            <Home />
-          </Authenticated>
-        }
-      />
       <Route
         path="chats"
         element={

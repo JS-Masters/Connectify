@@ -53,7 +53,7 @@ const SignUp = () => {
       );
 
       setContext({ user, userData: null });
-      navigate("/");
+      navigate("/chats");
     } catch (error) {
       showToast("Invalid email or password", "error");
     }

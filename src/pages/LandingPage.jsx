@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  HStack,
-  Heading,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Button, HStack, Heading, Text, VStack } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppContext from "../providers/AppContext";
@@ -18,7 +11,9 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    user ? navigate("/") : null;
+    setTimeout(() => {
+      user ? navigate("/chats") : null;
+    }, 200);
   }, [user, navigate]);
 
   useEffect(() => {
@@ -40,10 +35,10 @@ const LandingPage = () => {
         <CountUp duration={10} end={userCount} /> users are already using
         Connectify.
       </Heading>
-      <VStack w="380px" color="goldenrod" textAlign='center'>
+      <VStack w="380px" color="goldenrod" textAlign="center">
         <Heading>Welcome to Connectify</Heading>
 
-        <Text mb='10px'>
+        <Text mb="10px">
           Here, you&apos;ll find everything you need to stay connected with your
           friends and loved ones.
           <br />
