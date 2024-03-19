@@ -8,7 +8,6 @@ import {
   Box,
   Button,
   HStack,
-  Heading,
   Input,
   InputGroup,
   InputRightElement,
@@ -67,10 +66,9 @@ const SignIn = () => {
     <Box display="flex" alignItems="center" justifyContent="center" h="100%">
       <Form
         onSubmit={handleSubmit}
-        style={{ width: "380px", color: "goldenrod" }}
+        style={{ width: "350px", color: "goldenrod" }}
       >
         <VStack spacing="10px">
-          <Heading>Welcome to Connectify</Heading>
           <Input type="email" placeholder="Email" name="email" />
 
           <InputGroup>
