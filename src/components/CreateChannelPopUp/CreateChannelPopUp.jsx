@@ -50,7 +50,9 @@ const CreateChannelPopUp = () => {
   return (
     <Popup trigger=
       {<Button id="new-channel-button" marginBottom='50px'>New Channel</Button>}
-      modal nested>
+      modal nested
+      closeOnDocumentClick={false}
+      closeOnEscape={false}>
       {
         close => (
           <div className='modal' style={{ width: '500px', height: '250px', backgroundImage: "url('/pop-up-background2.jpg')" }}>

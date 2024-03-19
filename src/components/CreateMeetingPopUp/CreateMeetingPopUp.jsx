@@ -113,7 +113,8 @@ const CreateMeetingPopUp = ({ teamName }) => {
   };
 
   return (
-    <Popup trigger={<Button mb="20px">Meetings Calendar</Button>} modal nested>
+    <Popup trigger={<Button mb="20px">Meetings Calendar</Button>} modal nested closeOnDocumentClick={false}
+      closeOnEscape={false}>
       {(close) => (
         <Box id="pop-up-calendar" minW="1000px">
           <Button
@@ -148,11 +149,11 @@ const CreateMeetingPopUp = ({ teamName }) => {
             // eventClick={handleEventClick}
 
             eventsSet={handleEvents} // called after events are initialized/added/changed/removed
-            /* you can update a remote database when these fire:
-                  eventAdd={function(){}}
-                  eventChange={function(){}}
-                  eventRemove={function(){}}
-                  */
+          /* you can update a remote database when these fire:
+                eventAdd={function(){}}
+                eventChange={function(){}}
+                eventRemove={function(){}}
+                */
           />
         </Box>
       )}
