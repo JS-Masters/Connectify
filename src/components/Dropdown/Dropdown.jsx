@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../services/auth.service";
@@ -26,7 +25,6 @@ import useOnclickOutside from "react-cool-onclickoutside";
 import "./Dropdown.css";
 
 const Dropdown = () => {
-
   const [showDropdown, setShowDropdown] = useState(false);
   const { userData, setContext } = useContext(AppContext);
   const navigate = useNavigate();
@@ -93,14 +91,14 @@ const Dropdown = () => {
             display="inline-block"
             w="12px"
             h="12px"
-            marginLeft='10px'
+            marginLeft="10px"
             borderRadius="50%"
             bg="green"
           />{" "}
           Online
         </ListItem>
         <ListItem
-           className="dropdown-item"
+          className="dropdown-item"
           //  textAlign='center'
 
           cursor="pointer"
@@ -118,11 +116,11 @@ const Dropdown = () => {
             setShowDropdown(false);
           }}
         >
-          <Box        
+          <Box
             display="inline-block"
             w="12px"
             h="12px"
-            marginLeft='10px'
+            marginLeft="10px"
             borderRadius="50%"
             bg="red"
           />{" "}
@@ -134,7 +132,7 @@ const Dropdown = () => {
 
   return (
     <HStack pos="relative" m="0 20px">
-      <Text id="logged-user-handle" color="bisque" cursor='default'>
+      <Text id="logged-user-handle" color="bisque" cursor="default">
         {userData.handle}
       </Text>
 
@@ -164,13 +162,13 @@ const Dropdown = () => {
         top="75px"
         border="1px solid gray"
         borderRadius="10px"
-        paddingLeft='0'
+        paddingLeft="0"
       >
         {!userIsInMeeting && renderStatusMenu()}
         <BlockedUsersPopUp />
         <UploadForm />
         <ListItem
-           className="dropdown-item"
+          className="dropdown-item"
           cursor="pointer"
           border="1px solid gray"
           borderRadius="5px"
@@ -189,7 +187,5 @@ const Dropdown = () => {
     </HStack>
   );
 };
-
-
 
 export default Dropdown;

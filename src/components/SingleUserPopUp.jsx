@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 
 const CustomModal = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -12,8 +12,13 @@ const CustomModal = () => {
   };
 
   return (
-    <span style={{float:'right'}}>
-      <button onClick={openModal} style={{margin:'4px', backgroundColor:'green', width:'25px'}}>+</button>
+    <span style={{ float: "right" }}>
+      <button
+        onClick={openModal}
+        style={{ margin: "4px", backgroundColor: "green", width: "25px" }}
+      >
+        +
+      </button>
       {modalOpen && (
         <dialog open>
           <button className="close-button" onClick={closeModal}>
@@ -27,4 +32,3 @@ const CustomModal = () => {
 };
 
 export default CustomModal;
-

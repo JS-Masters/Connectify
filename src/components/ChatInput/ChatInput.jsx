@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import { useContext, useState } from "react";
 import { Form, useParams } from "react-router-dom";
 import { addMessageToChat } from "../../services/chat.services";
@@ -86,10 +85,6 @@ const ChatInput = () => {
       </label>
     </Form>
   )
-}
-
-ChatInput.propTypes = {
-  disabled: PropTypes.bool
 }
 
 

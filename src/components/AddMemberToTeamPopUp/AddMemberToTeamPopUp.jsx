@@ -1,4 +1,3 @@
-import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   AvatarBadge,
@@ -8,7 +7,6 @@ import {
   Input,
   List,
   ListItem,
-  Tag,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import Popup from "reactjs-popup";
@@ -16,7 +14,10 @@ import AppContext from "../../providers/AppContext";
 import { getAllUsers } from "../../services/user.services";
 import { v4 } from "uuid";
 import UserStatusIcon from "../UserStatusIconChats";
-import { addNewMemberToTeam, getTeamNameByTeamId } from "../../services/team.services";
+import {
+  addNewMemberToTeam,
+  getTeamNameByTeamId,
+} from "../../services/team.services";
 import { useParams } from "react-router-dom";
 import { sendNotification } from "../../services/chat.services";
 import "./AddMemberToTeamPopUp.css";
@@ -27,7 +28,7 @@ const AddMemberToTeamPopUp = () => {
   const [users, setUsers] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [usersBySearchTerm, setUsersBySearchTerm] = useState([]);
-  const [teamName, setTeamName] = useState('');
+  const [teamName, setTeamName] = useState("");
 
   useEffect(() => {
     getAllUsers().then((users) =>
@@ -37,10 +38,9 @@ const AddMemberToTeamPopUp = () => {
 
   useEffect(() => {
     if (teamId) {
-      getTeamNameByTeamId(teamId)
-        .then((team) => setTeamName(team.teamName));
+      getTeamNameByTeamId(teamId).then((team) => setTeamName(team.teamName));
     }
-  }, [teamId])
+  }, [teamId]);
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
@@ -94,7 +94,12 @@ const AddMemberToTeamPopUp = () => {
       {users && (
         <Popup
           trigger={
-            <Button id="team-add-member-button" mr="10px" float='right' size="xs">
+            <Button
+              id="team-add-member-button"
+              mr="10px"
+              float="right"
+              size="xs"
+            >
               ADD Member
             </Button>
           }
@@ -104,20 +109,27 @@ const AddMemberToTeamPopUp = () => {
           closeOnEscape={false}
         >
           {(close) => (
-            <div className="modal"
-              style={{ width: '500px', height: '500px', backgroundImage: "url('/pop-up-background2.jpg')" }}
+            <div
+              className="modal"
+              style={{
+                width: "500px",
+                height: "500px",
+                backgroundImage: "url('/pop-up-background2.jpg')",
+              }}
             >
               <Button
                 id="close-add-member-popup"
-                size='sm' style={{ float: "right", margin: "10px", backgroundColor: 'transparent' }}
+                size="sm"
+                style={{
+                  float: "right",
+                  margin: "10px",
+                  backgroundColor: "transparent",
+                }}
                 onClick={() => handlePopUpClose(close)}
               >
                 X
               </Button>
-              <div
-                style={{ padding: "0 35px" }}
-                className="content"
-              >
+              <div style={{ padding: "0 35px" }} className="content">
                 <Box id="add-member-title">
                   <Heading id="add-member-heading">{teamName}</Heading>
                   <Heading id="add-member-subheading">add new members</Heading>
@@ -125,20 +137,33 @@ const AddMemberToTeamPopUp = () => {
                 <Input
                   id="add-members-search"
                   value={searchTerm}
-                  onChange={handleInputChange} />
+                  onChange={handleInputChange}
+                />
                 <div className="selected-content" style={{ color: "black" }}>
                   <List
                     id="add-member-form"
                     overflow="hidden"
                     overflowY="auto"
-                    style={{ border: '2px solid black', borderRadius: '10px', height: '275px', padding: '2px', marginTop: '20px' }}>
+                    style={{
+                      border: "2px solid black",
+                      borderRadius: "10px",
+                      height: "275px",
+                      padding: "2px",
+                      marginTop: "20px",
+                    }}
+                  >
                     {Boolean(usersBySearchTerm.length) &&
                       usersBySearchTerm.map((user) => (
                         <ListItem
-
-                          // className="create-form-user"
                           key={v4()}
-                          style={{ cursor: "default", border: '1px solid transparent', borderRadius: '5px', padding: '2px', margin: '7px', marginTop: '14px' }}
+                          style={{
+                            cursor: "default",
+                            border: "1px solid transparent",
+                            borderRadius: "5px",
+                            padding: "2px",
+                            margin: "7px",
+                            marginTop: "14px",
+                          }}
                         >
                           <Avatar size="sm" src={user.avatarUrl}>
                             <AvatarBadge bg="teal.500">
@@ -150,14 +175,19 @@ const AddMemberToTeamPopUp = () => {
                               }
                             </AvatarBadge>
                           </Avatar>
-                          <span className="user-handle-span" style={{ margin: '10px', fontSize: '20px' }}>{user.handle}</span>
+                          <span
+                            className="user-handle-span"
+                            style={{ margin: "10px", fontSize: "20px" }}
+                          >
+                            {user.handle}
+                          </span>
                           {/* <Box textAlign='right'> */}
                           {isUserAlreadyInTheTeam(user.handle) ? (
                             <h3
-                            id="team-member-text"
+                              id="team-member-text"
                               style={{
                                 display: "inline",
-                                float: "right"
+                                float: "right",
                               }}
                             >
                               Member
@@ -165,8 +195,8 @@ const AddMemberToTeamPopUp = () => {
                           ) : (
                             <Button
                               id="popup-add-member-button"
-                              float='right'
-                              mr='10px'
+                              float="right"
+                              mr="10px"
                               onClick={() =>
                                 handleAddMemberClick(user.handle, close)
                               }
@@ -174,7 +204,6 @@ const AddMemberToTeamPopUp = () => {
                               ADD
                             </Button>
                           )}
-                          {/* </Box>                          */}
                         </ListItem>
                       ))}
                   </List>

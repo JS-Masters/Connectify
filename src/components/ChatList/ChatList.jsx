@@ -1,14 +1,20 @@
-// import PropTypes from 'prop-types'
 import CreateChatPopUp from "../CreateChatPopUp/CreateChatPopUp";
 import { useContext, useEffect, useState } from "react";
 import AppContext from "../../providers/AppContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   fetchChatData,
   handleLeaveChat,
   listenForNewChats,
 } from "../../services/chat.services";
-import { Avatar, AvatarBadge, Box, Button, HStack, Heading } from "@chakra-ui/react";
+import {
+  Avatar,
+  AvatarBadge,
+  Box,
+  Button,
+  HStack,
+  Heading,
+} from "@chakra-ui/react";
 import { v4 } from "uuid";
 import { addAvatarAndStatus } from "../../services/user.services";
 import UserStatusIcon from "../UserStatusIconChats";
@@ -20,9 +26,7 @@ import {
 import "./ChatList.css";
 
 const ChatList = () => {
-
   const { userData } = useContext(AppContext);
-  const { chatId } = useParams();
   const navigate = useNavigate();
   const [myChats, setMyChats] = useState(null);
   const [users, setUsers] = useState([]); // Array<object{handle: string, avatarUrl: string, currentStatus: string}>
@@ -61,7 +65,13 @@ const ChatList = () => {
   };
 
   return (
-    <Box className="chat-list-box" h='85vh' w='32vh' overflow="hidden" overflowY="auto">
+    <Box
+      className="chat-list-box"
+      h="85vh"
+      w="32vh"
+      overflow="hidden"
+      overflowY="auto"
+    >
       <CreateChatPopUp />
       {myChats ? (
         Object.keys(myChats).map((chatID) => {
@@ -71,38 +81,43 @@ const ChatList = () => {
           const chatMembers =
             chatParticipantsHandles.length === 0
               ? [
-                {
-                  handle: NO_USERS_MESSAGE,
-                  avatarUrl: NO_USERS_AVATAR,
-                  currentStatus: statuses.offline,
-                },
-              ]
-              : users.filter((u) =>
-                chatParticipantsHandles.includes(u.handle)
-              );
+                  {
+                    handle: NO_USERS_MESSAGE,
+                    avatarUrl: NO_USERS_AVATAR,
+                    currentStatus: statuses.offline,
+                  },
+                ]
+              : users.filter((u) => chatParticipantsHandles.includes(u.handle));
 
           return (
             <Box
               className="single-chat-box"
               border="1px solid gray"
-              borderRadius='10px'
-              margin='8px'
-              padding='9px'
+              borderRadius="10px"
+              margin="8px"
+              padding="9px"
               size="md"
               cursor="pointer"
-              position='relative'
+              position="relative"
               key={v4()}
               onClick={() => navigate(`/chats/${chatID}`)}
             >
-              {chatMembers.map((member) => (
+              {chatMembers.map((member) =>
                 chatMembers.length <= 1 ? (
-                  <HStack key={v4()} style={{ marginRight: "10px", justifyContent: 'left', overflowT: 'scroll' }}>
+                  <HStack
+                    key={v4()}
+                    style={{
+                      marginRight: "10px",
+                      justifyContent: "left",
+                      overflowT: "scroll",
+                    }}
+                  >
                     <Avatar
                       size="md"
                       style={{ cursor: "pointer", marginRight: "10px" }}
                       src={member.avatarUrl}
                     >
-                      <AvatarBadge bg="teal.500" >
+                      <AvatarBadge bg="teal.500">
                         {
                           <UserStatusIcon
                             userHandle={member.handle}
@@ -111,12 +126,17 @@ const ChatList = () => {
                         }
                       </AvatarBadge>
                     </Avatar>
-                    <Heading id="chat-member-handle" display="inline" as="h3" size="sm"
+                    <Heading
+                      id="chat-member-handle"
+                      display="inline"
+                      as="h3"
+                      size="sm"
                       style={{
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                      }}>
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
                       {member.handle}
                     </Heading>
                   </HStack>
@@ -127,7 +147,7 @@ const ChatList = () => {
                     style={{ cursor: "pointer", marginRight: "10px" }}
                     src={member.avatarUrl}
                   >
-                    <AvatarBadge bg="teal.500" >
+                    <AvatarBadge bg="teal.500">
                       {
                         <UserStatusIcon
                           userHandle={member.handle}
@@ -137,7 +157,7 @@ const ChatList = () => {
                     </AvatarBadge>
                   </Avatar>
                 )
-              ))}
+              )}
               <Button
                 id="leave-chat-button"
                 cursor="pointer"
@@ -155,16 +175,12 @@ const ChatList = () => {
           );
         })
       ) : (
-
-        <Box textAlign='center' color='#FFBD0A' marginTop='40px'>
+        <Box textAlign="center" color="#FFBD0A" marginTop="40px">
           <Heading fontSize="2em">You dont have any chats...</Heading>
         </Box>
-
       )}
-    </Box >
+    </Box>
   );
 };
-
-ChatList.propTypes = {};
 
 export default ChatList;

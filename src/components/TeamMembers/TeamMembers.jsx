@@ -1,8 +1,8 @@
+import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
-import { getTeamById, listenForNewTeamMember } from "../../services/team.services";
+import { listenForNewTeamMember } from "../../services/team.services";
 import {
   changeUserCurrentStatusInDb,
-  getUserAvatarByHandle,
   getUserLastStatusByHandle,
   getUserStatusByHandle,
   getUsersAvatarsByHandles,
@@ -10,21 +10,18 @@ import {
 import {
   Avatar,
   AvatarBadge,
-  Box,
-  GridItem,
   HStack,
   Heading,
   VStack,
   useToast,
   Image,
-  Text,
   Spacer,
 } from "@chakra-ui/react";
 import UserStatusIcon from "../UserStatusIconChats";
 import { useParams } from "react-router-dom";
-import AddMemberToTeamPopUp from "../AddMemberToTeamPopUp/AddMemberToTeamPopUp";
+
 import AppContext from "../../providers/AppContext";
-import { ChatIcon, PhoneIcon } from "@chakra-ui/icons";
+import { PhoneIcon } from "@chakra-ui/icons";
 import {
   addIncomingCallToDb,
   createCall,
@@ -36,7 +33,6 @@ import SingleCallRoom from "../SingleCallRoom";
 import "./TeamMembers.css";
 
 const TeamMembers = ({ selectedTeam }) => {
-
   const { userData } = useContext(AppContext);
   const { teamId } = useParams();
   const [teamMembers, setTeamMembers] = useState([]);
@@ -125,7 +121,7 @@ const TeamMembers = ({ selectedTeam }) => {
   return (
     <>
       {teamOwner && (
-        <VStack h="84%" alignItems="start" w='70%'>
+        <VStack h="84%" alignItems="start" w="70%">
           <HStack key={teamOwner.handle} m="5px 0">
             <Avatar size="sm" src={teamOwner.avatarUrl}>
               <AvatarBadge bg="teal.500">
@@ -137,25 +133,32 @@ const TeamMembers = ({ selectedTeam }) => {
                 }
               </AvatarBadge>
             </Avatar>
-            <Heading className="team-member-handle" display="inline" as="h3" size="sm" color="white" >
+            <Heading
+              className="team-member-handle"
+              display="inline"
+              as="h3"
+              size="sm"
+              color="white"
+            >
               {teamOwner.handle}
             </Heading>
             <Image src="/crown.png" w="28px" h="28px" display="inline" />
-            {userData.handle !== teamOwner.handle &&
+            {userData.handle !== teamOwner.handle && (
               <PhoneIcon
-                onClick={() => startCall(member.handle)}
+                onClick={() => startCall(teamOwner.handle)}
                 float="right"
                 m="5px"
                 cursor="pointer"
                 color="green"
                 fontSize="23px"
-              />}
+              />
+            )}
           </HStack>
 
           {teamMembers
             .filter((m) => m.handle !== teamOwner.handle)
             .map((member) => (
-              <HStack key={member.handle} m="5px 0" w='100%'>
+              <HStack key={member.handle} m="5px 0" w="100%">
                 <Avatar size="sm" src={member.avatarUrl}>
                   <AvatarBadge bg="teal.500">
                     {
@@ -166,7 +169,13 @@ const TeamMembers = ({ selectedTeam }) => {
                     }
                   </AvatarBadge>
                 </Avatar>
-                <Heading className="team-member-handle" display="inline" as="h3" size="sm" color="white">
+                <Heading
+                  className="team-member-handle"
+                  display="inline"
+                  as="h3"
+                  size="sm"
+                  color="white"
+                >
                   {member.handle}
                 </Heading>
                 <Spacer />
@@ -180,7 +189,6 @@ const TeamMembers = ({ selectedTeam }) => {
                     fontSize="25px"
                   />
                 )}
-             
               </HStack>
             ))}
         </VStack>
@@ -192,6 +200,10 @@ const TeamMembers = ({ selectedTeam }) => {
       )}
     </>
   );
+};
+
+TeamMembers.propTypes = {
+  selectedTeam: PropTypes.object.isRequired,
 };
 
 export default TeamMembers;

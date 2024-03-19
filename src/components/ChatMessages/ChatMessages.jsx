@@ -8,7 +8,6 @@ import { v4 } from "uuid";
 import "./ChatMessages.css";
 
 const ChatMessages = () => {
-
   const { chatId } = useParams();
   const [messages, setMessages] = useState([]);
   const [dontScroll, setDontScroll] = useState(true);
@@ -19,8 +18,9 @@ const ChatMessages = () => {
       const msgData = snapshot.exists() ? snapshot.val() : {};
       const newMessages = Object.values(msgData);
 
-      setMessages(prevMessages => {
-        const wasMessagesLengthSame = prevMessages.length === Object.keys(newMessages).length;
+      setMessages((prevMessages) => {
+        const wasMessagesLengthSame =
+          prevMessages.length === Object.keys(newMessages).length;
         setDontScroll(wasMessagesLengthSame);
         return newMessages;
       });
@@ -31,7 +31,7 @@ const ChatMessages = () => {
   useLayoutEffect(() => {
     if (!dontScroll) {
       const timeout = setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+        messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
       }, 0);
       return () => clearTimeout(timeout);
     }
@@ -50,42 +50,27 @@ const ChatMessages = () => {
     <>
       <Box
         id="chat-messages-box"
-        position='relative'
+        position="relative"
         overflow="hidden"
         overflowY="auto"
-        whiteSpace='nowrap'
-        h='88%'
-        w='83%'>
-        {messages && (
-          messages.map((message) => (
+        whiteSpace="nowrap"
+        h="88%"
+        w="83%"
+      >
+        {messages &&
+          messages.map((message) =>
             isMessageFromSameAuthor(message) ? (
-              <ChatMessageBox
-                key={v4()}
-                message={message}
-                sameAuthor={true}
-              />
+              <ChatMessageBox key={v4()} message={message} sameAuthor={true} />
             ) : (
-              <ChatMessageBox
-                key={v4()}
-                message={message}
-                sameAuthor={false}
-              />
+              <ChatMessageBox key={v4()} message={message} sameAuthor={false} />
             )
-          ))
-        )}
-
+          )}
 
         <div ref={messagesEndRef} />
       </Box>
       <ChatInput />
     </>
-
   );
-
 };
 
 export default ChatMessages;
-
-
-
-

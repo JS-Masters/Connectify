@@ -10,7 +10,6 @@ import {
   Button,
   Box,
 } from "@chakra-ui/react";
-// import PropTypes from "prop-types";
 import Dropdown from "../Dropdown/Dropdown";
 import { useContext, useState, useEffect } from "react";
 import AppContext from "../../providers/AppContext";
@@ -75,12 +74,7 @@ const NavBar = () => {
     <>
       <Box w="100vw" bg="#2b2b2b">
         <Flex alignItems="center" maxW="1500px" m="auto">
-          <Image
-            id="logo"
-            src="/LOGO3.png"
-            w="200px"
-            margin="15px"
-          />
+          <Image id="logo" src="/LOGO3.png" w="200px" margin="15px" />
           <HStack spacing="12%" marginRight="23%" marginLeft="19%">
             <NavLink to="/chats" style={{ minWidth: "100px" }}>
               <Image src="/chats-y.png" />
@@ -198,7 +192,5 @@ const NavBar = () => {
     </>
   );
 };
-
-NavBar.propTypes = {};
 
 export default NavBar;
