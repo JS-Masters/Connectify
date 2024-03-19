@@ -27,21 +27,9 @@ const SignUp = () => {
     event.preventDefault();
 
     const userName = event.target.elements.username.value;
-    const firstName = event.target.elements.firstName.value;
-    const lastName = event.target.elements.lastName.value;
     const email = event.target.elements.email.value;
     const pass = event.target.elements.password.value;
     const confirmPassword = event.target.elements.confirmPassword.value;
-
-    if (firstName.length < 4 || firstName.length > 32) {
-      showToast("First name must be between 4 and 32 symbols!", "error");
-      return;
-    }
-
-    if (lastName.length < 4 || lastName.length > 32) {
-      showToast("Last name must be between 4 and 32 symbols!", "error");
-      return;
-    }
 
     const user = await getUserByHandle(userName);
     if (user.exists()) {
@@ -59,8 +47,6 @@ const SignUp = () => {
       await createUserHandle(
         userName,
         credentials.user.uid,
-        firstName,
-        lastName,
         email,
         statuses.online,
         statuses.online
@@ -109,7 +95,7 @@ const SignUp = () => {
           <Box className="form-box">
             <input type="submit" value="Sign up" />
           </Box>
-          <Box className="form-box" mt='0 !important'>
+          <Box className="form-box" mt="0 !important">
             <input
               type="button"
               value="Cancel"

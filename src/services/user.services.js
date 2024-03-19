@@ -12,10 +12,10 @@ export const updateUserByHandle = (handle, prop, value) => {
   return set(ref(db, `users/${handle}/${prop}`), value);
 };
 
-export const createUserHandle = (handle, uid, firstName, lastName, email, currentStatus, lastStatus) => {
+export const createUserHandle = (handle, uid, email, currentStatus, lastStatus) => {
 
 
-  return set(ref(db, `users/${handle}`), { handle, uid, firstName, lastName, email, createdOn: new Date(), currentStatus, lastStatus, avatarUrl: DEFAULT_AVATAR_URL })
+  return set(ref(db, `users/${handle}`), { handle, uid, email, createdOn: new Date(), currentStatus, lastStatus, avatarUrl: DEFAULT_AVATAR_URL })
 };
 
 export const getUserData = (uid) => {
