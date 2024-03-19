@@ -41,11 +41,7 @@
   text-shadow: 0 0 10px goldenrod;
   color: goldenrod;
 }
-/* #sign-up-button-landing:active, 
-#sign-in-button-landing:active {
-    color: #b88e1d;
-    opacity: 1;
-} */
+
 .form .form-content .form-box input[type="submit"],
 .form .form-content .form-box input[name="navigate"] {
   box-shadow: -3px -3px 6px rgba(255, 255, 255, 0.1),

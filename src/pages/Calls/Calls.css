@@ -42,19 +42,34 @@
 cursor: default !important;
 }
 
+
+#calls-main-box::-webkit-scrollbar {
+    width: 8px ;
+}
+#calls-main-box::-webkit-scrollbar-track {
+    background: #c2bebe ;
+    border-radius: 5px ;
+}
+
+#calls-main-box::-webkit-scrollbar-thumb {
+    background-color: #4d4c4c ;
+    border-radius: 6px ;
+}
+
+
 #calls-search-users-list::-webkit-scrollbar {
-    width: 8px;
+    width: 8px ;
 
 }
 
 #calls-search-users-list::-webkit-scrollbar-track {
-    background: #c2bebe;
-    border-radius: 5px;
+    background: #c2bebe ;
+    border-radius: 5px ;
 }
 
 #calls-search-users-list::-webkit-scrollbar-thumb {
-    background-color: #4d4c4c;
-    border-radius: 6px;
+    background-color: #4d4c4c ;
+    border-radius: 6px ;
 }
 
 #calls-search-users-list {

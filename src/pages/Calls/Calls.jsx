@@ -146,6 +146,7 @@ const Calls = () => {
   return (
     <Flex justifyContent="center" h="100%">
       <Box
+      id="calls-main-box"
         w="73%"
         h="90%"
         position="relative"
@@ -289,6 +290,7 @@ const Calls = () => {
                     cursor="pointer"
                     color="green"
                     fontSize="45px"
+                    mr='55px'
                   />
                 </Box>
               </HStack>
@@ -336,6 +338,7 @@ const Calls = () => {
                     cursor="pointer"
                     color="green"
                     fontSize="45px"
+                    mr='55px'
                   />
                 </Box>
               </HStack>

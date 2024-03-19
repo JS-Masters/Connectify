@@ -16,10 +16,9 @@ import {
   getUserLastStatusByHandle,
 } from "../../services/user.services";
 import { Box } from "@chakra-ui/react";
-// import enLocale from '@fullcalendar/core/locales/en';
 
 const Calendar = () => {
-  const [weekendsVisible, setWeekendsVisible] = useState(true);
+  const [weekendsVisible, setWeekendsVisible] = useState(false);
   const [currentEvents, setCurrentEvents] = useState([]);
 
   const { user, userData } = useContext(AppContext);
