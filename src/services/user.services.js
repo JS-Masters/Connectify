@@ -277,3 +277,13 @@ export const checkUsersIfBannedLoggedUser = async (usersToCheck, loggedUser) => 
     console.log(error.message);
   }
 };
+
+export const fetchAllUsers = async () => {
+  try {
+    const snapshot = await get(ref(db, 'users'));
+    return snapshot.val();
+  } catch (error) {
+    console.log(error.message);
+  }
+  return null; 
+};
