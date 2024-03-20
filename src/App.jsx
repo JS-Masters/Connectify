@@ -203,7 +203,7 @@ const App = () => {
       }, userData.handle);
       return () => unsubscribe();
     }
-  }, [user]);
+  }, [userData]);
 
   useEffect(() => {
     window.addEventListener("beforeunload", handleTabClose);

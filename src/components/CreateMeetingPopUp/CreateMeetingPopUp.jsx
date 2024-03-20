@@ -133,7 +133,7 @@ const CreateMeetingPopUp = ({ teamName }) => {
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
-            weekends={true}
+            weekends={false}
             initialEvents={teamMeetings}
             select={handleDateSelect}
             eventContent={renderEventContent}

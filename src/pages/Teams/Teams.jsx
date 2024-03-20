@@ -123,7 +123,7 @@ const Teams = () => {
               id="leave-team-button"
               onClick={handleLeaveTeamClick}
               colorScheme="red"
-              mr="10px"
+              mr="35px"
               size="sm"
               float='right'
             >
