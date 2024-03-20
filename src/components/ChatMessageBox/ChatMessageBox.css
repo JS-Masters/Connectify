@@ -12,7 +12,7 @@
 }
 
 #chat-message-box span {
-    color: white !important;
+    color: white ;
 }
 
 .user-handle-chat-box {
@@ -34,10 +34,18 @@
     color: bisque;
 }
 
-.deleted-by {
+#deleted-by-username-span {
     font-family: "Angkor", serif !important;
     font-weight: 200 !important;
     display: inline;
+}
+
+#deleted-by-span {
+    color: #a7555e !important;
+}
+
+#deleted-by-username-span {
+    color: #a7555e !important;
 }
 
 #edit-message-img {

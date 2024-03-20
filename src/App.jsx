@@ -219,8 +219,9 @@ const App = () => {
 
   const handleTabClose = async () => {
     try {
-      await logoutUser();
       await changeUserCurrentStatusInDb(userData.handle, statuses.offline);
+      await logoutUser();
+      
       setContext({ user: null, userData: null });
     } catch (error) {
       console.error("Error updating user status:", error);

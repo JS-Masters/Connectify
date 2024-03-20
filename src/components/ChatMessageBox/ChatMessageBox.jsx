@@ -115,16 +115,16 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
           <Text
             style={{ color: "#a7555e", cursor: "default", fontSize: "15px" }}
           >
-            <Text
-              style={{
-                color: "#a7555e",
-                fontWeight: "bold",
-                display: "inline",
-              }}
+            <Text as='span' id="deleted-by-span"
+              
+                // color= "#a7555e"
+                fontWeight= "bold"
+                display= "inline"
+              
             >
               {message.deleteMessage}{" "}
             </Text>
-            by <Text className="deleted-by">{message.deletedBy} </Text>
+            by <Text as='span' id="deleted-by-username-span">{message.deletedBy} </Text>
             on {message.deletedOn}
           </Text>
         ) : (
