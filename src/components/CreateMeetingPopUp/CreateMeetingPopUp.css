@@ -8,3 +8,77 @@
   border-radius: 10px;
   color: rgb(116, 108, 37);
 }
+
+#create-meeting-button-teams {
+  background: transparent;
+  border-radius: 10px;
+  border: none;
+  color: #6f6f6f;
+  font-size: 18px;
+  height: 50px;
+  outline: none;
+  padding: 5px 15px;
+  width: 90%;
+  box-shadow: -3px -3px 6px rgba(255, 255, 255, 0.1),
+    3px 3px 6px rgba(0, 0, 0, 0.8);
+  font-weight: 600;
+  margin-top: 20px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  margin-right: 25px;
+}
+
+#create-meeting-button-teams:hover {
+  opacity: 0.7;
+}
+
+#create-meeting-button-teams:active {
+  text-shadow: 0 0 10px green;
+  color: green;
+}
+
+#create-meeting-button:active {
+  box-shadow: none;
+  cursor: pointer;
+  color: #b88e1d;
+}
+
+#delete-meeting-button {
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 3px 6px 3px 6px;
+  background-color: #5f5c5c;
+}
+
+#delete-meeting-button:hover {
+ opacity: 0.5 !important;
+  border: none;
+}
+#delete-meeting-button:active {
+  opacity: 1 !important;
+   border: none;
+ }
+
+#create-meeting-button {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 3px 6px 3px 6px;
+  background-color: #5f5c5c;
+}
+
+#create-meeting-button:hover {
+  opacity: 0.5 !important;
+  border: none;
+}
+
+#create-meeting-button:active {
+  opacity: 1 !important;
+   border: none;
+ }
+

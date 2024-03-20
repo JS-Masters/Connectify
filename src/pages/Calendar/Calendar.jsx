@@ -66,7 +66,8 @@ const Calendar = () => {
       <>
         <b>{eventInfo.timeText}</b>
         <i>{eventInfo.event.title}</i>
-        <button
+        <button 
+        id="join-meeting-button"
           onClick={() =>
             handleJoinMeeting(eventInfo.event.extendedProps.dyteMeetingId)
           }

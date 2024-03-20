@@ -90,6 +90,7 @@ const CreateMeetingPopUp = ({ teamName }) => {
         <br />
         {!teamMeetings.find((meeting) => meeting.id === eventInfo.event.id) && (
           <button
+          id="create-meeting-button"
             style={{ border: "1px solid black", padding: "3px" }}
             onClick={() =>
               createMeeting(
@@ -100,10 +101,11 @@ const CreateMeetingPopUp = ({ teamName }) => {
               )
             }
           >
-            Create Meeting
+            Create
           </button>
         )}
         <button
+        id="delete-meeting-button"
           style={{ border: "1px solid black", padding: "3px" }}
           onClick={() => handleDeleteMeeting(eventInfo.event)}
         >
@@ -114,7 +116,7 @@ const CreateMeetingPopUp = ({ teamName }) => {
   };
 
   return (
-    <Popup trigger={<Button mb="20px">Meetings Calendar</Button>} modal nested
+    <Popup trigger={<input id="create-meeting-button-teams" value='Meetings Calendar' type="button" mb="20px"/>} modal nested
       closeOnDocumentClick={false}
       closeOnEscape={false}>
       {(close) => (

@@ -21,6 +21,8 @@ import {
 } from "../../services/chat.services";
 import useOnclickOutside from "react-cool-onclickoutside";
 import "./NavBar.css";
+import notificationSound from "./../../assets/sounds/new-message-sound.mp3";
+
 const NavBar = () => {
   const { userData } = useContext(AppContext);
   const [notifications, setNotifications] = useState([]);
@@ -56,6 +58,10 @@ const NavBar = () => {
             setNotifications(userNotifications);
           }
         }
+        // if(userData.currentStatus === )
+        // const sound = new Audio(notificationSound);
+        // sound.play();
+
       }, userData.handle);
       return () => unsubscribe();
     }
