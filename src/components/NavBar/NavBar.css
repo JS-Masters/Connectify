@@ -14,7 +14,6 @@
 #notifications-list::-webkit-scrollbar-track {
     background: #c2bebe;
     border-radius: 5px;
-
 }
 
 #notifications-list::-webkit-scrollbar-thumb {
@@ -30,14 +29,13 @@
     box-shadow: 4px 4px 60px rgba(255, 255, 255, 0.3);
 }
 
-a.active > img {
+a.active>img {
     border: 2px dashed #FFBD0A !important;
     padding: 10px;
     border-radius: 10px;
-
 }
 
-a > img:hover {
+a>img:hover {
     border: 1px solid #FFBD0A;
     padding: 10px;
     border-radius: 10px;

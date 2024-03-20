@@ -29,9 +29,8 @@ const ChatList = () => {
   const { userData } = useContext(AppContext);
   const navigate = useNavigate();
   const [myChats, setMyChats] = useState(null);
-  const [users, setUsers] = useState([]); // Array<object{handle: string, avatarUrl: string, currentStatus: string}>
+  const [users, setUsers] = useState([]);
   const [leaveChatTrigger, setLeaveChatTrigger] = useState(false);
-  // const [chatMembers, setChatMembers] = useState([]);
 
   useEffect(() => {
     if (userData) {
@@ -81,12 +80,12 @@ const ChatList = () => {
           const chatMembers =
             chatParticipantsHandles.length === 0
               ? [
-                  {
-                    handle: NO_USERS_MESSAGE,
-                    avatarUrl: NO_USERS_AVATAR,
-                    currentStatus: statuses.offline,
-                  },
-                ]
+                {
+                  handle: NO_USERS_MESSAGE,
+                  avatarUrl: NO_USERS_AVATAR,
+                  currentStatus: statuses.offline,
+                },
+              ]
               : users.filter((u) => chatParticipantsHandles.includes(u.handle));
 
           return (

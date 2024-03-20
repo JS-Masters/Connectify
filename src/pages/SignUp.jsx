@@ -29,18 +29,15 @@ const SignUp = () => {
     const email = event.target.elements.email.value;
     const pass = event.target.elements.password.value;
     const confirmPassword = event.target.elements.confirmPassword.value;
-
     const user = await getUserByHandle(userName);
     if (user.exists()) {
       showToast(`Handle @${userName} already exists`, "error");
       return;
     }
-
     if (pass !== confirmPassword) {
       showToast("Passwords do not match", "error");
       return;
     }
-
     try {
       const credentials = await registerUser(email, pass);
       await createUserHandle(
@@ -50,7 +47,6 @@ const SignUp = () => {
         statuses.online,
         statuses.online
       );
-
       setContext({ user, userData: null });
       navigate("/chats");
     } catch (error) {

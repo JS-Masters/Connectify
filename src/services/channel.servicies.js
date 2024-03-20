@@ -1,32 +1,20 @@
 import { get, getDatabase, limitToFirst, onValue, orderByChild, push, query, ref, set } from "firebase/database";
 import { db } from "../config/firebase-config";
 import { getTeamMembers } from "./team.services";
-import { DATABASE_ERROR_MSG, DELETE_MESSAGE } from "../common/constants";
+import { DELETE_MESSAGE } from "../common/constants";
 import { createNewChat, sendNotification } from "./chat.services";
 
 export const addChannelToTeam = async (teamId, channelTitle, createdBy) => {
   try {
     const teamMembers = await getTeamMembers(teamId);
-    //create chat with participants = teamMembers
- 
     const newChannelId = await createNewChat(createdBy, Object.keys(teamMembers), true);
 
-    // const channelRef = 
     await push(ref(db, `teams/${teamId}/channels`), {
       title: channelTitle,
       chatId: newChannelId
     });
 
-    // await set(ref(db, `teams/${teamId}/channels/${channelRef.key}`), {
-    //   id: channelRef.key,
-    //   title: channelTitle,
-    //   createdOn: new Date().toLocaleDateString(),
-    //   createdBy,
-    //   // participants: teamMembers,
-    //   messages: {}
-    // })
     return newChannelId;
-
   } catch (error) {
     console.log(error.message);
   }
@@ -38,22 +26,7 @@ export const listenForNewTeamChannels = (listenFn, teamId) => {
     limitToFirst(50)
   )
   return onValue(q, listenFn);
-
 };
-
-// export const getTeamChannels = async (teamId) => {
-//   try {
-//     const teamChannelsSnapshot = await get(ref(db, `teams/${teamId}/channels`));
-//     if (!teamChannelsSnapshot.exists()) {
-//       throw new Error(DATABASE_ERROR_MSG);
-//     }  
-//     const teamChannels = Object.values(teamChannelsSnapshot.val());
-
-//     return teamChannels;
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
 
 export const getChannelMessagesById = (listenFn, teamId, channelId) => {
   const q = query(
@@ -65,7 +38,6 @@ export const getChannelMessagesById = (listenFn, teamId, channelId) => {
 };
 
 export const addMessageToChannel = async (teamId, channelId, message, author) => {
-
   try {
     const msgRef = await push(ref(db, `teams/${teamId}/channels/${channelId}/messages`), {});
     const newMessageId = msgRef.key;
@@ -86,9 +58,7 @@ export const addMessageToChannel = async (teamId, channelId, message, author) =>
 
     await Promise.all(notificationPromises);
   } catch (error) {
-
     console.log(error.message);
-    // can throw Error in catch + после го catch-ваме в компонента и може да покажем Баннер ако искаме да покажем някоя грешка на потребителя
   }
 };
 

@@ -35,7 +35,7 @@ const Teams = () => {
     if (userData) {
       const unsubscribe = listenForTeamsByUserHandle((snapshot) => {
         const userTeamsData = snapshot.exists() ? snapshot.val() : [];
-        Boolean(Object.keys(userTeamsData).length)
+        Object.keys(userTeamsData).length > 0
           ? setTeams(Object.values(userTeamsData))
           : setTeams(userTeamsData);
       }, userData.handle);
@@ -97,7 +97,6 @@ const Teams = () => {
             ))}
         </HStack>
       </Flex>
-
       {teamId && (
         <>
           <Grid templateColumns="repeat(5, 1fr)">
@@ -127,13 +126,11 @@ const Teams = () => {
               mr="10px"
               size="sm"
               float='right'
-            // marginBottom='0px'
             >
               Leave
             </Button>
           )}
         </>
-
       )}
     </>
   );

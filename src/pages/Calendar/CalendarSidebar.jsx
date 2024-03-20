@@ -38,7 +38,7 @@ const Sidebar = ({ weekendsVisible, handleWeekendsToggle, currentEvents }) => {
           <Checkbox
             _checked={{
               "& .chakra-checkbox__control": {
-                background: "black", // Set your desired color here
+                background: "black",
                 borderColor: "rgb(116, 108, 37)",
               },
             }}

@@ -10,7 +10,6 @@
 
 .chat-list-box::-webkit-scrollbar {
     width: 9px;
-
 }
 
 .chat-list-box::-webkit-scrollbar-track {
@@ -26,7 +25,6 @@
 
 .single-chat-box:hover {
     opacity: 0.4;
-
 }
 
 #chat-member-handle {
@@ -38,6 +36,6 @@
 }
 
 #leave-chat-button:hover {
-color: red;
-opacity: 1;
+    color: red;
+    opacity: 1;
 }

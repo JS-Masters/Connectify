@@ -14,9 +14,10 @@
 }
 
 .create-form-user:hover {
-background-color: #2b2b2b;
-color: bisque;
+    background-color: #2b2b2b;
+    color: bisque;
 }
+
 #close-create-team-button:hover {
     opacity: 0.5;
 }

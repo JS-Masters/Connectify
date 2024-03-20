@@ -19,7 +19,6 @@ import {
 } from "@chakra-ui/react";
 import UserStatusIcon from "../UserStatusIconChats";
 import { useParams } from "react-router-dom";
-
 import AppContext from "../../providers/AppContext";
 import { PhoneIcon } from "@chakra-ui/icons";
 import {
@@ -72,7 +71,6 @@ const TeamMembers = ({ selectedTeam }) => {
       const userToCallCurrentStatus = await getUserStatusByHandle(
         userToCallHandle
       );
-
       if (userToCallCurrentStatus === statuses.offline) {
         showToast(
           "User is Offline!",
@@ -154,7 +152,6 @@ const TeamMembers = ({ selectedTeam }) => {
               />
             )}
           </HStack>
-
           {teamMembers
             .filter((m) => m.handle !== teamOwner.handle)
             .map((member) => (
@@ -193,7 +190,6 @@ const TeamMembers = ({ selectedTeam }) => {
             ))}
         </VStack>
       )}
-
       {token && (
         <div
           style={{

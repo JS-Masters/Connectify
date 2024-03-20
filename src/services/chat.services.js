@@ -1,4 +1,4 @@
-import { get, limitToFirst, onValue, orderByChild, push, query, ref, set, getDatabase, remove, update } from "@firebase/database"
+import { get, limitToFirst, onValue, push, query, ref, set, getDatabase, remove, update } from "@firebase/database"
 import { db } from "../config/firebase-config"
 import { getUserAvatarByHandle, getUsersByChatId, updateUserByHandle } from "./user.services";
 import { DATABASE_ERROR_MSG, DELETE_MESSAGE, DELETE_REPLY, SYSTEM_AVATAR } from "../common/constants";
@@ -12,7 +12,6 @@ const updateUsersChats = async (chatMembers, newChatId) => {
     });
 
     const allChats = await Promise.all(chatPromises);
-
     const updatePromises = allChats.map(async ({ member, chats }) => {
       await updateUserByHandle(member, 'chats', { ...chats, [newChatId]: { participants: chatMembers } });
     });
@@ -23,34 +22,12 @@ const updateUsersChats = async (chatMembers, newChatId) => {
   }
 };
 
-
-// const doesChatAlreadyExists = (loggedInUserChats, chatMembers, loggedInUsername) => {
-//   for (const chatId in loggedInUserChats) {
-//     const chatParticipants = Object.keys(loggedInUserChats[chatId].participants);
-//     const hasMatchingParticipants = chatParticipants.filter((p) => p !== loggedInUsername).every(member => chatMembers.includes(member));
-
-//     if (hasMatchingParticipants) {
-//       return chatId;
-//     }
-//   }
-//   return null;
-// };
-
 export const createNewChat = async (loggedInUsername, chatMembers, createdAsChannel = false) => {
   try {
-    // const loggedInUserChats = await getChatsByUserHandle(loggedInUsername);
     let allParticipants = { [loggedInUsername]: true };
     chatMembers.map((member) => {
       allParticipants = { ...allParticipants, [member]: true };
     });
-
-    // if (loggedInUserChats) {
-    //   const existingChatId = doesChatAlreadyExists(loggedInUserChats, chatMembers, loggedInUsername);
-    //   if (existingChatId) {
-    //     return existingChatId;
-    //   }
-    // }
-
     const chatRef = await push(ref(db, 'chats'), {});
     const newChatId = chatRef.key;
 
@@ -61,8 +38,6 @@ export const createNewChat = async (loggedInUsername, chatMembers, createdAsChan
       participants: allParticipants,
       messages: {},
     });
-
-    // DO NOT CALL IF CHAT IS CREATED FROM TEAM AS A CHANNEL
     if(!createdAsChannel) {
       await updateUsersChats(allParticipants, newChatId);
       const notificationPromises = chatMembers.map(async (member) => {
@@ -70,17 +45,13 @@ export const createNewChat = async (loggedInUsername, chatMembers, createdAsChan
           await sendNotification(member, 'New chat!', 'You have been added to a new chat.', newChatId, 'chats');
         }
       });
-  
       await Promise.all(notificationPromises);
     }
-
-
     return newChatId;
   } catch (error) {
     console.log(error.message);
   }
 };
-
 
 export const getChatsByUserHandle = async (userHandle) => {
   try {
@@ -98,17 +69,15 @@ export const getChatsByUserHandle = async (userHandle) => {
 export const listenForNewChats = (listenFn, userHandle) => {
   const q = query(
     ref(db, `users/${userHandle}/chats`),
-    // orderByChild('createdOn'),
     limitToFirst(50)
   )
   return onValue(q, listenFn);
-}
+};
 
 
 export const getChatMessagesById = (listenFn, chatId) => {
   const q = query(
     ref(db, `chats/${chatId}/messages`),
-    // orderByChild('createdOn'),
     limitToFirst(50)
   )
   return onValue(q, listenFn);
@@ -134,10 +103,8 @@ export const addMessageToChat = async (chatId, message, author, picURL, authorUr
 
     const chatSnapshot = await get(ref(db, `chats/${chatId}`));
     const chatData = chatSnapshot.val();
-
     const notificationPromises = Object.keys(chatData.participants).map(async (participant) => {
       if (participant !== author) {
-
         await sendNotification(participant, 'New message!', `You have new message from ${author}.`, chatId, 'chats');
       }
     });
@@ -180,16 +147,6 @@ export const deleteMessageFromChat = async (chatId, messageId, deletedBy) => {
   }
 };
 
-// export const listenToLoggedUserChats = (listenFn, userHandle, chatId) => {
-//   const q = query(
-//     ref(db, `${userHandle}/chats/${chatId}/messages`),
-//     orderByChild('createdOn'),
-//     limitToFirst(50)
-//   )
-//   return onValue(q, listenFn);
-
-// }
-
 export const sendNotification = async (userHandle, title, body, eventId, type, teamId = '') => {
   try {
     const notificationRef = await push(ref(db, `notifications/${userHandle}`), {});
@@ -229,7 +186,6 @@ export const deleteNotificationsForOpenChat = async (notificationsToDelete, user
 export const listenForNotificationsByUserHandle = (listenFn, userHandle) => {
   const q = query(
     ref(db, `notifications/${userHandle}`),
-    // orderByChild('createdOn'),
     limitToFirst(50)
   )
   return onValue(q, listenFn);
@@ -277,15 +233,13 @@ export const replyToMessage = async (chatId, messageId, replyContent, messageCon
     reactions: {},
     avatarUrl
   });
-
   await addMessageToChat(chatId, replyContent, userHandle, '', avatarUrl, messageContent, messageAuthor, messageAuthorAvatar)
 };
-
 
 export const getRepliesByMessage = (chatId, messageId, listenFn) => {
   const q = query(ref(db, `chats/${chatId}/messages/${messageId}/replies`));
   return onValue(q, listenFn);
-}
+};
 
 export const editReplyInChat = async (chatId, messageId, replyId, newContent) => {
   const db = getDatabase();
@@ -304,7 +258,7 @@ export const editReplyInChat = async (chatId, messageId, replyId, newContent) =>
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
 export const deleteReplyFromChat = async (chatId, messageId, replyId, deletedBy, avatarUrl) => {
   try {
@@ -317,7 +271,7 @@ export const deleteReplyFromChat = async (chatId, messageId, replyId, deletedBy,
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
 export const leaveChat = async (chatId, userHandle) => {
   try {
@@ -347,13 +301,10 @@ export const leaveChat = async (chatId, userHandle) => {
     }
   } catch (error) {
     console.log(error.message);
-
   }
 };
 
-
 export const fetchChatData = async (chatIds, logedInUserHandle) => {
-
   const userHandlesPromises = chatIds.map(async (chatId) => {
     const response = await getUsersByChatId(chatId);
     return Object.keys(response)
@@ -364,13 +315,11 @@ export const fetchChatData = async (chatIds, logedInUserHandle) => {
   const usersHandles = [...asSet].filter((handle) => handle !== logedInUserHandle);
 
   return usersHandles;
-
 };
 
 export const handleLeaveChat = async (chatID, userHandle) => {
   try {
     await leaveChat(chatID, userHandle);
-
     const leaveMessage = {
       content: `${userHandle} has left the chat.`,
       author: 'System',
@@ -382,7 +331,6 @@ export const handleLeaveChat = async (chatID, userHandle) => {
       return;
     }
     await addMessageToChat(chatID, leaveMessage.content, leaveMessage.author, null, SYSTEM_AVATAR);
-
   } catch (error) {
     console.log(error.message);
   }

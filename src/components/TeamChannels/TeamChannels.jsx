@@ -37,7 +37,6 @@ const TeamChannels = ({ selectedTeam }) => {
       >
         {channels &&
           channels.map((channel) => (
-            // <NavLink border= "1px solid gray">
             <Box
               id="single-channel-box"
               onClick={() =>
@@ -68,7 +67,6 @@ const TeamChannels = ({ selectedTeam }) => {
                 </Heading>
               </HStack>
             </Box>
-            // </NavLink>
           ))}
         <HStack style={{ justifyContent: "center", overflow: "" }}>
           {selectedTeam.owner === userData.handle && <CreateChannelPopUp />}

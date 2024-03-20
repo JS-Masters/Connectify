@@ -2,7 +2,6 @@ import { useContext, useState, useEffect } from "react";
 import AppContext from "../../providers/AppContext";
 import { Form, useLocation, useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/auth.service";
-
 import {
   Box,
   Heading,
@@ -16,9 +15,7 @@ import "./SignIn.css";
 const SignIn = () => {
   const toast = useToast();
   const { user, setContext } = useContext(AppContext);
-
   const [show, setShow] = useState(false);
-
   const navigate = useNavigate();
   const location = useLocation();
 

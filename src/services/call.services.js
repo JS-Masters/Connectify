@@ -1,4 +1,4 @@
-import { get, limitToFirst, onValue, orderByChild, push, query, ref, remove, set, update } from "firebase/database"
+import { get, limitToFirst, onValue, push, query, ref, remove, set, update } from "firebase/database"
 import { db } from "../config/firebase-config"
 import { getUserAvatarByHandle, getUserByHandle } from "./user.services";
 import { DATABASE_ERROR_MSG, WAITING_STATUS } from "../common/constants";
@@ -6,7 +6,6 @@ import { DATABASE_ERROR_MSG, WAITING_STATUS } from "../common/constants";
 export const listenForIncomingCalls = (listenFn, loggedUserUid) => {
   const q = query(
     ref(db, `incomingCalls/${loggedUserUid}`),
-    // orderByChild('createdOn'),
     limitToFirst(50)
   )
   return onValue(q, listenFn);
@@ -41,7 +40,6 @@ export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteI
     }
     const userVal = userSnapshot.val();
     const userId = userVal.uid;
-
     const callRef = await push(ref(db, `incomingCalls/${userId}`), {});
     const callId = callRef.key;
 
@@ -52,9 +50,8 @@ export const addIncomingCallToDb = async (userToCallHandle, caller, newCallDyteI
       createdOn: new Date().toLocaleString(),
       status: WAITING_STATUS
     });
-
     return newCallDyteId;
-
+    
   } catch (error) {
     console.log(error.message);
   }
@@ -68,7 +65,6 @@ export const changeIncomingCallStatus = async (callId, uid, status) => {
     console.log(error.message);
   }
 };
-
 
 export const createCall = async (madeCall, recievedCall) => {
   try {
@@ -108,7 +104,6 @@ export const createCall = async (madeCall, recievedCall) => {
       madeCallAvatar,
       createdOn: new Date().toLocaleString(),
     });
-
   } catch (error) {
     console.log(error.message);
   }

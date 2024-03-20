@@ -21,14 +21,12 @@ import {
 } from "../../services/chat.services";
 import useOnclickOutside from "react-cool-onclickoutside";
 import "./NavBar.css";
-import notificationSound from "./../../assets/sounds/new-message-sound.mp3";
 
 const NavBar = () => {
   const { userData } = useContext(AppContext);
   const [notifications, setNotifications] = useState([]);
   const { chatId, channelId } = useParams();
   const [showNotifications, setShowNotifications] = useState(false);
-
   const ref = useOnclickOutside(() => setShowNotifications(false));
 
   useEffect(() => {
@@ -58,10 +56,6 @@ const NavBar = () => {
             setNotifications(userNotifications);
           }
         }
-        // if(userData.currentStatus === )
-        // const sound = new Audio(notificationSound);
-        // sound.play();
-
       }, userData.handle);
       return () => unsubscribe();
     }
@@ -107,7 +101,6 @@ const NavBar = () => {
             <AvatarBadge w="16px" border="none">
               <Text>{notifications.length}</Text>
             </AvatarBadge>
-
             {notifications.length > 0 && (
               <List
                 ref={ref}

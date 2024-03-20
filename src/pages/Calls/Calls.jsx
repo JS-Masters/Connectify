@@ -95,7 +95,6 @@ const Calls = () => {
       const userToCallCurrentStatus = await getUserStatusByHandle(
         userToCallHandle
       );
-
       if (userToCallCurrentStatus === statuses.offline) {
         showToast(
           "User is Offline!",
@@ -243,7 +242,6 @@ const Calls = () => {
             </Flex>
           )}
         </Box>
-
         {calls ? (
           calls.map((call) => {
             return call.incoming ? (

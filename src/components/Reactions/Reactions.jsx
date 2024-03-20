@@ -28,13 +28,11 @@ const Reactions = ({ messageId, replyID = null }) => {
 
   useEffect(() => {
     const parentElement = parentRef.current;
-
     if (parentElement) {
       const parentRect = parentElement.getBoundingClientRect();
       const pickerHeight = 440;
       const spaceTop = parentRect.top;
       const spaceBottom = window.innerHeight - parentRect.bottom;
-
       let left = -250;
       let top;
       if (spaceBottom >= pickerHeight) {
@@ -57,13 +55,11 @@ const Reactions = ({ messageId, replyID = null }) => {
         setMessageReactions(snapshot.val());
       }
     );
-
     const unsubscribeReplyReactions =
       replyID &&
       getReactionsByReply(chatId, messageId, replyID, (snapshot) => {
         setReplyReactions(snapshot.val());
       });
-
     return () => {
       unsubscribeMessageReactions();
       unsubscribeReplyReactions && unsubscribeReplyReactions();

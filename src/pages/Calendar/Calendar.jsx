@@ -20,7 +20,6 @@ import { Box } from "@chakra-ui/react";
 const Calendar = () => {
   const [weekendsVisible, setWeekendsVisible] = useState(false);
   const [currentEvents, setCurrentEvents] = useState([]);
-
   const { user, userData } = useContext(AppContext);
   const [meetings, setMeetings] = useState([]);
   const [meetingToken, setMeetingToken] = useState("");

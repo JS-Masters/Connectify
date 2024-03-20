@@ -33,8 +33,6 @@
     outline: none !important;
 }
 
-
-
 .blocked-users-list::-webkit-scrollbar {
     width: 7px;
 }
@@ -48,10 +46,9 @@
     border-radius: 6px;
 }
 
-
 #block-button:hover {
-background-color: #B00B1D !important;
-color: white !important;
+    background-color: #B00B1D !important;
+    color: white !important;
 }
 
 #unblock-button {
@@ -61,6 +58,6 @@ color: white !important;
 }
 
 #unblock-button:hover {
-background-color: rgb(0, 128, 0);
-color: white !important;
+    background-color: rgb(0, 128, 0);
+    color: white !important;
 }

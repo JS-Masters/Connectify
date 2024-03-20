@@ -11,7 +11,6 @@ const CreateChannelPopUp = () => {
   const { teamId } = useParams();
   const navigate = useNavigate();
   const [channelName, setChannelName] = useState("");
-
   const toast = useToast();
 
   const showToast = (desc, status) => {

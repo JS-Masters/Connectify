@@ -2,12 +2,10 @@ import { get, push, ref, set, remove, query, onValue, limitToFirst, update } fro
 import { db } from "../config/firebase-config";
 import { updateUserByHandle } from "./user.services";
 import { DATABASE_ERROR_MSG } from "../common/constants";
-// import { removeTeamMeetingsFromUser } from "./meeting.services";
 
 export const getTeamMembers = async (teamId) => {
   try {
     const teamMembersRef = await get(ref(db, `teams/${teamId}/members`));
-
     if (!teamMembersRef.exists()) {
       throw new Error('There was problem with retrieving team members from database');
     }
@@ -68,7 +66,6 @@ export const createTeam = async (teamName, teamOwner, teamMembers) => {
 
     await updateUsersTeams(allMembers, teamRef.key, teamName);
     return teamRef.key;
-
   } catch (error) {
     console.log(error.message);
   }
@@ -80,7 +77,6 @@ export const getTeamsByIds = async (teamIds) => {
       return get(ref(db, `teams/${teamId}`));
     });
     const teamSnapshots = await Promise.all(teamPromises);
-
     const teams = teamSnapshots.map((teamSnapshot) => {
       if (!teamSnapshot.exists()) {
         throw new Error(DATABASE_ERROR_MSG);
@@ -115,7 +111,6 @@ export const leaveTeam = async (teamId, userToRemove) => {
     const removeMemberInOtherUsersPromises = Object.keys(teamMembers).map(async (member) => await removeTeamMemberInUser(member, teamId, userToRemove));
 
     await Promise.all(removeMemberInOtherUsersPromises);
-    // await removeTeamMeetingsFromUser(userToRemove, teamId);
   } catch (error) {
     console.log(error.message);
   }
@@ -132,7 +127,6 @@ export const removeTeamMemberInUser = async (userHandle, teamId, userToRemove) =
 export const listenForTeamsByUserHandle = (listenFn, loggedUserHandle) => {
   const q = query(
     ref(db, `users/${loggedUserHandle}/teams`),
-    // orderByChild('createdOn'),
     limitToFirst(50)
   )
   return onValue(q, listenFn);
@@ -170,7 +164,6 @@ export const getTeamNameByTeamId = async (teamId) => {
 export const listenForNewTeamMember = (listenFn, teamId) => {
   const q = query(
     ref(db, `teams/${teamId}/members`),
-    // orderByChild('createdOn'),
     limitToFirst(50)
   )
   return onValue(q, listenFn);

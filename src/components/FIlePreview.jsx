@@ -10,7 +10,6 @@ const FilePreview = ({ fileUrl }) => {
     try {
       const response = await fetch(fileUrl);
       const blob = await response.blob();
-
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = fileName || "downloaded-file";

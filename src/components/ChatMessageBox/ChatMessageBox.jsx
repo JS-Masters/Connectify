@@ -116,11 +116,8 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
             style={{ color: "#a7555e", cursor: "default", fontSize: "15px" }}
           >
             <Text as='span' id="deleted-by-span"
-              
-                // color= "#a7555e"
                 fontWeight= "bold"
                 display= "inline"
-              
             >
               {message.deleteMessage}{" "}
             </Text>
@@ -179,7 +176,6 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                 </Box>
               </>
             )}
-
             {isEditing ? (
               <Box position="relative">
                 <Textarea
@@ -214,7 +210,6 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                   color="red"
                   size="sm"
                   fontSize="22px"
-                // marginTop='2px'
                 >
                   X
                 </Button>
@@ -254,7 +249,6 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                             {message.messageAuthor}
                           </Text>
                         </HStack>
-
                         <span
                           style={{
                             display: "block",
@@ -393,7 +387,6 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                       )}
                     </HStack>
                   }
-
                   {isReplying && (
                     <Box>
                       <Textarea

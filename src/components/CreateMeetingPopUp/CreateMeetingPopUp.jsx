@@ -17,9 +17,6 @@ import {
 import "./CreateMeetingPopUp.css";
 
 const CreateMeetingPopUp = ({ teamName }) => {
-
-  const [weekendsVisible, setWeekendsVisible] = useState(true);
-  const [currentEvents, setCurrentEvents] = useState([]);
   const [teamMeetings, setTeamMeetings] = useState([]);
   const [newMeetingCreated, setNewMeetingCreated] = useState(false);
   const { teamId } = useParams();
@@ -40,10 +37,6 @@ const CreateMeetingPopUp = ({ teamName }) => {
     });
   }, [teamId, newMeetingCreated]);
 
-  const handleWeekendsToggle = () => {
-    setWeekendsVisible(!weekendsVisible);
-  };
-
   const handlePopUpClose = (close) => {
     close();
   };
@@ -51,9 +44,7 @@ const CreateMeetingPopUp = ({ teamName }) => {
   const handleDateSelect = (selectInfo) => {
     let title = prompt("Please enter a new title for your event");
     let calendarApi = selectInfo.view.calendar;
-
-    calendarApi.unselect(); // clear date selection
-
+    calendarApi.unselect();
     if (title) {
       calendarApi.addEvent({
         id: v4(),
@@ -63,10 +54,6 @@ const CreateMeetingPopUp = ({ teamName }) => {
         allDay: selectInfo.allDay,
       });
     }
-  };
-
-  const handleEvents = (events) => {
-    setCurrentEvents(events);
   };
 
   const createMeeting = (meetingId, title, start, end) => {
@@ -86,7 +73,6 @@ const CreateMeetingPopUp = ({ teamName }) => {
       <>
         <b>{eventInfo.timeText}</b>
         <i>{eventInfo.event.title}</i>
-        {/* <i>{JSON.stringify(eventInfo.event.start)}</i> */}
         <br />
         {!teamMeetings.find((meeting) => meeting.id === eventInfo.event.id) && (
           <button
@@ -116,7 +102,7 @@ const CreateMeetingPopUp = ({ teamName }) => {
   };
 
   return (
-    <Popup trigger={<input id="create-meeting-button-teams" value='Meetings Calendar' type="button" mb="20px"/>} modal nested
+    <Popup trigger={<input id="create-meeting-button-teams" value='Meetings Calendar' type="button" />} modal nested
       closeOnDocumentClick={false}
       closeOnEscape={false}>
       {(close) => (
@@ -147,18 +133,10 @@ const CreateMeetingPopUp = ({ teamName }) => {
             selectable={true}
             selectMirror={true}
             dayMaxEvents={true}
-            weekends={weekendsVisible}
+            weekends={true}
             initialEvents={teamMeetings}
             select={handleDateSelect}
             eventContent={renderEventContent}
-            // eventClick={handleEventClick}
-
-            eventsSet={handleEvents} // called after events are initialized/added/changed/removed
-          /* you can update a remote database when these fire:
-                eventAdd={function(){}}
-                eventChange={function(){}}
-                eventRemove={function(){}}
-                */
           />
         </Box>
       )}

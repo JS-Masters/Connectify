@@ -23,16 +23,13 @@ const UploadForm = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileUrl, setSelectedFileUrl] = useState(null);
   const { userData } = useContext(AppContext);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const toast = useToast();
 
   const showToast = (msg, status) => {
     toast({
       title: "Updating avatar",
       description: msg,
-      // duration: 5000,
       isClosable: true,
       status: status,
       position: "top",

@@ -4,7 +4,6 @@ import { Grid, GridItem } from "@chakra-ui/react";
 import ChatList from "../components/ChatList/ChatList";
 
 const Chats = () => {
-
   const { chatId } = useParams();
 
   return (

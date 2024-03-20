@@ -181,7 +181,6 @@ const AddMemberToTeamPopUp = () => {
                           >
                             {user.handle}
                           </span>
-                          {/* <Box textAlign='right'> */}
                           {isUserAlreadyInTheTeam(user.handle) ? (
                             <h3
                               id="team-member-text"

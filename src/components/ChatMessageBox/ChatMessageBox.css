@@ -1,6 +1,5 @@
 #chat-message-box {
     background-color: #2b2b2b;
-    /* border: 1px solid transparent; */
     border-top: 2px solid rgb(41, 37, 35) !important;
     border-radius: 5px;
     color: white !important;
@@ -8,11 +7,10 @@
 
 #chat-message-box:hover {
     background-color: #353535;
-
 }
 
 #chat-message-box span {
-    color: white ;
+    color: white;
 }
 
 .user-handle-chat-box {
@@ -73,7 +71,7 @@
     cursor: pointer;
 }
 
-#edit-textarea{
+#edit-textarea {
     height: 20px !important;
 }
 
@@ -88,7 +86,6 @@
 }
 
 #user-reacted-emoji {
-    /* box-shadow: 4px 4px 10px #b88e1d; */
     background-color: #1a1616;
     padding: 1px 2px;
 }

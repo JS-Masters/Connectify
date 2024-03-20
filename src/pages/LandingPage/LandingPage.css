@@ -1,31 +1,29 @@
-
-
 #landing-page-text {
-    font-family: "Angkor", serif;
-    font-weight: 400;
-    font-style: normal;
+  font-family: "Angkor", serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 #landing-page-heading {
-    font-family: "Angkor", serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 50px;
+  font-family: "Angkor", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 50px;
 }
 
 #sign-in-button-landing {
-    background: transparent;
-    border: none;
-    border-radius: 10px;
-    box-shadow: inset -3px -3px 6px rgba(255, 255, 255, 0.1),
-      inset 3px 3px 6px rgba(0, 0, 0, 0.8);
-    color: #6f6f6f;
-    font-size: 18px;
-    height: 55px;
-    outline: none;
-    padding: 5px 15px;
-    width: 170px;
-    box-shadow: -3px -3px 6px rgba(255, 255, 255, 0.1),
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  box-shadow: inset -3px -3px 6px rgba(255, 255, 255, 0.1),
+    inset 3px 3px 6px rgba(0, 0, 0, 0.8);
+  color: #6f6f6f;
+  font-size: 18px;
+  height: 55px;
+  outline: none;
+  padding: 5px 15px;
+  width: 170px;
+  box-shadow: -3px -3px 6px rgba(255, 255, 255, 0.1),
     3px 3px 6px rgba(0, 0, 0, 0.8);
   font-weight: 600;
   margin-top: 20px;
@@ -34,18 +32,18 @@
 }
 
 #sign-up-button-landing {
-    background: transparent;
-    border: none;
-    border-radius: 10px;
-    box-shadow: inset -3px -3px 6px rgba(255, 255, 255, 0.1),
-      inset 3px 3px 6px rgba(0, 0, 0, 0.8);
-    color: #6f6f6f;
-    font-size: 18px;
-    height: 55px;
-    outline: none;
-    padding: 5px 15px;
-    width: 170px;
-    box-shadow: -3px -3px 6px rgba(255, 255, 255, 0.1),
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  box-shadow: inset -3px -3px 6px rgba(255, 255, 255, 0.1),
+    inset 3px 3px 6px rgba(0, 0, 0, 0.8);
+  color: #6f6f6f;
+  font-size: 18px;
+  height: 55px;
+  outline: none;
+  padding: 5px 15px;
+  width: 170px;
+  box-shadow: -3px -3px 6px rgba(255, 255, 255, 0.1),
     3px 3px 6px rgba(0, 0, 0, 0.8);
   font-weight: 600;
   margin-top: 20px;
@@ -53,14 +51,13 @@
   margin-left: 20px;
 }
 
-#sign-up-button-landing:hover, 
+#sign-up-button-landing:hover,
 #sign-in-button-landing:hover {
-    opacity: 0.7;
-    color: #b88e1d;
+  opacity: 0.7;
+  color: #b88e1d;
 }
 
-#sign-up-button-landing:active, 
+#sign-up-button-landing:active,
 #sign-in-button-landing:active {
-
-    opacity: 1;
+  opacity: 1;
 }

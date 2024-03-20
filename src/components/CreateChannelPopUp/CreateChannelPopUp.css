@@ -10,7 +10,6 @@
     font-family: "Oswald", sans-serif;
     color: #ffe4c4;
     background-color: transparent;
-    /* margin-left: 45px; */
     color: green;
 }
 
@@ -61,4 +60,3 @@
 #create-channel-button:hover {
     opacity: 0.6;
 }
-

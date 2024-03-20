@@ -198,7 +198,7 @@ const BlockedUsersPopUp = () => {
                   overflow="hidden"
                   overflowY="auto"
                 >
-                  {Boolean(blockedUsersObjects.length) ? (
+                  {blockedUsersObjects.length > 0 ? (
                     blockedUsersObjects.map((user) => (
                       <ListItem
                         className="single-blocked-user"

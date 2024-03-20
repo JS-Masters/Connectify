@@ -8,8 +8,7 @@ import {
   HStack,
   List,
   ListItem,
-  Text,
-  useToast,
+  Text
 } from "@chakra-ui/react";
 import UploadForm from "../UploadForm/UploadForm";
 import {
@@ -25,25 +24,11 @@ import useOnclickOutside from "react-cool-onclickoutside";
 import "./Dropdown.css";
 
 const Dropdown = () => {
-  const [showDropdown, setShowDropdown] = useState(false);
   const { userData, setContext } = useContext(AppContext);
-  const navigate = useNavigate();
-  const toast = useToast();
-
-  const ref = useOnclickOutside(() => setShowDropdown(false));
-
   const [userIsInMeeting, setUserIsInMeeting] = useState(false);
-
-  const showToast = () => {
-    toast({
-      title: "Sign out",
-      description: "You have been signed out.",
-      duration: 5000,
-      isClosable: true,
-      status: "success",
-      position: "top",
-    });
-  };
+  const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
+  const ref = useOnclickOutside(() => setShowDropdown(false));
 
   useEffect(() => {
     if (userData) {
@@ -98,8 +83,6 @@ const Dropdown = () => {
         </ListItem>
         <ListItem
           className="dropdown-item"
-          //  textAlign='center'
-
           cursor="pointer"
           m="10px"
           border="1px solid gray"
@@ -134,7 +117,6 @@ const Dropdown = () => {
       <Text id="logged-user-handle" color="bisque" cursor="default">
         {userData.handle}
       </Text>
-
       <Avatar
         cursor="pointer"
         onClick={() => setShowDropdown(!showDropdown)}
@@ -145,7 +127,6 @@ const Dropdown = () => {
           {<UserStatusIcon userHandle={userData.handle} iconSize={"15px"} />}
         </AvatarBadge>
       </Avatar>
-
       <List
         ref={ref}
         id="dropdown-menu"

@@ -8,11 +8,10 @@ export const addDyteRoomIdToCall = async (dbCallId, dyteRoomId) => {
   await update(ref(db, `calls/${dbCallId}`), {
     dyteRoomId: dyteRoomId
   });
-  return dyteRoomId; // май може да се махне !
+  return dyteRoomId;
 };
 
 export const createDyteCall = async (dbCallId) => {
-
   const options = {
     method: 'POST',
     headers: {
@@ -26,7 +25,6 @@ export const createDyteCall = async (dbCallId) => {
     const result = await response.json();
 
     await addDyteRoomIdToCall(dbCallId, result.data.id);
-
     return result.data.id;
   } catch (error) {
     console.log(error.message);
@@ -34,7 +32,6 @@ export const createDyteCall = async (dbCallId) => {
 };
 
 export const addUserToCall = (listenFn, userData, dyteRoomId) => {
-
   const options = {
     method: 'POST',
     headers: {

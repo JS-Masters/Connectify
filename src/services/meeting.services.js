@@ -2,9 +2,8 @@ import { get, limitToFirst, onValue, query, ref, remove, set, update } from "fir
 import { DYTE_URL, statuses } from "../common/constants";
 import { DYTE_KEY } from "../common/dyte.api.auth";
 import { db } from "../config/firebase-config";
-import { getTeamMembers, getTeamsByUserHandle } from "./team.services";
-import { changeUserCurrentStatusInDb, updateUserByHandle } from "./user.services";
-
+import { getTeamsByUserHandle } from "./team.services";
+import { changeUserCurrentStatusInDb } from "./user.services";
 
 export const listenForMeetingsByUserHandle = (listenFn, userHandle) => {
   const q = query(
@@ -51,40 +50,6 @@ export const getMeetingsByTeamId = async (teamId) => {
   }
 };
 
-// export const getMeetingsIdsByUserHandle = async (handle) => {
-//   try {
-//     const meetingsSnapshot = await get(ref(db, `users/${handle}/meetings`));
-//     if (!meetingsSnapshot.exists()) {
-//       return null;
-//     }
-//     return meetingsSnapshot.val();
-
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
-
-
-// export const updateUsersMeetings = async (teamMembers, dyteMeetingId, teamId) => {
-//   try {
-//     const meetingPromises = teamMembers.map(async (member) => {
-//       const memberMeetingsIds = await getMeetingsIdsByUserHandle(member);
-//       return { member, meetings: memberMeetingsIds };
-//     });
-
-//     const allMeetings = await Promise.all(meetingPromises);
-
-//     const updatePromises = allMeetings.map(async ({ member, meetings }) => {
-//       await updateUserByHandle(member, 'meetings', { ...meetings, [dyteMeetingId]: teamId });
-//     });
-
-//     await Promise.all(updatePromises);
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
-
-
 export const addDyteRoomIdToMeeting = async (meetingId, dyteMeetingId, teamId) => {
   await update(ref(db, `teams/${teamId}/meetings/${meetingId}`), {
     dyteMeetingId: dyteMeetingId
@@ -106,7 +71,6 @@ export const createMeetingInDb = async (meetingId, title, start, end, teamId) =>
   }
 };
 
-
 export const createDyteMeeting = async (dbMeetingId, teamId) => {
   const options = {
     method: 'POST',
@@ -120,31 +84,10 @@ export const createDyteMeeting = async (dbMeetingId, teamId) => {
     const response = await fetch(`${DYTE_URL}/meetings`, options);
     const result = await response.json();
     await addDyteRoomIdToMeeting(dbMeetingId, result.data.id, teamId);
-    // const teamMembers = await getTeamMembers(teamId);
-    // await updateUsersMeetings(Object.keys(teamMembers), dbMeetingId, teamId);
-    // return result.data.id;
   } catch (error) {
     console.log(error.message);
   }
 };
-
-// export const removeTeamMeetingsFromUser = async (userHandle, teamId) => {
-//   try {
-//     const userMeetingsSnapshot = await get(ref(db, `users/${userHandle}/meetings`));
-//     if (userMeetingsSnapshot.exists()) {
-//       const userMeetings = userMeetingsSnapshot.val();
-//       const userMeetingsEntries = Object.entries(userMeetings);
-//       if (userMeetingsEntries.length > 0) {
-//         const userMeetingsUpdatedEntries = userMeetingsEntries.filter((m) => m[1] !== teamId);
-//         const userMeetingsUpdated = Object.fromEntries(userMeetingsUpdatedEntries);
-
-//         await set(ref(db, `users/${userHandle}/meetings`), userMeetingsUpdated);
-//       }
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
 
 export const joinMeeting = (dyteRoomId, userData, listenFn) => {
   const options = {
@@ -167,14 +110,6 @@ export const joinMeeting = (dyteRoomId, userData, listenFn) => {
     .then(() => changeUserCurrentStatusInDb(userData.handle, statuses.inMeeting))
     .catch(e => console.error(e));
 };
-
-export const getMeetingById = async () => {
-
-
-
-
-};
-
 
 export const deleteMeeting = async (meetingId, teamId) => {
  await remove(ref(db, `teams/${teamId}/meetings/${meetingId}`));

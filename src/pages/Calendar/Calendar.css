@@ -1,5 +1,4 @@
 body>div {
-  /* the react root */
   margin: 0;
   padding: 0;
   height: 100%;
@@ -21,13 +20,12 @@ li {
 }
 
 b {
-  /* used for event dates/times */
   margin-right: 3px;
 }
 
 :root {
-  --fc-border-color: rgb(95, 87, 87); /* Customize border color */
-  --fc-daygrid-event-dot-width: 5px; /* Customize event dot width */
+  --fc-border-color: rgb(95, 87, 87);
+  --fc-daygrid-event-dot-width: 5px;
 }
 
 .demo-app-sidebar {
@@ -50,10 +48,8 @@ b {
 
 .fc .fc-button-primary:not(:disabled).fc-button-active,
 .fc .fc-button-primary:not(:disabled):active {
-
   color: bisque;
   background-color: transparent;
-
 }
 
 .demo-app-sidebar-section {
@@ -66,7 +62,6 @@ b {
 }
 
 .fc {
-  /* the calendar root */
   max-width: 1100px;
   margin: 0 auto;
 }
@@ -76,7 +71,6 @@ b {
   min-height: 100%;
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: 14px;
-
 }
 
 #calendar-box {
@@ -100,33 +94,34 @@ b {
 }
 
 #all-events-title {
-font-family: "Angkor", serif;
-font-weight: 200;
-font-style: normal;
-font-size: 20px;
-color: bisque;
+  font-family: "Angkor", serif;
+  font-weight: 200;
+  font-style: normal;
+  font-size: 20px;
+  color: bisque;
 }
 
-#all-events-title > span {
+#all-events-title>span {
   font-family: "Angkor", serif;
   font-weight: 200;
   font-style: normal;
   font-size: 35px;
   color: rgb(128, 15, 15);
-  }
+}
 
-  .fc-scroller::-webkit-scrollbar {
-    width: 9px !important;
+.fc-scroller::-webkit-scrollbar {
+  width: 9px !important;
 }
 
 .fc-scroller::-webkit-scrollbar-track {
-    background: #c2bebe !important;
+  background: #c2bebe !important;
 }
 
 .fc-scroller::-webkit-scrollbar-thumb {
-    background-color: #5f5c5c !important;
-    border-radius: 6px !important;
+  background-color: #5f5c5c !important;
+  border-radius: 6px !important;
 }
+
 .fc-event-main {
   background-color: #a8a190;
   border-color: #010101 !important;

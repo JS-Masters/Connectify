@@ -65,7 +65,6 @@ const ChatMessages = () => {
               <ChatMessageBox key={v4()} message={message} sameAuthor={false} />
             )
           )}
-
         <div ref={messagesEndRef} />
       </Box>
       <ChatInput />

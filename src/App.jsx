@@ -19,7 +19,6 @@ import {
 } from "./services/user.services";
 import Chats from "./pages/Chats";
 import Calls from "./pages/Calls/Calls";
-import ChatMessages from "./components/ChatMessages/ChatMessages";
 import Authenticated from "./hoc/Authenticated";
 import Teams from "./pages/Teams/Teams";
 import LandingPage from "./pages/LandingPage/LandingPage";
@@ -32,7 +31,7 @@ import {
   listenForRejectedCalls,
   setUserHasRejectedCall,
 } from "./services/call.services";
-import { Box, Button, Flex, HStack, useToast } from "@chakra-ui/react";
+import { Box, HStack, useToast } from "@chakra-ui/react";
 import { v4 } from "uuid";
 import { ATENDED_STATUS, WAITING_STATUS, statuses } from "./common/constants";
 import { ref, remove } from "firebase/database";
@@ -69,7 +68,6 @@ const router = createBrowserRouter(
           </Authenticated>
         }
       />
-      {/* <Route path="calls/:id" element={<Authenticated><Calls /></Authenticated>} /> */}
       <Route
         path="teams"
         element={
@@ -112,7 +110,6 @@ const App = () => {
     userData: null,
     notifications: [],
   });
-
   const [user] = useAuthState(auth);
   const [userData, setUserData] = useState(null);
   const [incomingToken, setIncomingToken] = useState("");
@@ -182,12 +179,10 @@ const App = () => {
           } else {
             setIncomingCall([]);
           }
-          // логиката тук е само ако има 1 обект с обаждане в incomingCalls във Firebase
         } else {
           setIncomingCall([]);
         }
       }, user.uid);
-
       return () => unsubscribe();
     }
   }, [user]);
@@ -206,14 +201,12 @@ const App = () => {
           }
         }
       }, userData.handle);
-
       return () => unsubscribe();
     }
   }, [user]);
 
   useEffect(() => {
     window.addEventListener("beforeunload", handleTabClose);
-
     return () => window.removeEventListener("beforeunload", handleTabClose);
   }, [userData]);
 
@@ -221,7 +214,6 @@ const App = () => {
     try {
       await changeUserCurrentStatusInDb(userData.handle, statuses.offline);
       await logoutUser();
-      
       setContext({ user: null, userData: null });
     } catch (error) {
       console.error("Error updating user status:", error);
@@ -273,20 +265,15 @@ const App = () => {
         <Box id="incoming-call-box">
           {incomingCall.map((call) => (
             <Box key={v4()}>
-              <h3 style={{ fontSize: '25px', marginBottom:'13px' }}>{call.caller} is calling...</h3>
+              <h3 style={{ fontSize: '25px', marginBottom: '13px' }}>{call.caller} is calling...</h3>
               <HStack justifyContent='space-around'>
                 <img className="incoming-call-buttons" src="/answer-call.png" onClick={() => joinCall(call.dyteRoomId, call.callId)} />
-                <img className="incoming-call-buttons" src="/reject-call.png" onClick={() => rejectCall(call.callId, call.caller)}  />
+                <img className="incoming-call-buttons" src="/reject-call.png" onClick={() => rejectCall(call.callId, call.caller)} />
               </HStack>
             </Box>
           ))}
         </Box>
       )}
-
-
-
-
-
       {incomingToken && (
         <div style={{
           height: "50vh",
@@ -303,4 +290,5 @@ const App = () => {
     </Box>
   );
 };
+
 export default App;

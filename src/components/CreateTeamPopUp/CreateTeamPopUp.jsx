@@ -13,7 +13,6 @@ import "./CreateTeamPopUp.css";
 import UserStatusIcon from "../UserStatusIconChats";
 
 const CreateTeamPopUp = () => {
-
   const { userData } = useContext(AppContext);
   const [users, setUsers] = useState([]);
   const [foundUsers, setFoundUsers] = useState([]);
@@ -59,7 +58,6 @@ const CreateTeamPopUp = () => {
     setChannelFromInput(event.target.value);
   };
 
-
   const updateSelectedUsers = (userHandle) => {
     if (selectedUsers.includes(userHandle)) {
       const selectedUsersUpdated = selectedUsers.filter(
@@ -98,30 +96,27 @@ const CreateTeamPopUp = () => {
     if (!teamName) {
       showToast('Choose a name for your team', 'info');
       return;
-    };
+    }
     if (teamName.length < 3 || teamName.length > 20) {
       showToast('Team name should be between 3 and 20 characters', 'info');
       return;
-    };
+    }
     if (!selectedUsers.length) {
       showToast('Choose people to connect with in your team', 'info');
       return;
-    };
+    }
     if (!channels.length) {
       showToast('Create at least one channel', 'info');
       return;
-    };
+    }
     try {
       const newTeamId = await createTeam(teamName, userData.handle, selectedUsers);
-
       await Promise.all(channels.map(async (channelTitle) => {
         await addChannelToTeam(newTeamId, channelTitle, userData.handle);
       }));
-
       await Promise.all(selectedUsers.map(async (user) => {
         await sendNotification(user, 'New team!', 'You have been added to a new team.', newTeamId, 'teams');
       }))
-
       handlePopUpClose(close);
       navigate(`/teams/${newTeamId}`);
     } catch (error) {
@@ -175,11 +170,11 @@ const CreateTeamPopUp = () => {
                     >
                       {user}{" "}
                       <CloseIcon
-                            style={{ width: "15px", marginLeft: "9px", color: "black", fontSize:'10px' }}
+                        style={{ width: "15px", marginLeft: "9px", color: "black", fontSize: '10px' }}
                       />
                     </Tag>
                   ))
-                  : <p style={{ display: 'inline-block', marginTop: '10px', marginLeft: '125px', marginBottom: '10px', color: '#611f26', fontWeight:'bold' }}>No users selected yet!</p>}
+                  : <p style={{ display: 'inline-block', marginTop: '10px', marginLeft: '125px', marginBottom: '10px', color: '#611f26', fontWeight: 'bold' }}>No users selected yet!</p>}
               </div>
               <List id="create-team-users-list"
                 overflow="hidden"
@@ -189,9 +184,9 @@ const CreateTeamPopUp = () => {
                 {foundUsers.length &&
                   foundUsers.map((user) => (
                     <ListItem
-                    className="create-form-user"
+                      className="create-form-user"
                       key={v4()}
-                      style={{ cursor: "pointer", border:'1px solid transparent', borderRadius:'5px', padding:'5px' }}
+                      style={{ cursor: "pointer", border: '1px solid transparent', borderRadius: '5px', padding: '5px' }}
                       onClick={() => updateSelectedUsers(user.handle)}
                     >
                       <Avatar size='md' src={user.avatarUrl}>
@@ -203,14 +198,14 @@ const CreateTeamPopUp = () => {
               </List>
               <br />
               <Input
-              id="team-channels-input"
+                id="team-channels-input"
                 type="text"
                 value={channelFromInput}
                 onChange={updateChannelInputField}
                 placeholder="Create a channel..."
                 style={{ width: "275px" }}
               />
-               <AddIcon onClick={() => addChannelToSelected()} style={{ padding: '3px', marginLeft: '10px', marginBottom:'px', color: 'rgb(38, 70, 9)', border: '2px solid rgb(38, 70, 9)', borderRadius: '5px', width: '36px', height: '36px', cursor:'pointer' }} />
+              <AddIcon onClick={() => addChannelToSelected()} style={{ padding: '3px', marginLeft: '10px', marginBottom: 'px', color: 'rgb(38, 70, 9)', border: '2px solid rgb(38, 70, 9)', borderRadius: '5px', width: '36px', height: '36px', cursor: 'pointer' }} />
               <br />
               {channels.length ? (channels.map((channel) =>
                 <Tag
@@ -225,8 +220,8 @@ const CreateTeamPopUp = () => {
                   {channel}{" "}
                   <CloseIcon
                     onClick={() => removeChannelFromSelected(channel)}
-                    
-                    style={{ width: "15px", marginLeft: "16px", color: "black", fontSize:'10px' }}
+
+                    style={{ width: "15px", marginLeft: "16px", color: "black", fontSize: '10px' }}
                   />
                 </Tag>
               )
@@ -240,4 +235,5 @@ const CreateTeamPopUp = () => {
     </Popup>
   );
 };
+
 export default CreateTeamPopUp;
