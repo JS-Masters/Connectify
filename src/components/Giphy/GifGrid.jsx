@@ -1,12 +1,15 @@
 import { SimpleGrid, Img } from "@chakra-ui/react";
 import PropTypes from "prop-types";
+import "./GifGrid.css";
 
 const GifGrid = ({ gifs, handleGif }) => {
   return (
     <SimpleGrid
+    id="gif-simple-grid"
       columns={3}
       spacing={5}
-      overflow="scroll"
+      overflow="hidden"
+      overflowY="auto"
       width={"500px"}
       height={"300px"}
       p={"10px"}

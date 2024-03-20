@@ -80,6 +80,7 @@
 }
 
 #user-reacted-emoji {
-    box-shadow: 4px 4px 10px #b88e1d;
-    background-color: transparent;
+    /* box-shadow: 4px 4px 10px #b88e1d; */
+    background-color: #1a1616;
+    padding: 1px 2px;
 }

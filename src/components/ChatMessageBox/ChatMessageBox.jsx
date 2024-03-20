@@ -214,7 +214,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                   color="red"
                   size="sm"
                   fontSize="22px"
-                  // marginTop='2px'
+                // marginTop='2px'
                 >
                   X
                 </Button>
@@ -236,7 +236,7 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                     }}
                   >
                     {"repliedMessageContent" in message &&
-                    message.repliedMessageContent.length > 0 ? (
+                      message.repliedMessageContent.length > 0 ? (
                       <>
                         <HStack marginTop="5px">
                           <Avatar
@@ -361,35 +361,38 @@ const ChatMessageBox = ({ message, sameAuthor }) => {
                     )}
                   {message.img && <FilePreview fileUrl={message.img} />}
                   {"reactions" in message &&
-                    countMessageReactions(Object.values(message.reactions)).map(
-                      (entry) =>
-                        message.reactions[userData.handle] === entry[0] ? (
-                          <span
-                            id="user-reacted-emoji"
-                            style={{
-                              cursor: "pointer",
-                              borderRadius: "5px",
-                              width: "fit-content",
-                            }}
-                            key={v4()}
-                            onClick={() =>
-                              removeReactionFromMessage(
-                                chatId,
-                                message.id,
-                                userData.handle
-                              )
-                            }
-                          >
-                            {" "}
-                            {entry[0]} {entry[1]}
-                          </span>
-                        ) : (
-                          <span style={{ width: "fit-content" }} key={v4()}>
-                            {" "}
-                            {entry[0]} {entry[1]}
-                          </span>
-                        )
-                    )}
+                    <HStack>
+                      {countMessageReactions(Object.values(message.reactions)).map(
+                        (entry) =>
+                          message.reactions[userData.handle] === entry[0] ? (
+                            <span
+                              id="user-reacted-emoji"
+                              style={{
+                                cursor: "pointer",
+                                borderRadius: "5px",
+                                width: "fit-content",
+                              }}
+                              key={v4()}
+                              onClick={() =>
+                                removeReactionFromMessage(
+                                  chatId,
+                                  message.id,
+                                  userData.handle
+                                )
+                              }
+                            >
+                              {" "}
+                              {entry[0]} {entry[1]}
+                            </span>
+                          ) : (
+                            <span style={{ width: "fit-content" }} key={v4()}>
+                              {" "}
+                              {entry[0]} {entry[1]}
+                            </span>
+                          )
+                      )}
+                    </HStack>
+                  }
 
                   {isReplying && (
                     <Box>
