@@ -215,7 +215,7 @@ const App = () => {
     window.addEventListener("beforeunload", handleTabClose);
 
     return () => window.removeEventListener("beforeunload", handleTabClose);
-  }, []);
+  }, [userData]);
 
   const handleTabClose = async () => {
     try {
@@ -252,7 +252,7 @@ const App = () => {
   };
 
   const leaveCall = () => {
-    endCall(userData, joinedCallDyteId)
+    endCall(userData.handle, joinedCallDyteId)
       .then(() => getUserLastStatusByHandle(userData.handle))
       .then((previousStatus) => {
         changeUserCurrentStatusInDb(userData.handle, previousStatus);

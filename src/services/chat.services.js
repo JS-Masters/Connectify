@@ -108,7 +108,7 @@ export const listenForNewChats = (listenFn, userHandle) => {
 export const getChatMessagesById = (listenFn, chatId) => {
   const q = query(
     ref(db, `chats/${chatId}/messages`),
-    orderByChild('createdOn'),
+    // orderByChild('createdOn'),
     limitToFirst(50)
   )
   return onValue(q, listenFn);

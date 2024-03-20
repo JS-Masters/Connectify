@@ -6,7 +6,7 @@ import { DATABASE_ERROR_MSG, WAITING_STATUS } from "../common/constants";
 export const listenForIncomingCalls = (listenFn, loggedUserUid) => {
   const q = query(
     ref(db, `incomingCalls/${loggedUserUid}`),
-    orderByChild('createdOn'),
+    // orderByChild('createdOn'),
     limitToFirst(50)
   )
   return onValue(q, listenFn);
