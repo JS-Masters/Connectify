@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { DyteMeeting } from "@dytesdk/react-ui-kit";
 import { useDyteMeeting } from "@dytesdk/react-web-core";
 import { useContext, useEffect } from "react";
-import AppContext from "../providers/AppContext";
+import AppContext from "../../providers/AppContext";
 import "./MyMeeting.css";
 
 const MyMeeting = ({ leaveCall, isMeeting = false }) => {

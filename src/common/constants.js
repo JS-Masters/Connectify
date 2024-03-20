@@ -27,15 +27,6 @@ export const NO_USERS_MESSAGE = 'No users';
 
 export const NO_USERS_AVATAR = 'https://thumbs.dreamstime.com/z/group-icon-users-teamwork-sign-vector-no-stop-group-icon-users-teamwork-sign-person-silhouette-symbol-prohibited-ban-stop-148090714.jpg?ct=jpeg';
 
-export const REACTIONS = [
-    '👍',
-    '❤️',
-    '😄',
-    '😮',
-    '🙁',
-    '😠'
-];
-
 export const TICK = '✔'
 
 export const GIPHY_BASE_URL = 'http://api.giphy.com/v1/gifs/';

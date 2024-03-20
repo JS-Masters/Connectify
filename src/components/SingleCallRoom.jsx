@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { DyteProvider, useDyteClient } from "@dytesdk/react-web-core";
 import { useEffect } from "react";
 
-import MyMeeting from "./MyMeeting";
+import MyMeeting from "./MyMeeting/MyMeeting";
 
 const SingleCallRoom = ({ token, leaveCall, isMeeting = false }) => {
   const [client, initClient] = useDyteClient();

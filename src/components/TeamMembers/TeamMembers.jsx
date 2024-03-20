@@ -193,8 +193,16 @@ const TeamMembers = ({ selectedTeam }) => {
             ))}
         </VStack>
       )}
+
       {token && (
-        <div style={{ height: "50vh", width: "auto" }}>
+        <div style={{
+          height: "50vh",
+          width: "100%",
+          top:'0 !important',
+          
+          position: "absolute",
+          zIndex: "20",
+        }}>
           <SingleCallRoom token={token} leaveCall={leaveCall} />
         </div>
       )}

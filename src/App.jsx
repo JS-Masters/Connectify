@@ -221,7 +221,7 @@ const App = () => {
     try {
       await logoutUser();
       await changeUserCurrentStatusInDb(userData.handle, statuses.offline);
-      // setContext({ user: null, userData: null });
+      setContext({ user: null, userData: null });
     } catch (error) {
       console.error("Error updating user status:", error);
     }
