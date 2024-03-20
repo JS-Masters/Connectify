@@ -13,9 +13,9 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTimeout(() => {
+    // setTimeout(() => {
       user ? navigate("/chats") : null;
-    }, 200);
+    // }, 600);
   }, [user, navigate]);
 
   useEffect(() => {

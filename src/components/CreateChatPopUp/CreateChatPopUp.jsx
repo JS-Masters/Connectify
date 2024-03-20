@@ -43,7 +43,9 @@ const CreateChatPopUp = () => {
   };
 
   useEffect(() => {
-    getAllUsers().then((users) => setUsers(Object.values(users)));
+    if(userData) {
+      getAllUsers().then((users) => setUsers(Object.values(users)));
+    }
   }, []);
 
   useEffect(() => {
