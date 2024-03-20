@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { Form, useParams } from "react-router-dom";
 import { addMessageToChat } from "../../services/chat.services";
 import AppContext from "../../providers/AppContext";
@@ -21,6 +21,8 @@ const ChatInput = () => {
   const [isPickerVisible, setPickerVisible] = useState(false);
   const [fileUrl, setFileUrl] = useState("");
   const [giphy, setGiphy] = useState(false);
+
+  const inputRef = useRef(null);
 
   const handleFile = (e) => {
     e.preventDefault();
@@ -85,6 +87,7 @@ const ChatInput = () => {
             onEmojiSelect={(e) => {
               setPickerVisible(!isPickerVisible);
               setMsg(msg + e.native);
+              inputRef.current.focus();
             }}
           />
         </Box>
@@ -116,6 +119,7 @@ const ChatInput = () => {
       {giphy && <Giphy handleGif={handleGif} />}
       <Input
         id="new-message-input"
+        ref={inputRef}
         value={msg}
         onChange={(event) => setMsg(event.target.value)}
         placeholder="type here..."
@@ -126,7 +130,12 @@ const ChatInput = () => {
           setGiphy(false);
           setPickerVisible(!isPickerVisible);
         }}
-        style={{ fontSize: "30px", cursor: "pointer", color: "#FFBD0A" }}
+        style={{
+          fontSize: "30px",
+          cursor: "pointer",
+          color: "#FFBD0A",
+          margin: "5px",
+        }}
       />
       <label
         htmlFor="file"
@@ -134,7 +143,7 @@ const ChatInput = () => {
           setGiphy(false);
           setPickerVisible(false);
         }}
-        style={{ fontSize: "30px", cursor: "pointer" }}
+        style={{ fontSize: "30px", cursor: "pointer", margin: "5px" }}
       >
         <SlPicture />
       </label>
@@ -151,6 +160,7 @@ const ChatInput = () => {
           outline: "none",
           cursor: "pointer",
           color: "white",
+          margin: "5px",
         }}
         onClick={() => {
           setPickerVisible(false);

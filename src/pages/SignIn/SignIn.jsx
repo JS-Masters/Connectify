@@ -24,7 +24,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (user) {
-      navigate(location.state?.from.pathname || "/");
+      navigate(location.state?.from.pathname || "/chats");
     }
   }, [user, location.state?.from.pathname, navigate]);
 
