@@ -1,4 +1,3 @@
-// import PropTypes from "prop-types";
 import { useContext, useState } from "react";
 import AppContext from "../../providers/AppContext";
 import { Form } from "react-router-dom";
@@ -73,6 +72,7 @@ const UploadForm = () => {
           .then((url) => {
             updateUserByHandle(userData.handle, "avatarUrl", url);
             showToast("Image uploaded!", "success");
+            setSelectedFile(null);
             onClose();
           })
           .catch((error) => showToast(error.message, "error"));
