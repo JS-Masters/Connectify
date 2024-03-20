@@ -195,14 +195,16 @@ const TeamMembers = ({ selectedTeam }) => {
       )}
 
       {token && (
-        <div style={{
-          height: "50vh",
-          width: "100%",
-          top:'0 !important',
-          
-          position: "absolute",
-          zIndex: "20",
-        }}>
+        <div
+          style={{
+            height: "50%",
+            width: "50%",
+            top: "230px",
+            right: "380px",
+            position: "absolute",
+            zIndex: "20",
+          }}
+        >
           <SingleCallRoom token={token} leaveCall={leaveCall} />
         </div>
       )}

@@ -23,15 +23,13 @@ const SingleCallRoom = ({ token, leaveCall, isMeeting = false }) => {
 
   return (
     <>
-      <div>
-        {client ? (
-          <DyteProvider value={client}>
-            <MyMeeting leaveCall={leaveCall} isMeeting={isMeeting} />
-          </DyteProvider>
-        ) : (
-          <div style={{ height: "30vh", width: "auto" }}> </div>
-        )}
-      </div>
+      {client ? (
+        <DyteProvider value={client}>
+          <MyMeeting leaveCall={leaveCall} isMeeting={isMeeting} />
+        </DyteProvider>
+      ) : (
+        <div style={{ height: "30vh", width: "auto" }}> </div>
+      )}
     </>
   );
 };
