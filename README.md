@@ -28,6 +28,9 @@ npm install
 ```
 npm start
 ```
+3. To enable real-time calls and meetings functionality you should:
+- obtain a Dyte API Key from [@DYTE](https://dev.dyte.io/)
+- place it in this directory: /src/common/dyte.api.auth.js like this: export const DYTE_KEY = 'YOUR_API_KEY';
 
 ### Usage
 

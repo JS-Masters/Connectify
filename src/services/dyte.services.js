@@ -1,5 +1,5 @@
 import { ref, update } from "firebase/database";
-import { DYTE_URL, statuses } from "../common/constants";
+import { DYTE_ERROR_MESSAGE, DYTE_URL, statuses } from "../common/constants";
 import { db } from "../config/firebase-config";
 import { DYTE_KEY } from "../common/dyte.api.auth";
 import { changeUserCurrentStatusInDb } from "./user.services";
@@ -27,7 +27,7 @@ export const createDyteCall = async (dbCallId) => {
     await addDyteRoomIdToCall(dbCallId, result.data.id);
     return result.data.id;
   } catch (error) {
-    console.log(error.message);
+    console.log(DYTE_ERROR_MESSAGE);
   }
 };
 
@@ -50,6 +50,6 @@ export const addUserToCall = (listenFn, userData, dyteRoomId) => {
     .then(response => response.json())
     .then(response => listenFn(response.data.token))
     .then(() => changeUserCurrentStatusInDb(userData.handle, statuses.inMeeting))
-    .catch(e => console.error(e));
+    .catch(() => console.error(DYTE_ERROR_MESSAGE));
   return dyteRoomId;
 };

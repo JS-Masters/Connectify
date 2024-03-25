@@ -1,5 +1,5 @@
 import { get, limitToFirst, onValue, query, ref, remove, set, update } from "firebase/database";
-import { DYTE_URL, statuses } from "../common/constants";
+import { DYTE_ERROR_MESSAGE, DYTE_URL, statuses } from "../common/constants";
 import { DYTE_KEY } from "../common/dyte.api.auth";
 import { db } from "../config/firebase-config";
 import { getTeamsByUserHandle } from "./team.services";
@@ -85,7 +85,7 @@ export const createDyteMeeting = async (dbMeetingId, teamId) => {
     const result = await response.json();
     await addDyteRoomIdToMeeting(dbMeetingId, result.data.id, teamId);
   } catch (error) {
-    console.log(error.message);
+    console.log(DYTE_ERROR_MESSAGE);
   }
 };
 
@@ -108,7 +108,7 @@ export const joinMeeting = (dyteRoomId, userData, listenFn) => {
     .then(response => response.json())
     .then(response => listenFn(response.data.token))
     .then(() => changeUserCurrentStatusInDb(userData.handle, statuses.inMeeting))
-    .catch(e => console.error(e));
+    .catch(() => console.error(DYTE_ERROR_MESSAGE));
 };
 
 export const deleteMeeting = async (meetingId, teamId) => {
